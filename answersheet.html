@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>過去問 解答記録シート</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Hiragino Kaku Gothic ProN','Meiryo','Yu Gothic',sans-serif;background:#0f172a;color:#e2e8f0;-webkit-text-size-adjust:100%}
+header{background:linear-gradient(135deg,#1e3a5f,#0f172a);padding:14px 16px;border-bottom:2px solid #2563eb}
+header h1{font-size:1.05rem;color:#60a5fa}
+header .sub{font-size:.7rem;color:#475569;margin-top:2px}
+.wrap{max-width:680px;margin:0 auto;padding:12px 12px 60px}
+
+.summary{position:sticky;top:0;z-index:10;background:#0f172a;padding:10px 0;border-bottom:1px solid #1e293b}
+.sumbar{display:flex;gap:8px;background:#1e293b;border:1px solid #334155;border-radius:10px;padding:10px}
+.sumi{flex:1;text-align:center}
+.sumi .v{font-size:1.25rem;font-weight:700;color:#60a5fa}
+.sumi .l{font-size:.66rem;color:#64748b}
+.green{color:#22c55e!important}.red{color:#ef4444!important}
+
+.controls{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0}
+.btn{padding:8px 13px;border-radius:8px;border:1.5px solid #334155;background:transparent;color:#cbd5e1;font-size:.78rem;cursor:pointer;transition:.12s}
+.btn:active{transform:scale(.97)}
+.btn.on{background:#2563eb;border-color:#2563eb;color:#fff}
+.btn-warn{border-color:#7f1d1d;color:#fca5a5}
+.btn-blue{background:#2563eb;border-color:#2563eb;color:#fff}
+
+.panel{background:#1e293b;border:1px solid #334155;border-radius:10px;padding:13px;margin-bottom:12px;display:none}
+.panel.open{display:block}
+.panel label{font-size:.78rem;color:#94a3b8;display:block;margin-bottom:6px}
+.panel input,.panel textarea{width:100%;background:#0f172a;border:1px solid #334155;border-radius:7px;color:#e2e8f0;padding:9px;font-size:.9rem;font-family:inherit}
+.panel textarea{height:90px;resize:vertical;font-family:monospace}
+.panel .hintx{font-size:.72rem;color:#64748b;margin:6px 0 10px;line-height:1.6}
+.jump{display:flex;gap:7px;align-items:center;margin-bottom:12px}
+.jump input{width:90px;background:#0f172a;border:1px solid #334155;border-radius:7px;color:#e2e8f0;padding:7px;font-size:.85rem}
+
+.row{display:flex;align-items:center;gap:6px;background:#1e293b;border:1px solid #334155;border-radius:9px;padding:7px 9px;margin-bottom:6px}
+.row.ok{border-color:#22c55e55}.row.ng{border-color:#ef444455}
+.qn{width:34px;font-size:.8rem;color:#94a3b8;font-weight:700;flex-shrink:0;text-align:right}
+.grp{display:flex;align-items:center;gap:3px}
+.glab{font-size:.62rem;color:#64748b;margin-right:1px}
+.opt{width:26px;height:30px;border-radius:6px;border:1.5px solid #334155;background:#0f172a;color:#94a3b8;font-size:.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.opt:active{transform:scale(.92)}
+.opt.m{border-color:#2563eb;background:#1e3a5f;color:#bfdbfe}
+.opt.c{border-color:#fbbf24;background:#3a2e0e;color:#fde68a}
+.judge{margin-left:auto;width:24px;text-align:center;font-size:1rem;flex-shrink:0}
+.divider{flex-shrink:0;width:1px;height:24px;background:#334155;margin:0 2px}
+</style>
+</head>
+<body>
+<header>
+  <h1>📝 過去問 解答記録シート</h1>
+  <div class="sub">自分の解答と正解を記録 → 自動採点・弱点抽出（自動保存）</div>
+</header>
+
+<div class="wrap">
+  <div class="summary">
+    <div class="sumbar">
+      <div class="sumi"><div class="v" id="sAns">0</div><div class="l">解答済</div></div>
+      <div class="sumi"><div class="v green" id="sOk">0</div><div class="l">正解</div></div>
+      <div class="sumi"><div class="v red" id="sNg">0</div><div class="l">不正解</div></div>
+      <div class="sumi"><div class="v" id="sPct">-</div><div class="l">正答率</div></div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="btn on" id="fAll" onclick="setFilter('all')">全部</button>
+    <button class="btn" id="fNg" onclick="setFilter('ng')">間違いのみ</button>
+    <button class="btn" id="fTodo" onclick="setFilter('todo')">未採点のみ</button>
+    <button class="btn" onclick="togglePanel('keyPanel')">正解キー一括入力</button>
+    <button class="btn" onclick="togglePanel('setPanel')">設定</button>
+  </div>
+
+  <div class="panel" id="keyPanel">
+    <label>正解キーをまとめて入力（本の解答一覧を貼り付け）</label>
+    <div class="hintx">①②③ は 1 / 2 / 3 で入力。数字以外（カンマ・改行・問番号など）は無視されるので、そのまま貼り付けてOKです。<br>例：<code>1 3 2 2 1 3 …</code> または <code>132213…</code></div>
+    <textarea id="keyInput" placeholder="ここに正解の並びを貼り付け（1/2/3）"></textarea>
+    <div style="margin-top:9px;display:flex;gap:7px">
+      <button class="btn btn-blue" onclick="importKey()">一括登録する</button>
+      <button class="btn" onclick="togglePanel('keyPanel')">閉じる</button>
+    </div>
+  </div>
+
+  <div class="panel" id="setPanel">
+    <label>問題数</label>
+    <input type="number" id="countInput" min="1" max="500" value="210">
+    <div class="hintx">変更しても入力済みの記録は保持されます。</div>
+    <div style="display:flex;gap:7px">
+      <button class="btn btn-blue" onclick="applyCount()">問題数を変更</button>
+      <button class="btn btn-warn" onclick="resetAll()">全記録をリセット</button>
+    </div>
+  </div>
+
+  <div class="jump">
+    <span style="font-size:.78rem;color:#94a3b8">ジャンプ：</span>
+    <input type="number" id="jumpN" min="1" placeholder="問番号">
+    <button class="btn" onclick="doJump()">移動</button>
+  </div>
+
+  <div id="list"></div>
+</div>
+
+<script>
+const KEY='answerSheetV1';
+let state={count:210,data:{}};
+try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.count){state=s}}catch(e){}
+let filter='all';
+
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
+
+function judge(n){
+  const d=state.data[n];
+  if(!d||!d.m||!d.c)return null;
+  return d.m===d.c;
+}
+
+function render(){
+  const list=document.getElementById('list');
+  list.innerHTML='';
+  for(let n=1;n<=state.count;n++){
+    const d=state.data[n]||{};
+    const j=judge(n);
+    if(filter==='ng'&&j!==false)continue;
+    if(filter==='todo'&&(d.m&&d.c))continue;
+    const row=document.createElement('div');
+    row.className='row'+(j===true?' ok':j===false?' ng':'');
+    row.id='row'+n;
+    let h=`<div class="qn">${n}</div>`;
+    h+=`<div class="grp"><span class="glab">自</span>`;
+    for(let o=1;o<=3;o++)h+=`<button class="opt${d.m===o?' m':''}" onclick="setM(${n},${o})">${o}</button>`;
+    h+=`</div><div class="divider"></div>`;
+    h+=`<div class="grp"><span class="glab">正</span>`;
+    for(let o=1;o<=3;o++)h+=`<button class="opt${d.c===o?' c':''}" onclick="setC(${n},${o})">${o}</button>`;
+    h+=`</div>`;
+    h+=`<div class="judge">${j===true?'⭕':j===false?'❌':''}</div>`;
+    row.innerHTML=h;
+    list.appendChild(row);
+  }
+  updateSummary();
+}
+
+function setM(n,o){
+  state.data[n]=state.data[n]||{};
+  state.data[n].m=(state.data[n].m===o?null:o);
+  save();refreshRow(n);
+}
+function setC(n,o){
+  state.data[n]=state.data[n]||{};
+  state.data[n].c=(state.data[n].c===o?null:o);
+  save();refreshRow(n);
+}
+function refreshRow(n){
+  // フィルタ表示中は条件が変わる場合があるので全描画、それ以外は軽量更新
+  if(filter!=='all'){render();return}
+  const row=document.getElementById('row'+n);if(!row)return;
+  const d=state.data[n]||{},j=judge(n);
+  row.className='row'+(j===true?' ok':j===false?' ng':'');
+  row.querySelectorAll('.grp')[0].querySelectorAll('.opt').forEach((b,i)=>b.classList.toggle('m',d.m===i+1));
+  row.querySelectorAll('.grp')[1].querySelectorAll('.opt').forEach((b,i)=>b.classList.toggle('c',d.c===i+1));
+  row.querySelector('.judge').textContent=j===true?'⭕':j===false?'❌':'';
+  updateSummary();
+}
+
+function updateSummary(){
+  let ans=0,ok=0,ng=0;
+  for(let n=1;n<=state.count;n++){
+    const j=judge(n);
+    if(j!==null){ans++;j?ok++:ng++}
+  }
+  document.getElementById('sAns').textContent=ans;
+  document.getElementById('sOk').textContent=ok;
+  document.getElementById('sNg').textContent=ng;
+  document.getElementById('sPct').textContent=ans?Math.round(ok/ans*100)+'%':'-';
+}
+
+function setFilter(f){
+  filter=f;
+  ['All','Ng','Todo'].forEach(x=>document.getElementById('f'+x).classList.remove('on'));
+  document.getElementById('f'+(f==='all'?'All':f==='ng'?'Ng':'Todo')).classList.add('on');
+  render();
+}
+function togglePanel(id){document.getElementById(id).classList.toggle('open')}
+
+function importKey(){
+  const raw=document.getElementById('keyInput').value;
+  const digits=(raw.match(/[1-3]/g)||[]);
+  if(digits.length===0){alert('1〜3の数字が見つかりませんでした。');return}
+  if(digits.length>state.count){
+    if(!confirm('入力された正解が'+digits.length+'個あります。問題数('+state.count+')より多いです。最初の'+state.count+'個を登録しますか？'))return;
+  }
+  const n=Math.min(digits.length,state.count);
+  for(let i=0;i<n;i++){
+    state.data[i+1]=state.data[i+1]||{};
+    state.data[i+1].c=parseInt(digits[i]);
+  }
+  save();render();
+  alert(n+'問の正解を登録しました。');
+  togglePanel('keyPanel');
+}
+
+function applyCount(){
+  const v=parseInt(document.getElementById('countInput').value);
+  if(!v||v<1){alert('正しい問題数を入力してください。');return}
+  state.count=v;save();render();
+}
+function resetAll(){
+  if(!confirm('すべての解答記録を消去します。よろしいですか？'))return;
+  state.data={};save();render();
+}
+function doJump(){
+  const n=parseInt(document.getElementById('jumpN').value);
+  if(!n)return;
+  if(filter!=='all')setFilter('all');
+  const row=document.getElementById('row'+n);
+  if(row){row.scrollIntoView({behavior:'smooth',block:'center'});row.style.transition='background .3s';row.style.background='#1d4ed855';setTimeout(()=>row.style.background='',900)}
+}
+
+document.getElementById('countInput').value=state.count;
+render();
+</script>
+</body>
+</html>
