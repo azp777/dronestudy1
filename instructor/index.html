@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ドローン講師アプリ</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1d4ed8">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
+<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js');}</script>
+<style>
+  :root{--bg:#0f172a;--card:#1e293b;--txt:#f1f5f9;--sub:#94a3b8;}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  body{margin:0;font-family:"Hiragino Sans","Yu Gothic",system-ui,sans-serif;
+       background:var(--bg);color:var(--txt);min-height:100vh;}
+  header{padding:34px 16px 22px;text-align:center;
+         background:linear-gradient(150deg,#0ea5e9,#1d4ed8 80%);}
+  header .logo{font-size:2.4rem;}
+  header h1{margin:6px 0 4px;font-size:1.3rem;}
+  header p{margin:0;font-size:.75rem;opacity:.85;}
+  main{max-width:560px;margin:0 auto;padding:18px 14px 40px;}
+  a.card{display:flex;gap:14px;align-items:center;background:var(--card);
+         border-radius:16px;padding:18px;margin-bottom:14px;text-decoration:none;
+         color:var(--txt);border:1px solid #334155;}
+  a.card:active{background:#26364d;}
+  .ic{font-size:2rem;flex:0 0 auto;}
+  .t{font-size:1.05rem;font-weight:bold;}
+  .d{font-size:.8rem;color:var(--sub);margin-top:3px;line-height:1.5;}
+  .arrow{margin-left:auto;color:var(--sub);font-size:1.2rem;}
+  .note{font-size:.72rem;color:var(--sub);text-align:center;line-height:1.7;margin-top:18px;}
+  .install{background:#0b1220;border:1px dashed #334155;border-radius:12px;
+           padding:12px 14px;font-size:.78rem;color:var(--sub);line-height:1.7;margin-top:14px;}
+  .install b{color:var(--txt);}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">🚁</div>
+  <h1>ドローン講師アプリ</h1>
+  <p>一等無人航空機操縦士|2026年6月5日施行 実地新基準対応</p>
+</header>
+<main>
+  <a class="card" href="drill.html">
+    <span class="ic">🎓</span>
+    <span>
+      <span class="t">インストラクター学習ドリル</span>
+      <span class="d">減点判定35問・数値規定28問・60秒説明チャレンジ。試験員の目を鍛える</span>
+    </span>
+    <span class="arrow">›</span>
+  </a>
+  <a class="card" href="phrases.html">
+    <span class="ic">🗣️</span>
+    <span>
+      <span class="t">英語フレーズ練習</span>
+      <span class="d">9カテゴリ約90フレーズ。音声読み上げ・録音聞き比べ・進捗記録</span>
+    </span>
+    <span class="arrow">›</span>
+  </a>
+  <a class="card" href="textbook.html">
+    <span class="ic">📘</span>
+    <span>
+      <span class="t">Student Textbook(English)</span>
+      <span class="d">海外受講生向け英語テキスト全8章。受講生への共有・印刷用</span>
+    </span>
+    <span class="arrow">›</span>
+  </a>
+
+  <div class="install">
+    📲 <b>ホーム画面に追加するとアプリとして使えます</b><br>
+    iPhone:Safariで開く → 共有ボタン → 「ホーム画面に追加」<br>
+    Android:Chromeで開く → メニュー(⋮) → 「ホーム画面に追加」<br>
+    一度開けばオフライン(圏外の飛行場)でも動きます ※音声読み上げは端末内蔵なので圏外OK
+  </div>
+
+  <p class="note">
+    出典:国土交通省 実地試験実施基準・一等/二等実地試験実施細則(マルチローター)<br>
+    令和7年12月5日改正・令和8年6月5日施行/教則第4版(令和7年2月1日)
+  </p>
+</main>
+</body>
+</html>

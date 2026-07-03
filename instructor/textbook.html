@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Drone Pilot Course — Student Textbook (English Edition)</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1d4ed8">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
+<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js');}</script>
+
+<style>
+  :root{--blue:#1d4ed8;--sky:#0ea5e9;--ink:#1e293b;--sub:#64748b;--bg:#f8fafc;
+        --red:#dc2626;--yel:#d97706;--grn:#16a34a;}
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:Georgia,"Times New Roman","Hiragino Mincho ProN",serif;
+       color:var(--ink);background:var(--bg);line-height:1.65;}
+  .page{max-width:800px;margin:0 auto;background:#fff;padding:40px 48px;}
+  .cover{background:linear-gradient(150deg,#0ea5e9,#1d4ed8 70%);color:#fff;text-align:center;
+         padding:90px 40px;border-radius:0;}
+  .cover h1{font-size:2rem;margin:0 0 8px;}
+  .cover .sub{font-size:1rem;opacity:.9;}
+  .cover .meta{margin-top:60px;font-size:.85rem;opacity:.8;line-height:1.8;}
+  h2{color:var(--blue);border-bottom:3px solid var(--sky);padding-bottom:6px;margin-top:0;
+     font-size:1.35rem;}
+  h3{color:var(--ink);font-size:1.05rem;margin-bottom:6px;border-left:5px solid var(--sky);padding-left:10px;}
+  p{margin:8px 0;}
+  table{border-collapse:collapse;width:100%;margin:12px 0;font-size:.88rem;}
+  th,td{border:1px solid #cbd5e1;padding:7px 10px;text-align:left;vertical-align:top;}
+  th{background:#e0f2fe;color:#0c4a6e;}
+  .jp{font-family:"Hiragino Sans","Yu Gothic",sans-serif;color:var(--sub);font-size:.85em;}
+  .keybox{background:#eff6ff;border-left:5px solid var(--blue);padding:12px 16px;margin:14px 0;
+          border-radius:0 8px 8px 0;font-size:.92rem;}
+  .keybox b:first-child{color:var(--blue);}
+  .warn{background:#fef2f2;border-left:5px solid var(--red);padding:12px 16px;margin:14px 0;
+        border-radius:0 8px 8px 0;font-size:.92rem;}
+  .tip{background:#f0fdf4;border-left:5px solid var(--grn);padding:12px 16px;margin:14px 0;
+       border-radius:0 8px 8px 0;font-size:.92rem;}
+  .fail{color:var(--red);font-weight:bold;}
+  .m5{color:var(--yel);font-weight:bold;}
+  .m1{color:var(--grn);font-weight:bold;}
+  figure{margin:16px 0;text-align:center;}
+  figcaption{font-size:.8rem;color:var(--sub);margin-top:6px;}
+  .chapnum{display:inline-block;background:var(--blue);color:#fff;border-radius:6px;
+           padding:2px 12px;font-size:.85rem;margin-bottom:6px;font-family:sans-serif;}
+  .answer{color:var(--sub);font-size:.85rem;}
+  ol.q li{margin-bottom:10px;}
+  footer{max-width:800px;margin:0 auto;background:#fff;padding:20px 48px 40px;font-size:.75rem;color:var(--sub);border-top:1px solid #e2e8f0;}
+  @media print{
+    body{background:#fff;}
+    .page{max-width:none;padding:20px 10mm;}
+    .chapter{page-break-before:always;}
+    .cover{border-radius:0;page-break-after:always;}
+  }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <h1>🚁 Drone Pilot Course</h1>
+  <div class="sub">Student Textbook — English Edition<br>
+  Japan UAS License (Second-Class / First-Class)</div>
+  <div class="meta">
+    Based on the official MLIT standards effective June 5, 2026<br>
+    and the Safety Textbook (<i>Kyousoku</i>) 4th Edition<br><br>
+    Name: ______________________
+  </div>
+</div>
+
+<!-- CHAPTER 1 -->
+<div class="page chapter">
+  <span class="chapnum">Chapter 1</span>
+  <h2>Welcome — How This Course Works</h2>
+  <p>Welcome to our drone school! This textbook will guide you to the Japanese national drone
+  license (<span class="jp">技能証明 <i>ginou shoumei</i></span>). It is written in simple English.
+  Important Japanese words are shown with <i>romaji</i>, because you will hear them during
+  training and the exam.</p>
+
+  <h3>Your path to the license</h3>
+  <table>
+    <tr><th>Step</th><th>What</th><th>Language</th></tr>
+    <tr><td>1</td><td><b>Classroom lessons</b> at our school (this textbook)</td><td>English</td></tr>
+    <tr><td>2</td><td><b>Flight training</b> with your instructor</td><td>English commands</td></tr>
+    <tr><td>3</td><td><b>Completion exam</b> (<span class="jp">修了審査 <i>shuuryou shinsa</i></span>) at our school — same national standard as the government practical test</td><td>Japanese (we train you for it)</td></tr>
+    <tr><td>4</td><td><b>National knowledge test</b> (CBT at a test center)</td><td><b>Japanese only</b></td></tr>
+    <tr><td>5</td><td><b>Medical check</b> and online application</td><td>Japanese (we help you)</td></tr>
+  </table>
+
+  <div class="warn"><b>⚠ Important:</b> The national knowledge test is in <b>Japanese only</b>.
+  There is no English version. We will help you learn the key Japanese exam words (Chapter 7).
+  If your Japanese reading is limited, plan extra study time — talk to your instructor early.</div>
+
+  <div class="keybox"><b>The license is valid for 3 years.</b> You renew it with a short training course.</div>
+</div>
+
+<!-- CHAPTER 2 -->
+<div class="page chapter">
+  <span class="chapnum">Chapter 2</span>
+  <h2>Japan's Drone Rules</h2>
+
+  <h3>2.1 Registration and Remote ID</h3>
+  <p>In Japan, every drone of <b>100 grams or more</b> must be <b>registered</b>
+  (<span class="jp">登録 <i>touroku</i></span>). The registration number must be displayed on
+  the aircraft, and the drone must broadcast <b>Remote ID</b>. Registration is done online
+  through the government system <b>DIPS 2.0</b>.</p>
+
+  <h3>2.2 Specified flights (特定飛行 <i>tokutei hikou</i>)</h3>
+  <p>Some flights need government <b>permission or approval</b>. They are called
+  <b>specified flights</b>. There are two groups:</p>
+  <table>
+    <tr><th>Airspace (where)</th><th>Method (how)</th></tr>
+    <tr><td>• Near airports<br>• Above <b>150 m</b><br>• Over <b>DID</b> — Densely Inhabited Districts (most city areas)<br>• Emergency operation airspace</td>
+        <td>• <b>Night</b> flight<br>• <b>BVLOS</b> — beyond visual line of sight<br>• Within 30 m of people/objects<br>• Over events, dangerous goods, dropping objects</td></tr>
+  </table>
+
+  <h3>2.3 The three risk categories</h3>
+  <table>
+    <tr><th>Category</th><th>Meaning</th><th>What you need</th></tr>
+    <tr><td><b>I</b></td><td>Not a specified flight</td><td>No procedure (follow basic rules)</td></tr>
+    <tr><td><b>II</b></td><td>Specified flight <b>with a safety zone</b> that keeps other people out (<span class="jp">立入管理措置 <i>tachiiri kanri sochi</i></span>)</td><td>Permission/approval. A <b>Second-Class license + certified aircraft</b> can simplify or remove some procedures</td></tr>
+    <tr><td><b>III</b></td><td>Specified flight <b>over third parties, without</b> a safety zone — highest risk</td><td><b>First-Class license + first-class certified aircraft + approval</b></td></tr>
+  </table>
+
+  <div class="keybox"><b>Remember:</b> "Third parties" (<span class="jp">第三者 <i>daisansha</i></span>)
+  means people who are not involved in your flight operation. Category III means flying over them.</div>
+
+  <h3>2.4 Basic rules for every flight</h3>
+  <p>No alcohol or drugs. Always do a pre-flight check. Do not fly in a dangerous way.
+  Give way to manned aircraft. Maximum altitude 150 m. For specified flights: make a
+  <b>flight plan notification</b>, keep a <b>flight logbook</b>
+  (<span class="jp">飛行日誌 <i>hikou nisshi</i></span>), and report
+  <b>accidents</b> to the government.</p>
+
+  <div class="warn"><b>⚠ Penalties are real.</b> Flying drunk, or flying over a DID without
+  permission, can bring criminal penalties and license suspension. Rules protect you and others.</div>
+</div>
+
+<!-- CHAPTER 3 -->
+<div class="page chapter">
+  <span class="chapnum">Chapter 3</span>
+  <h2>The License System</h2>
+
+  <h3>3.1 Two classes</h3>
+  <table>
+    <tr><th></th><th>Second-Class <span class="jp">二等</span></th><th>First-Class <span class="jp">一等</span></th></tr>
+    <tr><td>For</td><td>Category II operations</td><td>Category III operations</td></tr>
+    <tr><td>Practical exam pass line</td><td><b>70 / 100</b> points</td><td><b>80 / 100</b> points</td></tr>
+    <tr><td>Basic flight test mode</td><td>GPS ON (normal), GPS OFF (emergency subject)</td><td>GPS <b>OFF</b> for all basic subjects</td></tr>
+    <tr><td>Knowledge test</td><td>50 questions / 30 min</td><td>70 questions / 75 min</td></tr>
+  </table>
+
+  <h3>3.2 Limitations (限定 <i>gentei</i>)</h3>
+  <p>A new license starts with three limitations: <b>daytime only</b>, <b>VLOS only</b>, and
+  <b>under 25 kg</b>. You can remove each limitation by passing an extra practical test
+  (<span class="jp">限定変更 <i>gentei henkou</i></span>):</p>
+  <table>
+    <tr><th>Limitation removal</th><th>Allows</th></tr>
+    <tr><td>Night rating</td><td>Night flight</td></tr>
+    <tr><td>BVLOS rating</td><td>Flight beyond visual line of sight (camera only)</td></tr>
+    <tr><td>25 kg rating</td><td>Aircraft of 25 kg or more</td></tr>
+  </table>
+
+  <div class="tip"><b>💡 Good to know:</b> Our school's completion exam follows <b>exactly the
+  same national standard</b> (MLIT standards, latest revision effective June 5, 2026). When you
+  pass here, you do not take the government practical test.</div>
+</div>
+
+<!-- CHAPTER 4 -->
+<div class="page chapter">
+  <span class="chapnum">Chapter 4</span>
+  <h2>Know Your Aircraft</h2>
+
+  <h3>4.1 Multirotor basics</h3>
+  <p>A multirotor flies by changing the speed of each motor. Four controls:</p>
+  <table>
+    <tr><th>Stick input</th><th>Movement</th><th>Word you will hear</th></tr>
+    <tr><td>Throttle</td><td>Up / down</td><td>"Climb" / "Descend"</td></tr>
+    <tr><td>Elevator</td><td>Forward / backward</td><td>"Forward" / "Backward"</td></tr>
+    <tr><td>Aileron</td><td>Left / right</td><td>"Left" / "Right"</td></tr>
+    <tr><td>Rudder</td><td>Rotate (yaw)</td><td>"Turn the nose"</td></tr>
+  </table>
+
+  <h3>4.2 GPS mode vs. ATTI mode</h3>
+  <p>With <b>position stabilization ON</b> (GPS + vision sensors), the drone holds its position.
+  With stabilization <b>OFF</b> ("ATTI mode"), the drone drifts with the wind — you must correct
+  it constantly. The exam tests ATTI flying because real emergencies can disable GPS.</p>
+  <div class="keybox"><b>First-class students:</b> ALL basic subjects are flown with stabilization OFF.
+  Most of your training time will be ATTI practice. This is normal — everyone finds it hard at first.</div>
+
+  <h3>4.3 Battery safety (LiPo)</h3>
+  <p>Do not use a swollen or damaged battery. Store at 50–60% charge, not full.
+  Cold weather reduces power. Carry batteries in a fireproof bag. Never throw them in normal trash.</p>
+
+  <h3>4.4 Fail-safe / Return-to-Home (RTH)</h3>
+  <p>Before every flight, check: RTH altitude (higher than obstacles!), home point updated,
+  and the signal-lost behavior (hover / land / RTH). Wrong RTH settings cause many accidents.</p>
+</div>
+
+<!-- CHAPTER 5 -->
+<div class="page chapter">
+  <span class="chapnum">Chapter 5</span>
+  <h2>Inspections and Records</h2>
+
+  <h3>5.1 Pre-flight inspection — say it out loud!</h3>
+  <p>In the exam, you perform the inspection and <b>record the results on the daily inspection
+  sheet</b> (<span class="jp">日常点検記録 <i>nichijou tenken kiroku</i></span>).
+  Time limit: about <b>12 minutes</b> for the two inspection subjects. Practice this order:</p>
+  <table>
+    <tr><th>#</th><th>Check</th><th>Call-out</th></tr>
+    <tr><td>1</td><td>Airspace & surroundings</td><td>"Airspace and surroundings — clear."</td></tr>
+    <tr><td>2</td><td>Weather / wind</td><td>"Wind is under five meters per second."</td></tr>
+    <tr><td>3</td><td>Propellers, frame, ID plate</td><td>"No damage."</td></tr>
+    <tr><td>4</td><td>Screws & connectors</td><td>"Tight."</td></tr>
+    <tr><td>5</td><td>Power system</td><td>"Normal."</td></tr>
+    <tr><td>6</td><td>Signal & GPS</td><td>"Normal."</td></tr>
+    <tr><td>7</td><td>Battery level</td><td>"Enough."</td></tr>
+    <tr><td>8</td><td>Remote ID</td><td>"Working."</td></tr>
+    <tr><td>9</td><td>Motors</td><td>"Normal."</td></tr>
+    <tr><td>10</td><td>Control check in hover</td><td>"Normal."</td></tr>
+  </table>
+  <div class="warn"><b>⚠ Exam rule:</b> If you check safety but <b>do not say it</b> to the
+  examiner, it counts as NOT checked — minus 5 points. Always call out.</div>
+
+  <h3>5.2 After the flight</h3>
+  <p>Post-flight inspection (heat, damage, dirt) + fill in the <b>flight log</b>: date, place,
+  times, and total flight time. Time limit: 5 minutes. A mistake in the flight-time calculation
+  costs <b>10 points</b> — check your math!</p>
+
+  <h3>5.3 Accidents and serious incidents — memorize the three</h3>
+  <div class="keybox">
+  <b>Accident (事故 <i>jiko</i>):</b> ① injury or death of a person ② damage to property
+  ③ collision or contact with a manned aircraft.<br>
+  <b>Serious incident (重大インシデント):</b> ① near-collision with a manned aircraft
+  ② injury (minor) ③ loss of control ④ fire/smoke in flight.<br>
+  If an accident happens: <b>stop the flight → help injured people → report to MLIT.</b></div>
+</div>
+
+<!-- CHAPTER 6 -->
+<div class="page chapter">
+  <span class="chapnum">Chapter 6</span>
+  <h2>The Practical Exam</h2>
+
+  <h3>6.1 How scoring works</h3>
+  <p>You start each subject with <b>100 points</b>. Mistakes remove points.
+  You pass with <b>70+ (Second-Class)</b> or <b>80+ (First-Class)</b>.</p>
+  <table>
+    <tr><th>Result</th><th>Examples</th></tr>
+    <tr><td class="fail">INSTANT FAIL</td><td>Crash・hit an object (pylon, flag, net)・lose control・
+      dangerous speed (about 5 m/s)・one hand on the controller・enter the <b>red zone</b>
+      (disqualification zone, half of the aircraft)・over the time limit・examiner takes control・
+      outside help・(BVLOS test) looking at the drone without instruction</td></tr>
+    <tr><td class="m5">−5 points</td><td>Enter the <b>yellow zone</b> (deduction zone)・wrong procedure or
+      direction・hard landing・not watching the drone・no safety call-out・moving before instruction・
+      clearly wrong altitude・(1st class) pirouette faster than 16 s or slower than 26 s</td></tr>
+    <tr><td class="m1">−1 point</td><td>Wobble・rough control (sudden speed/stop)・wrong nose direction (brief)</td></tr>
+  </table>
+  <div class="tip"><b>💡 The 2-second rule:</b> the first time you drift into the yellow zone on a
+  route segment, you lose <b>no points</b> if you return to the route within about <b>2 seconds</b>
+  after the examiner tells you. Recover fast, stay calm.</div>
+  <div class="tip"><b>💡 Wind gusts:</b> if the wind pushes your drone and you correct it quickly
+  and properly, there is <b>no deduction</b>. Do not panic.</div>
+
+  <h3>6.2 The maneuvers</h3>
+
+  <figure>
+  <svg viewBox="0 0 460 210" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;">
+    <rect x="10" y="10" width="440" height="190" fill="#fef2f2" stroke="#dc2626" stroke-dasharray="6 4"/>
+    <rect x="45" y="40" width="370" height="130" fill="#fffbeb" stroke="#d97706" stroke-dasharray="4 3"/>
+    <rect x="80" y="70" width="300" height="70" fill="#fff" stroke="#94a3b8"/>
+    <circle cx="230" cy="105" r="14" fill="none" stroke="#16a34a" stroke-width="2"/>
+    <text x="230" y="109" font-size="10" text-anchor="middle" fill="#16a34a">A</text>
+    <text x="80" y="63" font-size="11" fill="#334155">B</text>
+    <text x="376" y="63" font-size="11" fill="#334155">C</text>
+    <text x="376" y="156" font-size="11" fill="#334155">D</text>
+    <text x="80" y="156" font-size="11" fill="#334155">E</text>
+    <path d="M230 105 L80 105 L80 70 L380 70 L380 140 L80 140" fill="none" stroke="#1d4ed8" stroke-width="2" marker-end="url(#arr)"/>
+    <defs><marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#1d4ed8"/></marker></defs>
+    <text x="230" y="30" font-size="11" text-anchor="middle" fill="#dc2626">RED zone = instant fail</text>
+    <text x="230" y="58" font-size="11" text-anchor="middle" fill="#d97706">YELLOW zone = −5 points</text>
+    <text x="230" y="190" font-size="11" text-anchor="middle" fill="#334155">Square flight: A → hover 5 s → follow the route, nose in direction of travel</text>
+  </svg>
+  <figcaption>Square flight. First-class: climb 1.5 m → 3.5 m between B–C and E–D.</figcaption>
+  </figure>
+
+  <figure>
+  <svg viewBox="0 0 460 170" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;">
+    <circle cx="160" cy="85" r="55" fill="none" stroke="#1d4ed8" stroke-width="2"/>
+    <circle cx="300" cy="85" r="55" fill="none" stroke="#1d4ed8" stroke-width="2"/>
+    <circle cx="160" cy="85" r="3" fill="#dc2626"/>
+    <circle cx="300" cy="85" r="3" fill="#dc2626"/>
+    <circle cx="230" cy="85" r="12" fill="none" stroke="#16a34a" stroke-width="2"/>
+    <text x="230" y="89" font-size="9" text-anchor="middle" fill="#16a34a">start</text>
+    <text x="160" y="30" font-size="10" text-anchor="middle" fill="#64748b">circle ≈ 5 m</text>
+    <text x="300" y="30" font-size="10" text-anchor="middle" fill="#64748b">circle ≈ 5 m</text>
+    <text x="230" y="160" font-size="11" text-anchor="middle" fill="#334155">Figure-eight: keep the nose forward. You MUST fly around each red center point.</text>
+  </svg>
+  <figcaption>Figure-eight. Cutting inside a circle's center = instant fail.</figcaption>
+  </figure>
+
+  <table>
+    <tr><th>Subject</th><th>2nd Class (basic)</th><th>1st Class (basic)</th></tr>
+    <tr><td>Square flight</td><td>GPS ON, 3.5 m, 8 min</td><td>GPS OFF, climb 1.5→3.5 m, 6 min</td></tr>
+    <tr><td>Figure-eight</td><td>GPS ON, 1.5 m, 2 laps, 8 min</td><td>GPS OFF, 1+ lap, then <b>emergency landing</b>, 5 min</td></tr>
+    <tr><td>Pirouette (360° hover turn)</td><td>—</td><td>GPS OFF, 3.5 m, one turn in ~20 s (16–26 s), 3 min</td></tr>
+    <tr><td>Abnormal condition flight</td><td>GPS OFF, straight line + emergency landing, 6 min</td><td>(included in figure-eight subject)</td></tr>
+  </table>
+
+  <h3>6.3 Emergency landing procedure</h3>
+  <p>When the examiner says <b>"Emergency!"</b>: ① stop and hover immediately →
+  ② wait for the landing instruction → ③ <b>keep your altitude</b> and fly the
+  <b>shortest route</b> to the landing point → ④ land softly inside the 2 m circle.</p>
+
+  <h3>6.4 Exam-day flow & time limits</h3>
+  <table>
+    <tr><th>Part</th><th>Content</th><th>Time</th></tr>
+    <tr><td>Planning test</td><td>Questions about a flight plan (4 questions 2nd class / 5 questions 1st class)</td><td>5 min / 10 min</td></tr>
+    <tr><td>Oral: pre-flight</td><td>Airspace check + inspections with record sheet</td><td>3 min + 12 min</td></tr>
+    <tr><td>Flight test</td><td>The maneuvers above</td><td>each subject timed</td></tr>
+    <tr><td>Oral: post-flight</td><td>Inspection + flight log</td><td>5 min</td></tr>
+    <tr><td>Oral: accidents</td><td>Name the three accidents / proper response</td><td>3 min each</td></tr>
+  </table>
+  <div class="warn"><b>⚠ New rule (from June 5, 2026):</b> if time runs out, missing answers and
+  missing checks count as mistakes. Practice the inspection as one smooth routine.</div>
+  <div class="tip"><b>💡 Safety gear:</b> helmet and safety glasses are required during flight
+  tests — for everyone on the field.</div>
+</div>
+
+<!-- CHAPTER 7 -->
+<div class="page chapter">
+  <span class="chapnum">Chapter 7</span>
+  <h2>Japanese Words You Will Hear</h2>
+  <p>The completion exam and official documents are in Japanese. Learn these by sound:</p>
+  <table>
+    <tr><th>Japanese</th><th>Romaji</th><th>Meaning</th></tr>
+    <tr><td class="jp">離陸してください</td><td><i>ririku shite kudasai</i></td><td>Please take off</td></tr>
+    <tr><td class="jp">着陸してください</td><td><i>chakuriku shite kudasai</i></td><td>Please land</td></tr>
+    <tr><td class="jp">ホバリング</td><td><i>hobaringu</i></td><td>Hover</td></tr>
+    <tr><td class="jp">上昇 / 下降</td><td><i>joushou / kakou</i></td><td>Climb / descend</td></tr>
+    <tr><td class="jp">前進 / 後進</td><td><i>zenshin / koushin</i></td><td>Forward / backward</td></tr>
+    <tr><td class="jp">右 / 左</td><td><i>migi / hidari</i></td><td>Right / left</td></tr>
+    <tr><td class="jp">機首</td><td><i>kishu</i></td><td>Nose (heading)</td></tr>
+    <tr><td class="jp">緊急事態発生</td><td><i>kinkyuu jitai hassei</i></td><td>Emergency declared!</td></tr>
+    <tr><td class="jp">緊急着陸</td><td><i>kinkyuu chakuriku</i></td><td>Emergency landing</td></tr>
+    <tr><td class="jp">点検</td><td><i>tenken</i></td><td>Inspection</td></tr>
+    <tr><td class="jp">異常なし</td><td><i>ijou nashi</i></td><td>No problem / normal</td></tr>
+    <tr><td class="jp">安全確認よし</td><td><i>anzen kakunin yoshi</i></td><td>Safety check — OK! (say this out loud)</td></tr>
+    <tr><td class="jp">風速</td><td><i>fuusoku</i></td><td>Wind speed</td></tr>
+    <tr><td class="jp">減点</td><td><i>genten</i></td><td>Point deduction</td></tr>
+    <tr><td class="jp">不合格 / 合格</td><td><i>fugoukaku / goukaku</i></td><td>Fail / pass</td></tr>
+    <tr><td class="jp">事故 / 重大インシデント</td><td><i>jiko / juudai inshidento</i></td><td>Accident / serious incident</td></tr>
+    <tr><td class="jp">飛行日誌</td><td><i>hikou nisshi</i></td><td>Flight logbook</td></tr>
+    <tr><td class="jp">立入管理措置</td><td><i>tachiiri kanri sochi</i></td><td>Safety zone (keeping people out)</td></tr>
+    <tr><td class="jp">目視内 / 目視外</td><td><i>mokushi-nai / mokushi-gai</i></td><td>VLOS / BVLOS</td></tr>
+    <tr><td class="jp">技能証明</td><td><i>ginou shoumei</i></td><td>Pilot certificate (the license)</td></tr>
+  </table>
+  <div class="tip"><b>💡 Exam trick:</b> during training we give commands in English AND Japanese.
+  By exam day, <i>"kinkyuu jitai hassei!"</i> will trigger the same reaction as "Emergency!"</div>
+</div>
+
+<!-- CHAPTER 8 -->
+<div class="page chapter">
+  <span class="chapnum">Chapter 8</span>
+  <h2>Check Yourself — 10 Questions</h2>
+  <ol class="q">
+    <li>From what weight must a drone be registered in Japan?<br><span class="answer">→ 100 grams.</span></li>
+    <li>Name the three airspace types that make a flight "specified".<br><span class="answer">→ Near airports / above 150 m / over DID (+ emergency operation airspace).</span></li>
+    <li>What is Category III?<br><span class="answer">→ A specified flight over third parties without a safety zone. Needs a First-Class license and a first-class certified aircraft.</span></li>
+    <li>What is the pass line of the Second-Class practical exam?<br><span class="answer">→ 70 points out of 100 (First-Class: 80).</span></li>
+    <li>You enter the yellow zone for the first time on a segment. What must you do to avoid losing points?<br><span class="answer">→ Return to the route within about 2 seconds after the examiner tells you.</span></li>
+    <li>Name three instant-fail actions.<br><span class="answer">→ e.g. crash, hitting an object, losing control, dangerous speed (~5 m/s), one-hand control, entering the red zone, over the time limit.</span></li>
+    <li>What are the three "accidents" you must report?<br><span class="answer">→ Injury/death of a person, damage to property, collision or contact with a manned aircraft.</span></li>
+    <li>Why does the exam use ATTI mode (stabilization OFF)?<br><span class="answer">→ To prove you can control the drone safely when GPS fails in a real emergency.</span></li>
+    <li>What must you do when you finish a safety check?<br><span class="answer">→ Say it out loud to the examiner. Silent checks count as not done (−5).</span></li>
+    <li>How long is the license valid, and what language is the national knowledge test?<br><span class="answer">→ 3 years; Japanese only.</span></li>
+  </ol>
+</div>
+
+<footer>
+  This textbook is a training aid produced by the school. It summarizes: MLIT "Practical Examination
+  Standards for UA Pilots" and the First/Second-Class detailed rules for multirotor (revised Dec 5, 2025,
+  effective June 5, 2026), and the Safety Textbook (Kyousoku) 4th Edition (Feb 1, 2025). Official sources:
+  mlit.go.jp/koku/license.html ・ mlit.go.jp/en/koku/uas.html. Rules change — always check the latest official documents.
+</footer>
+
+
+<a href="./" id="homeBtn" style="position:fixed;top:10px;right:10px;z-index:99;
+ background:rgba(15,23,42,.75);color:#fff;text-decoration:none;font-size:1.1rem;
+ width:40px;height:40px;border-radius:50%;display:flex;align-items:center;
+ justify-content:center;border:1px solid rgba(255,255,255,.3);">🏠</a>
+<style>@media print{#homeBtn{display:none;}}</style>
+</body>
+</html>

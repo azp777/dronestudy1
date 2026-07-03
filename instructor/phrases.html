@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ドローン講師 英語フレーズ練習 v2</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1d4ed8">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
+<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js');}</script>
+
+<style>
+  :root{
+    --bg:#0f172a; --card:#1e293b; --acc:#38bdf8; --acc2:#f59e0b;
+    --txt:#f1f5f9; --sub:#94a3b8; --ok:#22c55e; --rec:#ef4444;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  body{margin:0;font-family:"Hiragino Sans","Yu Gothic",system-ui,sans-serif;background:var(--bg);color:var(--txt);}
+  header{padding:14px;text-align:center;background:linear-gradient(135deg,#0ea5e9,#1d4ed8);}
+  header h1{margin:0;font-size:1.1rem;}
+  header p{margin:4px 0 0;font-size:.72rem;opacity:.85;}
+  .progressAll{font-size:.75rem;margin-top:6px;background:rgba(0,0,0,.25);border-radius:10px;padding:4px 10px;display:inline-block;}
+  .tabs{display:flex;overflow-x:auto;gap:6px;padding:10px;background:#0b1220;position:sticky;top:0;z-index:5;}
+  .tabs button{flex:0 0 auto;border:1px solid #334155;background:var(--card);color:var(--txt);
+    padding:8px 12px;border-radius:20px;font-size:.78rem;}
+  .tabs button.active{background:var(--acc);color:#03202f;border-color:var(--acc);font-weight:bold;}
+  .tabs .done{color:var(--ok);font-weight:bold;}
+  .tabs button.active .done{color:#065f46;}
+  .bar{display:flex;gap:10px;align-items:center;padding:8px 12px;font-size:.8rem;color:var(--sub);flex-wrap:wrap;}
+  .bar label{display:flex;align-items:center;gap:4px;}
+  .bar .shuffle{border:1px solid #334155;background:var(--card);color:var(--txt);border-radius:8px;padding:6px 10px;font-size:.78rem;}
+  #list{padding:0 12px 100px;}
+  .card{background:var(--card);border-radius:12px;padding:12px 14px;margin:10px 0;border-left:4px solid var(--acc);}
+  .card.saidok{border-left-color:var(--ok);}
+  .en{font-size:1.02rem;font-weight:bold;line-height:1.4;}
+  .kana{color:var(--acc2);font-size:.85rem;margin-top:4px;line-height:1.4;}
+  .ja{color:var(--sub);font-size:.85rem;margin-top:4px;}
+  .tip{color:#7dd3fc;font-size:.75rem;margin-top:4px;}
+  .btns{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;}
+  .btns button{border:none;border-radius:8px;padding:8px 12px;font-size:.82rem;background:#334155;color:var(--txt);}
+  .btns .play{background:var(--acc);color:#03202f;font-weight:bold;}
+  .btns .recbtn.recording{background:var(--rec);color:#fff;animation:blink 1s infinite;}
+  .btns .myvoice{display:none;background:#7c3aed;color:#fff;}
+  .btns .myvoice.avail{display:inline-block;}
+  .btns .said{background:#14532d;color:#bbf7d0;}
+  .card.saidok .said{background:var(--ok);color:#04270f;font-weight:bold;}
+  @keyframes blink{50%{opacity:.5;}}
+  .hidden-en .en,.hidden-en .kana{filter:blur(6px);}
+  .card.revealed .en,.card.revealed .kana{filter:none;}
+  .quizhint{display:none;font-size:.75rem;color:var(--ok);margin-top:6px;}
+  .hidden-en .quizhint{display:block;}
+  .card.revealed .quizhint{display:none;}
+  footer{position:fixed;bottom:0;left:0;right:0;background:#0b1220;padding:10px;display:flex;gap:8px;justify-content:center;border-top:1px solid #1e293b;}
+  footer button{border:none;border-radius:10px;padding:10px 14px;font-size:.82rem;background:#334155;color:var(--txt);}
+  footer .main{background:var(--ok);color:#04270f;font-weight:bold;}
+  .notice{font-size:.7rem;color:var(--sub);text-align:center;padding:6px 16px 10px;}
+</style>
+</head>
+<body>
+<header>
+  <h1>🚁 ドローン講師 英語フレーズ練習 v2</h1>
+  <p>聞く → 真似る → 録音して聞き比べ → 「✓言えた」で進捗記録</p>
+  <div class="progressAll" id="progAll"></div>
+</header>
+
+<div class="tabs" id="tabs"></div>
+
+<div class="bar">
+  <label><input type="checkbox" id="showKana" checked> カタカナ</label>
+  <label>速さ
+    <select id="rate">
+      <option value="1">ふつう</option>
+      <option value="0.7" selected>ゆっくり</option>
+      <option value="0.5">とてもゆっくり</option>
+    </select>
+  </label>
+  <button class="shuffle" id="shufBtn">🔀 シャッフル</button>
+</div>
+
+<div id="list"></div>
+
+<footer>
+  <button class="main" id="playAll">▶ 全部再生</button>
+  <button id="quizBtn">🎯 クイズ</button>
+  <button id="unsaidBtn">🔥 未達のみ</button>
+  <button id="stopBtn">⏹ 停止</button>
+</footer>
+<div class="notice" id="voiceNote"></div>
+
+<script>
+const DATA = {
+"① フィールドコマンド12": [
+ {en:"Take off.", ja:"離陸。", kana:"テイク オフ"},
+ {en:"Climb to 3.5 meters.", ja:"3.5mまで上昇。", kana:"クライム トゥ スリー ポイント ファイブ ミーターズ"},
+ {en:"Hover for five seconds.", ja:"5秒間ホバリング。", kana:"ホバー フォー ファイブ セカンズ"},
+ {en:"Move forward. Move backward.", ja:"前進。後退。", kana:"ムーブ フォワード。ムーブ バックワード"},
+ {en:"Move left. Move right.", ja:"左へ。右へ。", kana:"ムーブ レフト。ムーブ ライト"},
+ {en:"Nose in the direction of travel.", ja:"機首は進行方向。", kana:"ノーズ イン ザ ディレクション オブ トラベル"},
+ {en:"Slow down. Too fast.", ja:"減速。速すぎます。", kana:"スロー ダウン。トゥー ファスト"},
+ {en:"You are off the route. Come back.", ja:"経路を外れています。戻って。", kana:"ユー アー オフ ザ ルート。カム バック"},
+ {en:"Emergency! Stop and hover.", ja:"緊急事態!停止してホバリング。", kana:"エマージェンシー!ストップ アンド ホバー"},
+ {en:"Emergency landing. Keep altitude, shortest route.", ja:"緊急着陸。高度維持で最短経路。", kana:"エマージェンシー ランディング。キープ アルティテュード、ショーテスト ルート"},
+ {en:"Land.", ja:"着陸。", kana:"ランド", tip:"語尾の「ド」を軽く添える。「ラン!」だと run(走れ)に聞こえる"},
+ {en:"Well done. One more time.", ja:"よくできました。もう一回。", kana:"ウェル ダン。ワン モア タイム"}
+],
+"② 困った時の型": [
+ {en:"Sorry, one more time, please.", ja:"すみません、もう一回お願いします。", kana:"ソーリー、ワン モア タイム、プリーズ"},
+ {en:"Slowly, please.", ja:"ゆっくりお願いします。", kana:"スローリー、プリーズ"},
+ {en:"Please type it here.", ja:"(翻訳アプリに)ここに打ってください。", kana:"プリーズ タイプ イット ヒア"},
+ {en:"Do you mean this?", ja:"こういう意味ですか?", kana:"ドゥ ユー ミーン ディス?"},
+ {en:"Good question. Let me check. I will answer next time.", ja:"良い質問です。調べて次回答えます。", kana:"グッド クエスチョン。レット ミー チェック。アイ ウィル アンサー ネクスト タイム"},
+ {en:"Just a moment.", ja:"ちょっと待ってください。", kana:"ジャスト ア モーメント"},
+ {en:"Let me show you.", ja:"やって見せます。", kana:"レット ミー ショウ ユー"},
+ {en:"Watch me first.", ja:"まず見ていてください。", kana:"ウォッチ ミー ファースト"},
+ {en:"Look at this picture.", ja:"この図を見てください。", kana:"ルック アット ディス ピクチャー"},
+ {en:"Is it OK so far?", ja:"ここまで大丈夫ですか?", kana:"イズ イット オーケー ソー ファー?"},
+ {en:"My English is simple. For difficult topics, I use this translator.", ja:"私の英語はシンプルです。難しい話は翻訳機を使います。", kana:"マイ イングリッシュ イズ シンプル。フォー ディフィカルト トピックス、アイ ユーズ ディス トランスレーター"}
+],
+"③ Lesson1 コア文": [
+ {en:"Welcome to our drone school. I am your instructor.", ja:"ようこそ。私がインストラクターです。", kana:"ウェルカム トゥ アワ ドローン スクール。アイム ヨア インストラクター"},
+ {en:"I have a first-class drone license.", ja:"私は一等の資格を持っています。", kana:"アイ ハブ ア ファーストクラス ドローン ライセンス", tip:"自己紹介の最強カード。胸を張って言う"},
+ {en:"In Japan, drones of 100 grams or more must be registered.", ja:"日本では100g以上のドローンは登録が必要です。", kana:"イン ジャパン、ドローンズ オブ ワンハンドレッド グラムズ オア モア マスト ビー レジスタード"},
+ {en:"Registered drones must broadcast Remote ID.", ja:"登録したドローンはリモートID発信が必要です。", kana:"レジスタード ドローンズ マスト ブロードキャスト リモート アイディー"},
+ {en:"Some flights need government permission. We call them specified flights.", ja:"一部の飛行は国の許可・承認が必要で「特定飛行」と呼びます。", kana:"サム フライツ ニード ガバメント パーミッション。ウィー コール ゼム スペシファイド フライツ"},
+ {en:"Near airports, above 150 meters, and over crowded areas called DID.", ja:"空港周辺・150m以上・人口集中地区(DID)。", kana:"ニア エアポーツ、アバブ ワンフィフティ ミーターズ、アンド オーバー クラウデッド エリアズ コールド ディーアイディー"},
+ {en:"Night flight, BVLOS, and flight over people.", ja:"夜間・目視外・人の上空。", kana:"ナイト フライト、ビーブイロス、アンド フライト オーバー ピープル"},
+ {en:"Category two is a specified flight with a safety zone.", ja:"カテゴリーIIは立入管理措置ありの特定飛行。", kana:"カテゴリー トゥー イズ ア スペシファイド フライト ウィズ ア セーフティ ゾーン"},
+ {en:"Category three is flight over people without a safety zone.", ja:"カテゴリーIIIは措置なしの第三者上空飛行。", kana:"カテゴリー スリー イズ フライト オーバー ピープル ウィズアウト ア セーフティ ゾーン"},
+ {en:"The second-class license is for Category two. The first-class license is for Category three.", ja:"二等はカテゴリーII、一等はカテゴリーIIIの資格です。", kana:"ザ セカンドクラス ライセンス イズ フォー カテゴリー トゥー。ザ ファーストクラス ライセンス イズ フォー カテゴリー スリー"},
+ {en:"Any questions so far?", ja:"ここまでで質問はありますか?", kana:"エニー クエスチョンズ ソー ファー?"}
+],
+"④ Lesson2 コア文": [
+ {en:"This course has three parts: classroom, flight training, and the completion exam.", ja:"このコースは座学・実技訓練・修了審査の3部構成です。", kana:"ディス コース ハズ スリー パーツ:クラスルーム、フライト トレーニング、アンド ザ コンプリーション イグザム"},
+ {en:"Our school exam follows the same national standard as the government test.", ja:"当校の修了審査は国の実地試験と同じ基準です。", kana:"アワ スクール イグザム フォローズ ザ セイム ナショナル スタンダード アズ ザ ガバメント テスト"},
+ {en:"The national knowledge test is in Japanese only.", ja:"国の学科試験は日本語のみです。", kana:"ザ ナショナル ナレッジ テスト イズ イン ジャパニーズ オンリー", tip:"受講生の合否計画に直結。最初に必ず伝える"},
+ {en:"You start with 100 points. Mistakes take points away.", ja:"100点スタートの減点式です。", kana:"ユー スタート ウィズ ワンハンドレッド ポインツ。ミステイクス テイク ポインツ アウェイ"},
+ {en:"You pass with 70 points or more.", ja:"70点以上で合格です(一等は80点)。", kana:"ユー パス ウィズ セブンティ ポインツ オア モア"},
+ {en:"Some mistakes mean instant fail: crash, hitting an object, losing control, over-speed, or leaving the test area.", ja:"即不合格:墜落・衝突・制御不能・速度超過・不合格区画逸脱。", kana:"サム ミステイクス ミーン インスタント フェイル:クラッシュ、ヒッティング アン オブジェクト、ルージング コントロール、オーバースピード、オア リービング ザ テスト エリア"},
+ {en:"The exam is not only flying. There is a planning test, an oral test, and inspections.", ja:"試験は飛行だけでなく、机上・口述・点検があります。", kana:"ジ イグザム イズ ノット オンリー フライング。ゼア イズ ア プランニング テスト、アン オーラル テスト、アンド インスペクションズ"},
+ {en:"Safety first, always. Say your safety checks out loud.", ja:"常に安全第一。安全確認は声に出して。", kana:"セーフティ ファースト、オールウェイズ。セイ ヨア セーフティ チェックス アウト ラウド"}
+],
+"⑤ 点検コールアウト": [
+ {en:"Airspace and surroundings — clear.", ja:"飛行空域と周辺、問題なし。", kana:"エアスペース アンド サラウンディングズ — クリア"},
+ {en:"Weather OK. Wind is under five meters per second.", ja:"気象良好。風速5m/s未満。", kana:"ウェザー オーケー。ウィンド イズ アンダー ファイブ ミーターズ パー セカンド"},
+ {en:"Propellers, frame, ID plate — no damage.", ja:"プロペラ・フレーム・識別票、損傷なし。", kana:"プロペラーズ、フレーム、アイディー プレート — ノー ダメージ"},
+ {en:"Screws and connectors — tight.", ja:"ネジ・コネクタ、緩みなし。", kana:"スクリューズ アンド コネクターズ — タイト"},
+ {en:"Power system — normal.", ja:"電源系統、正常。", kana:"パワー システム — ノーマル"},
+ {en:"Signal and GPS — normal.", ja:"通信・GNSS、正常。", kana:"シグナル アンド ジーピーエス — ノーマル"},
+ {en:"Battery level — enough.", ja:"バッテリー残量、十分。", kana:"バッテリー レベル — イナフ"},
+ {en:"Remote ID — working.", ja:"リモートID、作動正常。", kana:"リモート アイディー — ワーキング"},
+ {en:"Motors — normal.", ja:"モーター、正常。", kana:"モーターズ — ノーマル"},
+ {en:"Control check in hover — normal.", ja:"ホバリングでの操縦系統確認、正常。", kana:"コントロール チェック イン ホバー — ノーマル"},
+ {en:"Injury or death of a person. Damage to property. Collision with an aircraft.", ja:"(事故3つ)人の死傷・物件損壊・航空機との衝突。", kana:"インジャリー オア デス オブ ア パーソン。ダメージ トゥ プロパティ。コリジョン ウィズ アン エアクラフト"}
+],
+"⑥ 数字の練習": [
+ {en:"Three point five meters.", ja:"3.5メートル(高度指示の基本)", kana:"スリー ポイント ファイブ ミーターズ", tip:"小数点は point。「3コンマ5」とは言わない"},
+ {en:"One point five meters.", ja:"1.5メートル", kana:"ワン ポイント ファイブ ミーターズ"},
+ {en:"Thirteen. Thirty.", ja:"13と30(言い分け練習)", kana:"サーティーン。サーティ", tip:"teen は後ろを強く、ty は前を強く"},
+ {en:"Fifteen. Fifty.", ja:"15と50", kana:"フィフティーン。フィフティ"},
+ {en:"One hundred fifty meters.", ja:"150メートル(高度上限)", kana:"ワン ハンドレッド フィフティ ミーターズ"},
+ {en:"One hundred grams.", ja:"100グラム(登録の基準)", kana:"ワン ハンドレッド グラムズ"},
+ {en:"Twenty-five kilograms.", ja:"25キログラム(限定変更の境界)", kana:"トゥエンティファイブ キログラムズ"},
+ {en:"Five meters per second.", ja:"風速5m/s(中止基準・速度上限)", kana:"ファイブ ミーターズ パー セカンド"},
+ {en:"Sixteen to twenty-six seconds.", ja:"16〜26秒(ピルエットの許容範囲)", kana:"シックスティーン トゥ トゥエンティシックス セカンズ"},
+ {en:"Within two seconds.", ja:"2秒以内(経路復帰ルール)", kana:"ウィズイン トゥー セカンズ"},
+ {en:"Twelve minutes for the inspections.", ja:"点検は12分以内。", kana:"トゥエルブ ミニッツ フォー ジ インスペクションズ"},
+ {en:"The license is valid for three years.", ja:"資格の有効期間は3年。", kana:"ザ ライセンス イズ ヴァリッド フォー スリー イヤーズ"}
+],
+"⑦ 審査フィードバック": [
+ {en:"Congratulations! You passed with 85 points.", ja:"おめでとう!85点で合格です。", kana:"コングラチュレーションズ!ユー パスト ウィズ エイティファイブ ポインツ"},
+ {en:"You lost five points here.", ja:"ここで5点減点でした。", kana:"ユー ロスト ファイブ ポインツ ヒア"},
+ {en:"You entered the yellow zone and did not come back in two seconds.", ja:"減点区画に入り、2秒以内に戻れませんでした。", kana:"ユー エンタード ザ イエロー ゾーン アンド ディド ノット カム バック イン トゥー セカンズ"},
+ {en:"Your landing was a little hard. Try a softer touchdown.", ja:"着陸が少し強かった。もっとソフトに。", kana:"ヨア ランディング ワズ ア リトル ハード。トライ ア ソフター タッチダウン"},
+ {en:"Your hover was very stable. ", ja:"ホバリングがとても安定していました。", kana:"ヨア ホバー ワズ ベリー ステイブル"},
+ {en:"Watch your nose direction in the figure-eight.", ja:"8の字では機首方向に注意。", kana:"ウォッチ ヨア ノーズ ディレクション イン ザ フィギュアエイト"},
+ {en:"Say your safety checks out loud next time.", ja:"次は安全確認を声に出して。", kana:"セイ ヨア セーフティ チェックス アウト ラウド ネクスト タイム"},
+ {en:"Your rotation was too fast. Aim for about twenty seconds.", ja:"回転が速すぎ。20秒程度を目指して。", kana:"ヨア ローテーション ワズ トゥー ファスト。エイム フォー アバウト トゥエンティ セカンズ"},
+ {en:"Almost perfect. Let's fix one thing.", ja:"ほぼ完璧。1つだけ直しましょう。", kana:"オールモスト パーフェクト。レッツ フィックス ワン シング"},
+ {en:"Don't worry. Everyone makes this mistake at first.", ja:"大丈夫。最初はみんな間違えます。", kana:"ドント ウォーリー。エブリワン メイクス ディス ミステイク アット ファースト"}
+],
+"⑧ 授業運営": [
+ {en:"Let's take a ten-minute break.", ja:"10分休憩にしましょう。", kana:"レッツ テイク ア テンミニット ブレイク"},
+ {en:"Please make pairs.", ja:"ペアになってください。", kana:"プリーズ メイク ペアーズ"},
+ {en:"Your turn.", ja:"あなたの番です。", kana:"ヨア ターン"},
+ {en:"Please look at the screen.", ja:"画面を見てください。", kana:"プリーズ ルック アット ザ スクリーン"},
+ {en:"Left and right mean your left and right.", ja:"左右は「あなたから見て」の左右です。", kana:"レフト アンド ライト ミーン ユア レフト アンド ライト", tip:"初回の実技で必ず宣言する"},
+ {en:"Put on your helmet and safety glasses.", ja:"ヘルメットと保護メガネを着けて。", kana:"プット オン ヨア ヘルメット アンド セーフティ グラシズ", tip:"2026年6月から着用義務"},
+ {en:"That's all for today. Good job!", ja:"今日はここまで。お疲れさま!", kana:"ザッツ オール フォー トゥデイ。グッジョブ!"}
+],
+"⑨ 質問への回答": [
+ {en:"Most of Tokyo is DID. You need registration and permission.", ja:"東京の大半はDID。登録と許可が必要です。", kana:"モースト オブ トーキョー イズ ディーアイディー。ユー ニード レジストレーション アンド パーミッション"},
+ {en:"Japan does not accept foreign licenses. But your knowledge will help you.", ja:"外国の資格はそのまま使えませんが、知識は役立ちます。", kana:"ジャパン ダズ ノット アクセプト フォーリン ライセンシズ。バット ヨア ナレッジ ウィル ヘルプ ユー"},
+ {en:"Up to 150 meters. Higher needs permission.", ja:"150mまで。それ以上は許可が必要。", kana:"アップ トゥ ワンフィフティ ミーターズ。ハイヤー ニーズ パーミッション"},
+ {en:"Yes, you can bring your own drone, but it must be registered in Japan.", ja:"持込機はOK、ただし日本での登録が必要。", kana:"イエス、ユー キャン ブリング ヨア オウン ドローン、バット イット マスト ビー レジスタード イン ジャパン"},
+ {en:"Night flight needs an extra practical test.", ja:"夜間飛行は追加の実地試験(限定変更)が必要。", kana:"ナイト フライト ニーズ アン エクストラ プラクティカル テスト"},
+ {en:"The license is valid for three years.", ja:"資格の有効期間は3年です。", kana:"ザ ライセンス イズ ヴァリッド フォー スリー イヤーズ"}
+]
+};
+
+const $ = id => document.getElementById(id);
+let currentCat = Object.keys(DATA)[0];
+let quizMode = false, unsaidOnly = false, shuffled = false;
+let voice = null;
+const said = JSON.parse(localStorage.getItem('engPhraseSaid')||'{}');
+function keyOf(item){ return item.en; }
+function saveSaid(){ localStorage.setItem('engPhraseSaid', JSON.stringify(said)); }
+
+function pickVoice(){
+  const vs = speechSynthesis.getVoices().filter(v=>v.lang.startsWith('en'));
+  voice = vs.find(v=>/US|United States/i.test(v.name+v.lang)) || vs[0] || null;
+  $('voiceNote').textContent = voice ? '音声: '+voice.name : '⚠ 英語音声が見つかりません。Chrome/Edge/Safariで開いてください。';
+}
+speechSynthesis.onvoiceschanged = pickVoice;
+pickVoice();
+
+function speak(text, rate){
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang='en-US'; if(voice) u.voice=voice;
+  u.rate = rate ?? parseFloat($('rate').value);
+  speechSynthesis.speak(u);
+}
+
+/* 録音 */
+let mediaStream=null, recorder=null, activeRecCard=null;
+async function toggleRec(card, item, btn, myBtn){
+  if(recorder && recorder.state==='recording'){
+    recorder.stop(); return;
+  }
+  try{
+    if(!mediaStream) mediaStream = await navigator.mediaDevices.getUserMedia({audio:true});
+  }catch(e){
+    alert('マイクを使用できません。\n・ブラウザのマイク許可を確認\n・Netlify等のhttps上で開くと確実に動きます');
+    return;
+  }
+  const chunks=[];
+  recorder = new MediaRecorder(mediaStream);
+  activeRecCard = card;
+  recorder.ondataavailable = e=>chunks.push(e.data);
+  recorder.onstop = ()=>{
+    btn.classList.remove('recording'); btn.textContent='🎤 録音';
+    const blob = new Blob(chunks,{type:recorder.mimeType||'audio/webm'});
+    card._audioUrl && URL.revokeObjectURL(card._audioUrl);
+    card._audioUrl = URL.createObjectURL(blob);
+    myBtn.classList.add('avail');
+  };
+  recorder.start();
+  btn.classList.add('recording'); btn.textContent='⏹ 停止';
+}
+
+function progressOf(cat){
+  const items = DATA[cat];
+  const n = items.filter(i=>said[keyOf(i)]).length;
+  return [n, items.length];
+}
+function renderProgressAll(){
+  let n=0,t=0;
+  Object.keys(DATA).forEach(c=>{const [a,b]=progressOf(c); n+=a; t+=b;});
+  $('progAll').textContent = `✓言えた: ${n} / ${t} フレーズ`;
+}
+
+function renderTabs(){
+  const t = $('tabs'); t.innerHTML='';
+  Object.keys(DATA).forEach(cat=>{
+    const [a,b] = progressOf(cat);
+    const btn = document.createElement('button');
+    btn.innerHTML = cat + ' <span class="done">'+(a===b?'✓':a+'/'+b)+'</span>';
+    btn.className = cat===currentCat?'active':'';
+    btn.onclick = ()=>{ currentCat=cat; shuffled=false; renderTabs(); renderList(); };
+    t.appendChild(btn);
+  });
+}
+
+function renderList(){
+  const list = $('list');
+  const showKana = $('showKana').checked;
+  list.innerHTML='';
+  let items = [...DATA[currentCat]];
+  if(unsaidOnly) items = items.filter(i=>!said[keyOf(i)]);
+  if(shuffled) items.sort(()=>Math.random()-0.5);
+  if(items.length===0){
+    list.innerHTML = '<p style="text-align:center;color:var(--ok);padding:30px 0;">🎉 このカテゴリは全部「言えた」達成!</p>';
+    return;
+  }
+  items.forEach(item=>{
+    const c = document.createElement('div');
+    c.className = 'card' + (said[keyOf(item)] ? ' saidok' : '');
+    if(quizMode) c.classList.add('hidden-en');
+    c.innerHTML =
+      '<div class="en">'+item.en+'</div>' +
+      (showKana?'<div class="kana">🔊 '+item.kana+'</div>':'') +
+      '<div class="ja">🇯🇵 '+item.ja+'</div>' +
+      (item.tip?'<div class="tip">💡 '+item.tip+'</div>':'') +
+      '<div class="quizhint">▼ 英語で言ってみて、カードをタップで答え合わせ</div>' +
+      '<div class="btns">' +
+        '<button class="play">▶ 再生</button>' +
+        '<button class="slow">🐢 ゆっくり</button>' +
+        '<button class="recbtn">🎤 録音</button>' +
+        '<button class="myvoice">👤 自分の声</button>' +
+        '<button class="said">✓ 言えた</button>' +
+      '</div>';
+    const playB=c.querySelector('.play'), slowB=c.querySelector('.slow'),
+          recB=c.querySelector('.recbtn'), myB=c.querySelector('.myvoice'),
+          saidB=c.querySelector('.said');
+    playB.onclick=e=>{e.stopPropagation(); c.classList.add('revealed'); speak(item.en,1);};
+    slowB.onclick=e=>{e.stopPropagation(); c.classList.add('revealed'); speak(item.en,0.55);};
+    recB.onclick=e=>{e.stopPropagation(); toggleRec(c,item,recB,myB);};
+    myB.onclick=e=>{e.stopPropagation(); if(c._audioUrl){ new Audio(c._audioUrl).play(); }};
+    saidB.onclick=e=>{
+      e.stopPropagation();
+      said[keyOf(item)] = !said[keyOf(item)];
+      if(!said[keyOf(item)]) delete said[keyOf(item)];
+      saveSaid(); c.classList.toggle('saidok');
+      renderTabs(); renderProgressAll();
+    };
+    c.onclick=()=>{ if(quizMode && !c.classList.contains('revealed')){ c.classList.add('revealed'); speak(item.en,1);} };
+    list.appendChild(c);
+  });
+  window.scrollTo(0,0);
+}
+
+$('showKana').onchange = renderList;
+$('shufBtn').onclick = ()=>{ shuffled=true; renderList(); };
+$('playAll').onclick = ()=>{
+  speechSynthesis.cancel();
+  const rate = parseFloat($('rate').value);
+  let items = [...DATA[currentCat]];
+  if(unsaidOnly) items = items.filter(i=>!said[keyOf(i)]);
+  items.forEach(item=>{
+    const u=new SpeechSynthesisUtterance(item.en);
+    u.lang='en-US'; if(voice)u.voice=voice; u.rate=rate;
+    speechSynthesis.speak(u);
+  });
+};
+$('quizBtn').onclick = ()=>{
+  quizMode=!quizMode;
+  $('quizBtn').textContent = quizMode?'📖 通常':'🎯 クイズ';
+  renderList();
+};
+$('unsaidBtn').onclick = ()=>{
+  unsaidOnly=!unsaidOnly;
+  $('unsaidBtn').textContent = unsaidOnly?'📚 全部表示':'🔥 未達のみ';
+  renderList();
+};
+$('stopBtn').onclick = ()=>speechSynthesis.cancel();
+
+renderTabs();
+renderList();
+renderProgressAll();
+</script>
+
+<a href="./" id="homeBtn" style="position:fixed;top:10px;right:10px;z-index:99;
+ background:rgba(15,23,42,.75);color:#fff;text-decoration:none;font-size:1.1rem;
+ width:40px;height:40px;border-radius:50%;display:flex;align-items:center;
+ justify-content:center;border:1px solid rgba(255,255,255,.3);">🏠</a>
+<style>@media print{#homeBtn{display:none;}}</style>
+</body>
+</html>

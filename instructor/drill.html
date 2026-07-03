@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>インストラクター学習ドリル(実地新基準対応)</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1d4ed8">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
+<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js');}</script>
+
+<style>
+  :root{--bg:#0f172a;--card:#1e293b;--acc:#38bdf8;--warn:#f59e0b;--ok:#22c55e;--ng:#ef4444;--txt:#f1f5f9;--sub:#94a3b8;}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  body{margin:0;font-family:"Hiragino Sans","Yu Gothic",system-ui,sans-serif;background:var(--bg);color:var(--txt);}
+  header{padding:16px;text-align:center;background:linear-gradient(135deg,#7c3aed,#1d4ed8);}
+  header h1{margin:0;font-size:1.1rem;}
+  header p{margin:4px 0 0;font-size:.72rem;opacity:.85;}
+  .tabs{display:flex;gap:6px;padding:10px;background:#0b1220;position:sticky;top:0;z-index:5;}
+  .tabs button{flex:1;border:1px solid #334155;background:var(--card);color:var(--txt);padding:10px 4px;border-radius:12px;font-size:.78rem;}
+  .tabs button.active{background:var(--acc);color:#03202f;border-color:var(--acc);font-weight:bold;}
+  main{padding:12px;max-width:640px;margin:0 auto;padding-bottom:40px;}
+  .stat{font-size:.8rem;color:var(--sub);margin:4px 0 12px;text-align:center;}
+  .q{background:var(--card);border-radius:14px;padding:16px;margin-bottom:12px;}
+  .q .scenario{font-size:1rem;line-height:1.6;font-weight:bold;}
+  .choices{display:grid;gap:8px;margin-top:14px;}
+  .choices button{border:1px solid #334155;background:#0b1220;color:var(--txt);padding:12px;border-radius:10px;font-size:.92rem;text-align:left;}
+  .choices button.correct{background:#14532d;border-color:var(--ok);}
+  .choices button.wrong{background:#450a0a;border-color:var(--ng);}
+  .expl{display:none;margin-top:12px;padding:10px;border-radius:10px;background:#0b1220;font-size:.85rem;line-height:1.6;color:var(--sub);}
+  .expl.show{display:block;}
+  .expl b{color:var(--warn);}
+  .next{width:100%;margin-top:12px;border:none;border-radius:12px;padding:14px;font-size:1rem;font-weight:bold;background:var(--acc);color:#03202f;display:none;}
+  .next.show{display:block;}
+  /* 60秒チャレンジ */
+  .topic{background:var(--card);border-radius:14px;padding:20px;text-align:center;}
+  .topic .t{font-size:1.05rem;font-weight:bold;line-height:1.6;min-height:3em;}
+  .timer{font-size:3rem;font-weight:bold;margin:12px 0;color:var(--acc);}
+  .timer.warn{color:var(--ng);}
+  .row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:8px;}
+  .row button{border:none;border-radius:12px;padding:12px 18px;font-size:.9rem;font-weight:bold;}
+  .b-start{background:var(--ok);color:#04270f;}
+  .b-next{background:#334155;color:var(--txt);}
+  .b-hint{background:var(--warn);color:#3b2503;}
+  .hint{display:none;margin-top:14px;font-size:.85rem;color:var(--sub);text-align:left;line-height:1.7;background:#0b1220;border-radius:10px;padding:12px;}
+  .hint.show{display:block;}
+  .selfrate{display:none;margin-top:12px;}
+  .selfrate.show{display:block;}
+  .selfrate button{margin:4px;}
+  .b-good{background:var(--ok);color:#04270f;}
+  .b-bad{background:var(--ng);color:#fff;}
+  .note{font-size:.72rem;color:var(--sub);text-align:center;margin-top:16px;line-height:1.6;}
+</style>
+</head>
+<body>
+<header>
+  <h1>🎓 インストラクター学習ドリル</h1>
+  <p>2026年6月5日施行 実地新基準対応|一等・二等マルチローター</p>
+</header>
+
+<div class="tabs">
+  <button id="tab0" class="active">⚖️ 減点判定</button>
+  <button id="tab1">🔢 数値・規定</button>
+  <button id="tab2">⏱ 60秒説明</button>
+</div>
+
+<main>
+  <div class="stat" id="stat"></div>
+  <div id="area"></div>
+  <div class="note">出典:実地試験実施基準+一等/二等細則(マルチローター)令和7年12月5日改正版<br>
+  成績はこの端末に自動保存されます</div>
+</main>
+
+<script>
+/* ========== モード1:減点判定ドリル(あなたが試験員ならどう裁定する?) ========== */
+const DEDUCT = [
+ {s:"受験者が概ね5m/s以上の危険な速度で機体を飛行させた。", a:3, e:"<b>即不合格</b>(危険な飛行)。速度超過は一発中止。"},
+ {s:"減点区画にその飛行区画で初めて進入。通知後、概ね2秒以内に経路復帰した。", a:0, e:"<b>減点なし</b>。初回進入+2秒以内復帰は免除(2026/6/5施行で明文化)。"},
+ {s:"減点区画に初回進入。通知されたが復帰まで4秒かかった。", a:1, e:"<b>−5点</b>(指示と異なる飛行:2秒以内に復帰しなかった)。"},
+ {s:"同じ飛行区画で2回目の減点区画進入(機体半分以上)。", a:1, e:"<b>−5点</b>(飛行経路逸脱)。免除は区画ごとの初回のみ。"},
+ {s:"不合格区画に機体の半分以上が進入した。", a:3, e:"<b>即不合格</b>(飛行空域逸脱)。試験は中止。"},
+ {s:"ホバリング中、直径2mの円から機体の半分が出た。", a:1, e:"<b>−5点</b>(飛行経路逸脱)。25kg限定変更のときだけ円は直径5m。"},
+ {s:"着陸時、機体を滑らせながら接地した。", a:2, e:"<b>−1点</b>(ふらつき)。強い衝撃なら−5(離着陸不良)。"},
+ {s:"突風で一瞬ふらついたが、受験者が即座に立て直し、試験員は制御できていると判断した。", a:0, e:"<b>減点なし</b>(注7:外的要因+速やかな適切操作は対象外)。"},
+ {s:"合理的な理由なく、飛行中に操縦装置を片手で持っていた。", a:3, e:"<b>即不合格</b>(危険な飛行)。両手保持は絶対。"},
+ {s:"8の字飛行で、設定された円の中心を含まないコースで周回した。", a:3, e:"<b>即不合格</b>(墜落・損傷・制御不能の細目に含まれる)。意外な落とし穴。"},
+ {s:"一時的に機首が指示と異なる方向を向いた。", a:2, e:"<b>−1点</b>(機首方向不良)。次の移動地点まで継続なら−5。"},
+ {s:"次の移動地点まで継続的に機首が指示と異なる方向のまま飛行した。", a:1, e:"<b>−5点</b>(指示と異なる飛行・注3)。8の字/円周では四分円にわたる継続で該当。"},
+ {s:"一等のピルエットホバリングで、一回転に14秒しかかからなかった。", a:1, e:"<b>−5点</b>。16秒未満または26秒以上はNG(新基準で数値明文化)。"},
+ {s:"ピルエットホバリングで一回転22秒だった。", a:0, e:"<b>減点なし</b>。16〜26秒の範囲内(目安は20秒程度)。"},
+ {s:"科目の制限時間を超過した。", a:3, e:"<b>即不合格</b>。時間は離陸指示〜着陸まで。"},
+ {s:"危険を感じた試験員が受験者に代わって操縦した。", a:3, e:"<b>即不合格</b>(操作介入)。"},
+ {s:"目視内飛行の限定変更で、指示がないのに目視外飛行中に機体をチラッと見た。", a:3, e:"<b>即不合格</b>(不正行為)。背を向けたら見ない。"},
+ {s:"接地時に機体に強い衝撃を与えた(損傷なし)。", a:1, e:"<b>−5点</b>(離着陸不良)。"},
+ {s:"着陸時に機体が転倒し、プロペラが割れた。", a:3, e:"<b>即不合格</b>。損傷したら「墜落・損傷・制御不能」に該当(注5)。"},
+ {s:"目視内飛行なのに、合理的理由なくカメラ画像ばかり注視していた。", a:1, e:"<b>−5点</b>(監視不足)。逆に目視外でカメラを見ないのも−5。"},
+ {s:"離陸前に気象と空域を確認したが、確認した旨を試験員に伝えなかった。", a:1, e:"<b>−5点</b>(安全確認不足・注6:伝えなければ確認していないとみなす)。"},
+ {s:"飛行前点検で、必要な点検項目を1つ飛ばした。", a:1, e:"<b>−10点</b>(飛行前の点検漏れ)。飛行後の点検漏れは−5。「−5では済まない」のがポイント。"},
+ {s:"飛行記録(飛行日誌)の飛行時間の計算を間違えた。", a:1, e:"<b>−10点</b>(飛行記録の記載漏れ又は誤り)。記録系で最も重い。"},
+ {s:"机上試験で1問誤答した。", a:1, e:"<b>−5点</b>/1問。未回答も同じく−5(新基準で明文化)。"},
+ {s:"机上試験で1問だけ時間内に答えられなかった。", a:1, e:"<b>−5点</b>(未回答=誤答扱い。2026/6/5施行の新設)。"},
+ {s:"試験員の指示を受ける前に機体を動かし始めた。", a:1, e:"<b>−5点</b>(指示と異なる飛行)。フライングに注意。"},
+ {s:"合理的な理由なく機体を急停止させた。", a:2, e:"<b>−1点</b>(不円滑)。"},
+ {s:"高度変化の科目で、一定の割合でなく急に高度を変えた。", a:2, e:"<b>−1点</b>(不円滑)。"},
+ {s:"口述試験で「事故に該当する3つ」のうち1つが抜けた。", a:1, e:"<b>−5点</b>(事故・重大インシデントの説明の抜け・誤り)。"},
+ {s:"機体をパイロンに軽く接触させた(損傷なし)。", a:3, e:"<b>即不合格</b>。パイロン・旗・壁・ネット等への衝突は損傷の有無を問わず中止。"},
+ {s:"受験者からアルコールの匂いがして、正常な飛行ができないおそれがあると判断した。", a:3, e:"<b>即不合格</b>(航空法等の違反)。試験前に必ず確認。"},
+ {s:"待機中の他の受講生が操作のコツを声に出して伝えた。", a:3, e:"<b>即不合格</b>(不正行為:他の者からの助言・補助)。見学者への注意喚起は運営側の仕事。"},
+ {s:"試験員が指示した高度と明らかに異なる高度で飛び続けた。", a:1, e:"<b>−5点</b>(指示と異なる飛行)。"},
+ {s:"経路・高度は保ったが、機体が大きくふらつきながら飛行した。", a:2, e:"<b>−1点</b>(ふらつき)。ただし積み重なると致命傷:一等は5点減点4回でギリギリ。"}
+];
+const DLABELS = ["減点なし","−5点(または−10点)","−1点","即不合格(試験中止)"];
+
+/* ========== モード2:数値・規定ドリル ========== */
+const NUM = [
+ {q:"一等の合格ライン(各試験科目終了時の持ち点)は?", c:["70点以上","75点以上","80点以上"], a:2, e:"一等80点・二等70点。100点からの減点式。"},
+ {q:"二等の合格ラインは?", c:["70点以上","75点以上","80点以上"], a:0, e:"二等は70点以上。"},
+ {q:"一等・基本の机上試験は?", c:["4問・5分","5問・10分","5問・15分"], a:1, e:"一等5問10分/二等4問5分。"},
+ {q:"作動前点検+作動点検の制限時間は(合計)?", c:["10分","12分","15分"], a:1, e:"3-2〜3-3を通じて12分。時間切れ=点検漏れ扱い(新基準)。"},
+ {q:"飛行後点検+飛行後の記録の制限時間は(合計)?", c:["5分","8分","10分"], a:0, e:"5-1〜5-2を通じて5分。"},
+ {q:"一等・基本のスクエア飛行の高度変化は?", c:["1.5m⇔3.5m","2.5m⇔3.5m","5m⇔10m"], a:0, e:"基本は1.5⇔3.5m。目視外は2.5⇔3.5m、25kg版は5⇔10m。"},
+ {q:"ピルエットホバリングの一回転の目安と許容範囲は?", c:["10秒程度(8〜14秒)","20秒程度(16〜26秒)","30秒程度(26〜36秒)"], a:1, e:"20秒程度。16秒未満/26秒以上で−5点。"},
+ {q:"8の字飛行の円直径は約何m?", c:["約3m","約5m","約10m"], a:1, e:"8の字は約5m。円周飛行(25kg)は約10m。"},
+ {q:"ホバリング・着陸の「定められた区画」の直径は(通常科目)?", c:["1m","2m","5m"], a:1, e:"直径2m。25kg限定変更のみ直径5m。"},
+ {q:"夜間科目(昼間飛行の限定変更)の試験場の照度条件は?", c:["150ルクス以下","150ルクス以上","300ルクス以下"], a:0, e:"夜間は150ルクス以下。通常科目は日出〜日没または150ルクス以上。"},
+ {q:"実技試験を中止して再試験できる気象条件は?", c:["3m/s以上の風","5m/s以上の突風・降雨","10m/s以上の突風"], a:1, e:"基準3-8-3。受験者に起因しない中止は再度実施可。"},
+ {q:"受験者補助員に必要な飛行実績は?", c:["直近1年で3月以上かつ30時間以上","直近2年で6月以上かつ50時間以上","直近3年で12月以上かつ100時間以上"], a:1, e:"細則I-10。当該機体種類についての実績。"},
+ {q:"減点区画に初回進入したとき、減点を免除される復帰時間は?", c:["概ね2秒以内","概ね5秒以内","概ね10秒以内"], a:0, e:"概ね2秒以内(新基準で明文化)。"},
+ {q:"「危険な速度」とされるのは概ね何m/s以上?", c:["3m/s","5m/s","8m/s"], a:1, e:"概ね5m/s以上で即不合格。"},
+ {q:"新しい実地試験基準の施行日は?", c:["2025年12月5日","2026年4月1日","2026年6月5日"], a:2, e:"令和7年12月5日改正・令和8年(2026年)6月5日施行。"},
+ {q:"学科試験が教則第4版準拠になったのは?", c:["2025年2月1日","2025年4月17日","2026年6月5日"], a:1, e:"令和7年4月17日から。第4版発行は令和7年2月1日。"},
+ {q:"一等・基本の実技での位置安定機能(GNSS/ビジョン)は?", c:["全科目ON","全科目OFF","科目による"], a:1, e:"一等基本は全てOFF。二等は正常時ON・異常事態のみOFF。"},
+ {q:"技能証明の有効期間は?", c:["2年","3年","5年"], a:1, e:"3年。更新講習で更新。"},
+ {q:"登録が必要になる機体重量は?", c:["100g以上","200g以上","250g以上"], a:0, e:"100g以上(2022年6月〜)。"},
+ {q:"一等の学科試験の問題数と時間は?", c:["50問・30分","70問・75分","100問・120分"], a:1, e:"一等70問75分/二等50問30分(CBT・三肢択一)。"},
+ {q:"実地試験の受験前提は?", c:["身体検査合格","学科試験合格","講習修了"], a:1, e:"基準1-11。学科合格が確認できるまで実地は開始されない。"},
+ {q:"同一日に基本と限定変更を実施する場合の順序は?", c:["どちらが先でもよい","限定変更→基本","基本→限定変更"], a:2, e:"基準4-2。基本が不合格なら限定変更も不合格。"},
+ {q:"実技試験で機体を係留した状態での実施は?", c:["風速5m/s超なら可","試験員が認めれば可","禁止"], a:2, e:"基準3-9(新設)。係留状態での実技試験は不可。"},
+ {q:"保護具(ヘルメット・保護メガネ等)の着用が必要なのは?", c:["受験者のみ","受験者と試験員のみ","受験者・試験員・補助員全員"], a:2, e:"細則I-12(新設)。実技+機体作動を伴う口述で全員着用。"},
+ {q:"飛行前点検の口述で減点細目に複数該当した場合は?", c:["全部合算する","最も減点数が高いもののみ適用","試験員の裁量"], a:1, e:"細則II-1-5。飛行後も点検系・記録系それぞれ同様。"},
+ {q:"一等の目視外(目視内飛行の限定変更)スクエア飛行の位置安定機能は?", c:["OFF","ON","受験者が選択"], a:1, e:"目視外スクエアはON(カメラのみで操縦)。異常事態科目はOFF。"},
+ {q:"二等の目視外・異常事態科目の着陸方法は?", c:["目視外のまま緊急着陸","目視内に戻って着陸","自動RTHで着陸"], a:1, e:"二等は「機体を目視できる状態に戻り目視内で着陸」。一等は目視外のまま緊急着陸地点へ。ここが一等/二等の差。"},
+ {q:"修了審査で使う机上・口述(事故等)の問題は?", c:["講習機関が自作する","国または指定試験機関から提供されたものを使う","教則から講師が選ぶ"], a:1, e:"細則VII章(準用)。勝手に作れない。"}
+];
+
+/* ========== モード3:60秒説明チャレンジ ========== */
+const TOPICS = [
+ {t:"カテゴリーI/II/IIIの違いを、ドローン未経験者に説明してください", h:"鍵は「特定飛行かどうか」×「立入管理措置の有無」。III=措置なしで第三者上空=一等+第一種機体認証が必要。"},
+ {t:"なぜ一等の基本は位置安定機能OFFで試験するのか、制度の意図から説明してください", h:"カテゴリーIII=第三者上空。GNSS喪失など機能低下時でも安全に飛ばせる「素の操縦力」が人の命を守る最後の砦だから。"},
+ {t:"「立入管理措置」とは何か、具体例を3つ挙げて説明してください", h:"第三者の立入りを制限する措置。例:立入禁止の看板+監視員、ロープ・フェンス区画、補助者による周知。"},
+ {t:"減点区画と不合格区画の違いと、2秒復帰ルールを説明してください", h:"減点区画(yellow)=半分以上進入で−5(初回は2秒以内復帰で免除)。不合格区画(red)=半分以上進入で即中止。"},
+ {t:"ピルエットホバリングの合格基準と練習のコツを説明してください", h:"20秒程度で一回転(16〜26秒)。90°を約5秒のリズム。位置安定OFFなので当て舵を続けながら回す。"},
+ {t:"事故と重大インシデントの違いを、それぞれ3つ挙げて説明してください", h:"事故:人の死傷/物件損壊/航空機との衝突・接触。重大インシデント:航空機と衝突のおそれ/人の負傷(軽微でない扱いは事故側)/制御不能/発火等。発生時は飛行中止・救護・国交省へ報告。"},
+ {t:"飛行日誌はなぜ法定義務なのか、何を書くのか説明してください", h:"特定飛行で義務。飛行記録・日常点検記録・整備記録の3点。口述試験でも飛行時間計算まで問われる(誤りは−10点)。"},
+ {t:"レベル3.5飛行とは何か説明してください(教則第4版の新論点)", h:"無人地帯の目視外(レベル3)で、技能証明+保険加入+カメラによる歩行者等の確認を条件に、立入管理措置(補助者・看板)を省略できる仕組み。"},
+ {t:"RTH(フェールセーフ)の設定を誤ると何が起きるか、実例で説明してください", h:"帰還高度が障害物より低い→衝突。離陸点更新忘れ→あらぬ場所へ帰還。電波喪失時の挙動(ホバリング/着陸/RTH)の違いを機体ごとに確認。"},
+ {t:"風速5m/sで試験・講習はどうなるか、運営側の手順で説明してください", h:"各科目開始前に風速計で計測(細則I-7)。5m/s以上の突風・降雨は中止→受験者に起因しないので再試験可(基準3-8-3)。"},
+ {t:"「安全確認は声に出せ」と受講生に指導する理由を説明してください", h:"注6:試験員に伝えなければ確認していないとみなされ−5点。現場でもCRM(チーム運航)の基本動作。"},
+ {t:"一等と二等の実地試験の違いを1分でプレゼンしてください", h:"想定(措置なし/あり)、合格ライン(80/70)、位置安定(OFF/ON)、科目(高度変化+ピルエット+緊急8の字 vs スクエア+8の字+異常事態)、机上(5問10分/4問5分)。"},
+ {t:"2026年6月5日施行の改正点を受講生向けに説明してください", h:"口述・机上に制限時間(時間切れ=漏れ・未回答扱い)/2秒復帰ルール/ピルエット16〜26秒/保護具着用義務/係留禁止。「点検を体系立てて実行できるか」を問う方向へ。"},
+ {t:"目視外飛行(目視内飛行の限定変更)の試験の流れと注意点を説明してください", h:"受験者は機体に背を向ける。カメラ画像のみで飛行。指示なく機体を見たら不正行為=不合格。一等は目視外のまま緊急着陸、二等は目視内に戻って着陸。"},
+ {t:"日常点検で見るポイントを、機体を目の前にしているつもりで順に説明してください", h:"取付(ネジ・コネクタ)→外観(プロペラ・フレーム・識別票)→電源→通信/GNSS→バッテリー→リモートID→モーター→ホバリングで操縦系統。"},
+ {t:"なぜ8の字・円周飛行で「円の中心を含まない周回」が即不合格なのか説明してください", h:"経路を大きくショートカット=コースを飛べていない=制御できていない扱い。「墜落・損傷・制御不能」の細目に含まれている。"},
+ {t:"DID(人口集中地区)で飛ばしたい受講生に、必要な手続きを説明してください", h:"登録+リモートID→DIDは特定飛行→許可申請(DIPS2.0)。二等+第二種機体認証があればカテゴリーIIの一部手続きが簡略化。"},
+ {t:"バッテリー(リポ)の取扱注意を現場目線で説明してください", h:"膨らみ・損傷は使用禁止/満充電保管NG(50〜60%)/低温で性能低下/専用バッグ保管/廃棄は放電+自治体ルール。"}
+];
+
+/* ========== 共通処理 ========== */
+const $ = id => document.getElementById(id);
+let mode = 0;
+let order = [], idx = 0;
+const store = JSON.parse(localStorage.getItem('instrDrill')||'{"d":[0,0],"n":[0,0],"t":0}');
+function save(){ localStorage.setItem('instrDrill', JSON.stringify(store)); }
+function shuffle(n){ const a=[...Array(n).keys()]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+
+function setMode(m){
+  mode = m;
+  [0,1,2].forEach(i=>$('tab'+i).classList.toggle('active', i===m));
+  idx = 0;
+  if(m===0){ order = shuffle(DEDUCT.length); showDeduct(); }
+  else if(m===1){ order = shuffle(NUM.length); showNum(); }
+  else { order = shuffle(TOPICS.length); showTopic(); }
+}
+$('tab0').onclick=()=>setMode(0);
+$('tab1').onclick=()=>setMode(1);
+$('tab2').onclick=()=>setMode(2);
+
+function statTxt(){
+  if(mode===0) return `⚖️ 減点判定:通算 ${store.d[0]}問中 ${store.d[1]}問正解` + rate(store.d);
+  if(mode===1) return `🔢 数値・規定:通算 ${store.n[0]}問中 ${store.n[1]}問正解` + rate(store.n);
+  return `⏱ 説明チャレンジ:通算 ${store.t}本完走`;
+}
+function rate(x){ return x[0] ? `(${Math.round(x[1]/x[0]*100)}%)` : ''; }
+
+function showDeduct(){
+  const item = DEDUCT[order[idx % order.length]];
+  $('stat').textContent = statTxt();
+  $('area').innerHTML = `
+    <div class="q">
+      <div style="font-size:.75rem;color:var(--sub);margin-bottom:8px;">あなたは試験員(修了審査員)です。この場合の裁定は?</div>
+      <div class="scenario">${item.s}</div>
+      <div class="choices" id="ch"></div>
+      <div class="expl" id="ex">${item.e}</div>
+      <button class="next" id="nx">次の問題 ▶</button>
+    </div>`;
+  DLABELS.forEach((lb,i)=>{
+    const b=document.createElement('button'); b.textContent=lb;
+    b.onclick=()=>{
+      store.d[0]++; if(i===item.a){b.classList.add('correct');store.d[1]++;}
+      else{b.classList.add('wrong'); [...$('ch').children][item.a].classList.add('correct');}
+      save(); $('ex').classList.add('show'); $('nx').classList.add('show');
+      [...$('ch').children].forEach(x=>x.disabled=true);
+      $('stat').textContent = statTxt();
+    };
+    $('ch').appendChild(b);
+  });
+  $('nx').onclick=()=>{ idx++; showDeduct(); };
+}
+
+function showNum(){
+  const item = NUM[order[idx % order.length]];
+  $('stat').textContent = statTxt();
+  $('area').innerHTML = `
+    <div class="q">
+      <div class="scenario">${item.q}</div>
+      <div class="choices" id="ch"></div>
+      <div class="expl" id="ex">${item.e}</div>
+      <button class="next" id="nx">次の問題 ▶</button>
+    </div>`;
+  item.c.forEach((lb,i)=>{
+    const b=document.createElement('button'); b.textContent=lb;
+    b.onclick=()=>{
+      store.n[0]++; if(i===item.a){b.classList.add('correct');store.n[1]++;}
+      else{b.classList.add('wrong'); [...$('ch').children][item.a].classList.add('correct');}
+      save(); $('ex').classList.add('show'); $('nx').classList.add('show');
+      [...$('ch').children].forEach(x=>x.disabled=true);
+      $('stat').textContent = statTxt();
+    };
+    $('ch').appendChild(b);
+  });
+  $('nx').onclick=()=>{ idx++; showNum(); };
+}
+
+let timerId=null;
+function showTopic(){
+  clearInterval(timerId);
+  const item = TOPICS[order[idx % order.length]];
+  $('stat').textContent = statTxt();
+  $('area').innerHTML = `
+    <div class="topic">
+      <div style="font-size:.75rem;color:var(--sub);margin-bottom:8px;">お題(声に出して60秒で説明。録音アプリ併用推奨)</div>
+      <div class="t">${item.t}</div>
+      <div class="timer" id="tm">60</div>
+      <div class="row">
+        <button class="b-start" id="st">▶ スタート</button>
+        <button class="b-hint" id="hi">💡 模範ポイント</button>
+        <button class="b-next" id="nx2">⏭ 別のお題</button>
+      </div>
+      <div class="hint" id="hint">${item.h}</div>
+      <div class="selfrate" id="sr">
+        <div style="font-size:.85rem;color:var(--sub);">自己採点:詰まらずに説明できた?</div>
+        <div class="row">
+          <button class="b-good" id="good">😊 できた!</button>
+          <button class="b-bad" id="bad">😅 もう一回</button>
+        </div>
+      </div>
+    </div>`;
+  $('st').onclick=()=>{
+    let t=60; $('tm').textContent=t; $('tm').classList.remove('warn');
+    clearInterval(timerId);
+    timerId=setInterval(()=>{
+      t--; $('tm').textContent=t;
+      if(t<=10)$('tm').classList.add('warn');
+      if(t<=0){ clearInterval(timerId); $('tm').textContent='終了!'; $('sr').classList.add('show'); }
+    },1000);
+  };
+  $('hi').onclick=()=>$('hint').classList.toggle('show');
+  $('nx2').onclick=()=>{ clearInterval(timerId); idx++; showTopic(); };
+  $('good').onclick=()=>{ store.t++; save(); idx++; showTopic(); };
+  $('bad').onclick=()=>{ $('sr').classList.remove('show'); $('tm').textContent='60'; };
+}
+
+setMode(0);
+</script>
+
+<a href="./" id="homeBtn" style="position:fixed;top:10px;right:10px;z-index:99;
+ background:rgba(15,23,42,.75);color:#fff;text-decoration:none;font-size:1.1rem;
+ width:40px;height:40px;border-radius:50%;display:flex;align-items:center;
+ justify-content:center;border:1px solid rgba(255,255,255,.3);">🏠</a>
+<style>@media print{#homeBtn{display:none;}}</style>
+</body>
+</html>
