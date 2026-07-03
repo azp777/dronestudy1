@@ -2,674 +2,105 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>一等無人航空機 学科試験対策</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ドローン学習ポータル</title>
+<meta name="theme-color" content="#1d4ed8">
+<link rel="icon" href="instructor/icon-192.png">
+<link rel="apple-touch-icon" href="instructor/apple-touch-icon.png">
 <style>
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{font-family:'Hiragino Kaku Gothic ProN','Meiryo','Yu Gothic',sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;-webkit-text-size-adjust:100%}
-header{background:linear-gradient(135deg,#1e3a5f,#0f172a);padding:14px 18px;border-bottom:2px solid #2563eb;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10}
-header h1{font-size:1.05rem;font-weight:700;color:#60a5fa}
-header .sub{font-size:.7rem;color:#475569;margin-top:2px}
-.badge{background:#2563eb;color:#fff;border-radius:20px;padding:3px 10px;font-size:.7rem;white-space:nowrap}
-.main{max-width:760px;margin:0 auto;padding:18px 14px 60px}
-.tabs{display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap}
-.tab{padding:8px 14px;border-radius:8px;border:1.5px solid #334155;background:transparent;color:#64748b;cursor:pointer;font-size:.82rem;transition:all .15s;flex:1;min-width:70px;text-align:center}
-.tab.active{background:#2563eb;border-color:#2563eb;color:#fff}
-.screen{display:none}.screen.active{display:block}
-
-.section-title{font-size:.78rem;color:#64748b;letter-spacing:.06em;margin:18px 0 10px}
-.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
-.cat-card{background:#1e293b;border:1.5px solid #334155;border-radius:12px;padding:15px 13px;cursor:pointer;transition:all .15s}
-.cat-card:active{border-color:#2563eb;background:#243450}
-.cat-card .icon{font-size:1.6rem;margin-bottom:6px}
-.cat-card h3{font-size:.85rem;color:#93c5fd;margin-bottom:3px}
-.cat-card p{font-size:.72rem;color:#64748b;line-height:1.5}
-.cat-card .qc{font-size:.68rem;color:#2563eb;margin-top:5px;font-weight:600}
-
-.mock-card{background:linear-gradient(135deg,#1e3a5f,#172554);border:1.5px solid #2563eb;border-radius:14px;padding:18px;cursor:pointer;margin-bottom:6px;transition:all .15s}
-.mock-card:active{transform:scale(.99)}
-.mock-card .icon{font-size:1.9rem}
-.mock-card h3{font-size:1rem;color:#fff;margin:6px 0 4px}
-.mock-card p{font-size:.76rem;color:#93c5fd;line-height:1.6}
-.mock-spec{display:flex;gap:14px;margin-top:10px;flex-wrap:wrap}
-.mock-spec span{font-size:.72rem;color:#bfdbfe;background:#1e40af66;border-radius:6px;padding:3px 9px}
-
-.stat-bar{display:flex;gap:10px;background:#1e293b;border-radius:10px;padding:12px;margin-bottom:16px;border:1px solid #334155}
-.stat-item{text-align:center;flex:1}.stat-item .val{font-size:1.35rem;font-weight:700;color:#60a5fa}
-.stat-item .lbl{font-size:.68rem;color:#64748b}
-
-.q-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:8px}
-.q-progress-bar{background:#1e293b;border-radius:99px;height:7px;flex:1}
-.q-progress-fill{background:#2563eb;height:100%;border-radius:99px;transition:width .4s}
-.q-count{font-size:.78rem;color:#94a3b8;white-space:nowrap}
-.timer{font-size:.85rem;font-weight:700;color:#fbbf24;background:#1c1a0e;border:1px solid #92400e;border-radius:7px;padding:4px 10px;white-space:nowrap}
-.timer.warn{color:#fca5a5;background:#2a0e0e;border-color:#7f1d1d;animation:blink 1s infinite}
-@keyframes blink{50%{opacity:.5}}
-.q-card{background:#1e293b;border-radius:12px;padding:18px 16px;margin-bottom:14px;border:1px solid #334155}
-.q-tag{font-size:.68rem;background:#1d4ed833;color:#60a5fa;border:1px solid #2563eb55;border-radius:20px;padding:2px 9px;display:inline-block;margin-bottom:8px}
-.q-num{font-size:.7rem;color:#475569;margin-bottom:5px}
-.q-text{font-size:.95rem;line-height:1.75;color:#e2e8f0;white-space:pre-line}
-.q-given{background:#0f172a;border-left:3px solid #2563eb;border-radius:0 8px 8px 0;padding:9px 13px;margin:11px 0;font-size:.83rem;color:#94a3b8;line-height:1.8;white-space:pre-line}
-.choices{display:flex;flex-direction:column;gap:9px}
-.choice-btn{background:#0f172a;border:1.5px solid #334155;border-radius:9px;padding:13px 14px;text-align:left;cursor:pointer;color:#cbd5e1;font-size:.9rem;transition:all .12s;width:100%;line-height:1.5}
-.choice-btn:active{background:#1e293b}
-.choice-btn.correct{border-color:#22c55e;background:#14532d44;color:#86efac}
-.choice-btn.wrong{border-color:#ef4444;background:#7f1d1d44;color:#fca5a5}
-.choice-btn.reveal{border-color:#22c55e;background:#14532d22;color:#86efac}
-.choice-btn.selected{border-color:#2563eb;background:#1e3a5f}
-.choice-btn:disabled{cursor:default;opacity:.9}
-.choice-label{color:#475569;margin-right:7px;font-size:.82rem;font-weight:700}
-
-.explanation{background:#0c1a2e;border:1px solid #1d4ed8;border-radius:12px;padding:16px;margin-top:12px;display:none}
-.explanation.show{display:block}
-.explanation h4{color:#60a5fa;margin-bottom:10px;font-size:.9rem}
-.step{display:flex;gap:9px;margin-bottom:11px}
-.step-num{background:#2563eb;color:#fff;border-radius:50%;width:21px;height:21px;display:flex;align-items:center;justify-content:center;font-size:.68rem;flex-shrink:0;margin-top:2px}
-.step-body{font-size:.85rem;line-height:1.75;color:#cbd5e1}
-.step-body strong{color:#93c5fd}
-.calc{background:#1e3a5f66;border-radius:5px;padding:5px 9px;margin-top:4px;font-family:monospace;font-size:.86rem;color:#7dd3fc;display:block}
-.answer-highlight{background:#064e3b;border:1.5px solid #22c55e;border-radius:7px;padding:9px 13px;margin-top:8px;text-align:center;color:#86efac;font-size:.92rem;font-weight:700}
-
-.hint-panel{background:#1c1a0e;border:1px solid #92400e;border-radius:9px;padding:11px 14px;margin-top:10px;display:none}
-.hint-panel.show{display:block}
-.hint-panel p{font-size:.83rem;color:#fde68a;line-height:1.7;white-space:pre-line}
-
-.nav-btns{display:flex;gap:8px;justify-content:space-between;margin-top:13px;flex-wrap:wrap}
-.btn{padding:10px 18px;border-radius:8px;border:none;cursor:pointer;font-size:.88rem;font-weight:600;transition:all .12s}
-.btn:active{transform:scale(.97)}
-.btn-primary{background:#2563eb;color:#fff}
-.btn-secondary{background:#334155;color:#cbd5e1}
-.btn-hint{background:#92400e44;color:#fbbf24;border:1px solid #92400e}
-
-.result-card{background:#1e293b;border-radius:16px;padding:28px 20px;text-align:center;border:1px solid #334155}
-.pass-badge{display:inline-block;font-size:1.4rem;font-weight:800;padding:8px 26px;border-radius:30px;margin-bottom:16px}
-.pass-badge.pass{background:#064e3b;color:#86efac;border:2px solid #22c55e}
-.pass-badge.fail{background:#3a0e0e;color:#fca5a5;border:2px solid #ef4444}
-.result-score{font-size:3.2rem;font-weight:800;color:#60a5fa;line-height:1}
-.result-label{font-size:.9rem;color:#94a3b8;margin:6px 0 16px}
-.result-breakdown{display:flex;justify-content:center;gap:24px;margin-bottom:20px}
-.result-breakdown .val{font-size:1.6rem;font-weight:700}
-.result-breakdown .lbl{font-size:.74rem;color:#64748b}
-.green{color:#22c55e}.red{color:#ef4444}
-.result-msg{font-size:.95rem;margin-bottom:20px;color:#93c5fd}
-.pass-line-note{font-size:.76rem;color:#64748b;margin-bottom:18px}
-
-.formula-list{display:grid;gap:11px}
-.formula-item{background:#1e293b;border-radius:10px;padding:15px 16px;border:1px solid #334155}
-.formula-item h4{color:#60a5fa;margin-bottom:9px;font-size:.88rem}
-.f-box{background:#0f172a;border-radius:6px;padding:9px 12px;font-family:monospace;color:#fbbf24;font-size:.9rem;margin-bottom:6px;word-break:break-word}
-.formula-item p{font-size:.79rem;color:#64748b;line-height:1.65}
-.formula-item .example{background:#0c1a2e;border-radius:6px;padding:8px 11px;font-size:.78rem;color:#7dd3fc;margin-top:7px;line-height:1.7}
-
-.review-list{display:flex;flex-direction:column;gap:11px}
-.review-item{background:#1e293b;border-radius:10px;padding:13px 14px;border:1px solid #7f1d1d}
-.review-item .rq{font-size:.84rem;color:#e2e8f0;margin-bottom:7px;line-height:1.6;white-space:pre-line}
-.review-item .ya{font-size:.77rem;color:#fca5a5;margin-bottom:3px}
-.review-item .ca{font-size:.77rem;color:#86efac}
-.review-item .rtag{font-size:.66rem;color:#60a5fa;margin-bottom:6px}
+  :root{--bg:#0f172a;--card:#1e293b;--txt:#f1f5f9;--sub:#94a3b8;--acc:#38bdf8;--gold:#f59e0b;}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  body{margin:0;font-family:"Hiragino Sans","Yu Gothic",system-ui,sans-serif;
+       background:var(--bg);color:var(--txt);min-height:100vh;}
+  header{padding:34px 16px 22px;text-align:center;
+         background:linear-gradient(150deg,#0ea5e9,#1d4ed8 80%);}
+  header .logo{font-size:2.4rem;}
+  header h1{margin:6px 0 4px;font-size:1.35rem;}
+  header p{margin:0;font-size:.78rem;opacity:.9;}
+  .badge{display:inline-block;margin-top:10px;background:rgba(0,0,0,.28);
+         border:1px solid rgba(255,255,255,.35);border-radius:20px;
+         padding:4px 14px;font-size:.75rem;}
+  main{max-width:560px;margin:0 auto;padding:18px 14px 40px;}
+  h2{font-size:.85rem;color:var(--sub);margin:22px 4px 10px;font-weight:normal;
+     border-left:4px solid var(--acc);padding-left:8px;}
+  h2.gold{border-left-color:var(--gold);}
+  a.card{display:flex;gap:14px;align-items:center;background:var(--card);
+         border-radius:16px;padding:16px;margin-bottom:12px;text-decoration:none;
+         color:var(--txt);border:1px solid #334155;}
+  a.card:active{background:#26364d;}
+  .ic{font-size:1.8rem;flex:0 0 auto;}
+  .t{font-size:1rem;font-weight:bold;}
+  .d{font-size:.78rem;color:var(--sub);margin-top:3px;line-height:1.5;}
+  .arrow{margin-left:auto;color:var(--sub);font-size:1.2rem;}
+  .small a.card{padding:11px 16px;}
+  .small .ic{font-size:1.3rem;}
+  .small .t{font-size:.9rem;}
+  .note{font-size:.7rem;color:var(--sub);text-align:center;line-height:1.7;margin-top:22px;}
 </style>
 </head>
 <body>
 <header>
-  <div>
-    <h1>一等無人航空機 学科対策</h1>
-    <div class="sub">教則 令和7年2月第4版準拠 ・ 三肢択一</div>
-  </div>
-  <span class="badge">v3.0</span>
+  <div class="logo">🚁</div>
+  <h1>ドローン学習ポータル</h1>
+  <p>無人航空機操縦士 学科・実地・指導のすべて</p>
+  <div class="badge">🏅 一等学科 合格(2026年7月)</div>
 </header>
+<main>
 
-<div class="main">
-  <div class="tabs">
-    <button class="tab active" onclick="showTab('home')">ホーム</button>
-    <button class="tab" onclick="showTab('cheat')">要点</button>
-    <button class="tab" onclick="showTab('formulas')">公式</button>
-    <button class="tab" onclick="showTab('review')">復習</button>
+  <h2 class="gold">インストラクター</h2>
+  <a class="card" href="instructor/">
+    <span class="ic">🎓</span>
+    <span>
+      <span class="t">講師アプリ</span>
+      <span class="d">学習ドリル・英語フレーズ練習・受講生用英語テキスト(2026年6月施行 実地新基準対応)</span>
+    </span>
+    <span class="arrow">›</span>
+  </a>
+
+  <h2>学科試験対策(一等)</h2>
+  <a class="card" href="study/">
+    <span class="ic">📝</span>
+    <span>
+      <span class="t">学科試験対策アプリ</span>
+      <span class="d">メインアプリ。出題実績・分野別演習・模擬試験(教則第4版対応)</span>
+    </span>
+    <span class="arrow">›</span>
+  </a>
+  <a class="card" href="study/course.html">
+    <span class="ic">🎯</span>
+    <span>
+      <span class="t">直前対策講座</span>
+      <span class="d">試験直前の総仕上げ用</span>
+    </span>
+    <span class="arrow">›</span>
+  </a>
+  <a class="card" href="study/answersheet.html">
+    <span class="ic">🗒️</span>
+    <span>
+      <span class="t">過去問 解答記録シート</span>
+      <span class="d">演習の記録・弱点管理</span>
+    </span>
+    <span class="arrow">›</span>
+  </a>
+
+  <h2>アーカイブ(旧バージョン)</h2>
+  <div class="small">
+    <a class="card" href="study/drone_exam_full.html">
+      <span class="ic">📚</span>
+      <span><span class="t">学科対策 完全版(旧)</span></span>
+      <span class="arrow">›</span>
+    </a>
+    <a class="card" href="study/drone_exam_app.html">
+      <span class="ic">🧪</span>
+      <span><span class="t">学科対策アプリ 初期版</span></span>
+      <span class="arrow">›</span>
+    </a>
   </div>
 
-  <div id="screen-home" class="screen active">
-    <div id="stat-bar" class="stat-bar" style="display:none">
-      <div class="stat-item"><div class="val" id="stat-total">0</div><div class="lbl">解答済</div></div>
-      <div class="stat-item"><div class="val green" id="stat-correct">0</div><div class="lbl">正解</div></div>
-      <div class="stat-item"><div class="val red" id="stat-wrong">0</div><div class="lbl">不正解</div></div>
-      <div class="stat-item"><div class="val" id="stat-pct">0%</div><div class="lbl">正解率</div></div>
-    </div>
-
-    <p class="section-title">🎓 本番形式の模擬試験</p>
-    <div class="mock-card" onclick="startMock()">
-      <div class="icon">📝</div>
-      <h3>本番モード（模擬試験）</h3>
-      <p>一等学科試験と同じ条件で挑戦。CBT本番の感覚をつかみましょう。</p>
-      <div class="mock-spec"><span>70問</span><span>75分</span><span>三肢択一</span><span>合格90%</span></div>
-    </div>
-
-    <p class="section-title">🔥 弱点克服</p>
-    <div class="mock-card" style="background:linear-gradient(135deg,#3a1e1e,#2a1212);border-color:#ef4444" onclick="startWeak()">
-      <div class="icon">🔥</div>
-      <h3>弱点モード（間違えた問題だけ）</h3>
-      <p>これまで間違えた問題だけを繰り返し練習。正解すると弱点リストから外れます。</p>
-      <div class="mock-spec"><span id="weakCount" style="background:#7f1d1d66;color:#fecaca">0問</span></div>
-    </div>
-
-    <p class="section-title">📚 分野別練習（解説つき）</p>
-    <div class="cat-grid" id="catGrid"></div>
-  </div>
-
-  <div id="screen-quiz" class="screen">
-    <div class="q-header">
-      <button class="btn btn-secondary" style="padding:6px 11px;font-size:.76rem" onclick="quitQuiz()">← 中断</button>
-      <div class="q-progress-bar"><div class="q-progress-fill" id="progressFill"></div></div>
-      <span class="q-count" id="qCount">1/1</span>
-      <span class="timer" id="timer" style="display:none">75:00</span>
-    </div>
-    <div class="q-card">
-      <span class="q-tag" id="qCatTag"></span>
-      <div class="q-num" id="qNum"></div>
-      <div class="q-text" id="qText"></div>
-      <div class="q-given" id="qGiven" style="display:none"></div>
-    </div>
-    <div class="choices" id="choices"></div>
-    <div class="hint-panel" id="hintPanel"><p id="hintText"></p></div>
-    <div class="explanation" id="explanation"></div>
-    <div class="nav-btns">
-      <button class="btn btn-hint" id="hintBtn" onclick="toggleHint()">💡 ヒント</button>
-      <div style="display:flex;gap:8px">
-        <button class="btn btn-secondary" id="prevBtn" onclick="prevQuestion()" style="display:none">← 前へ</button>
-        <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" style="display:none">次へ →</button>
-        <button class="btn btn-primary" id="submitBtn" onclick="submitMock()" style="display:none">採点する</button>
-      </div>
-    </div>
-  </div>
-
-  <div id="screen-result" class="screen">
-    <div class="result-card">
-      <div id="passBadge" class="pass-badge" style="display:none"></div>
-      <div class="result-score" id="resultScore"></div>
-      <div class="result-label">正解率</div>
-      <div class="result-breakdown">
-        <div><div class="val green" id="rCorrect"></div><div class="lbl">正解</div></div>
-        <div><div class="val" style="color:#94a3b8" id="rTotal"></div><div class="lbl">全問</div></div>
-        <div><div class="val red" id="rWrong"></div><div class="lbl">不正解</div></div>
-      </div>
-      <div class="pass-line-note" id="passLineNote"></div>
-      <div class="result-msg" id="resultMsg"></div>
-      <div style="display:flex;gap:9px;justify-content:center;flex-wrap:wrap">
-        <button class="btn btn-primary" onclick="retryQuiz()">もう一度</button>
-        <button class="btn btn-secondary" onclick="reviewWrong()" id="reviewBtn">間違い確認</button>
-        <button class="btn btn-secondary" onclick="showTab('home')">ホーム</button>
-      </div>
-    </div>
-  </div>
-
-  <div id="screen-formulas" class="screen"><div class="formula-list" id="formulaList"></div></div>
-
-  <div id="screen-cheat" class="screen">
-    <p style="font-size:.78rem;color:#64748b;margin-bottom:12px">間違えやすいポイント・暗記すべき数値をまとめました。試験直前の見直しに。</p>
-    <div class="formula-list" id="cheatList"></div>
-  </div>
-
-  <div id="screen-review" class="screen">
-    <div style="margin-bottom:13px;display:flex;align-items:center;justify-content:space-between">
-      <h3 style="color:#60a5fa;font-size:.92rem">間違えた問題の復習</h3>
-      <button class="btn btn-secondary" style="font-size:.76rem;padding:6px 11px" onclick="showTab('home')">← 戻る</button>
-    </div>
-    <div class="review-list" id="reviewList"></div>
-  </div>
-</div>
-
-<script>
-const Q = [
-{id:'r1',cat:'規則',tag:'⚖️ 規則',text:'航空法における「無人航空機」の定義として正しいものを選びなさい。',choices:['構造上人が乗ることができず、遠隔操作または自動操縦で飛行でき、重量100g以上のもの','遠隔操作のみで飛行し、重量に制限はないもの','構造上人が乗れないもので重量200g以上のもの'],answer:0,hint:'①構造②操縦方式③重量の3要件です。',steps:[{t:'3要件',b:'①構造上人が乗れない ②遠隔操作または自動操縦で飛行できる ③<strong>重量100g以上</strong>'},{t:'補足',b:'100g未満は「模型航空機」。重量は本体＋バッテリーの合計。'}],ans:'構造上人が乗ることができず、遠隔操作または自動操縦で飛行でき、重量100g以上のもの'},
-{id:'r2',cat:'規則',tag:'⚖️ 規則',text:'無人航空機の登録の有効期間として正しいものを選びなさい。',choices:['3年','1年','5年'],answer:0,hint:'登録・技能証明の有効期間を覚えましょう。',steps:[{t:'有効期間',b:'登録の有効期間は<strong>3年</strong>。3年毎に更新が必要。'},{t:'関連',b:'技能証明も一等・二等とも3年。第一種機体認証は1年、第二種は3年。'}],ans:'3年'},
-{id:'r3',cat:'規則',tag:'⚖️ 規則',text:'特定飛行の規制対象となる空域として誤っているものを選びなさい。',choices:['地表または水面から100m以上の高さの空域','空港等の周辺の上空の空域','人口集中地区（DID）の上空'],answer:0,hint:'高度の基準値は150mです。',steps:[{t:'規制対象',b:'①空港等周辺 ②緊急用務空域 ③<strong>150m以上</strong> ④人口集中地区'},{t:'誤り',b:'「100m以上」ではなく<strong>150m以上</strong>。'}],ans:'地表または水面から100m以上の高さの空域'},
-{id:'r4',cat:'規則',tag:'⚖️ 規則',text:'人口集中地区（DID）の説明として正しいものを選びなさい。',choices:['5年毎の国勢調査の結果から設定され、現在は令和2年調査に基づく','毎年市区町村が指定する','人口10万人以上の都市が一律対象'],answer:0,hint:'更新頻度と基準調査を確認しましょう。',steps:[{t:'DID',b:'<strong>5年毎</strong>の国勢調査結果から設定。現在は<strong>令和2年</strong>調査に基づく。'}],ans:'5年毎の国勢調査の結果から設定され、現在は令和2年調査に基づく'},
-{id:'r5',cat:'規則',tag:'⚖️ 規則',text:'カテゴリーIII飛行（レベル4）に必要な要件として正しいものを選びなさい。',choices:['一等技能証明＋第一種機体認証＋国土交通大臣の許可・承認','二等技能証明のみ','第一種機体認証のみ'],answer:0,hint:'最もリスクの高い飛行形態です。',steps:[{t:'カテゴリーIII',b:'立入管理措置を講じない＝第三者上空での特定飛行。'},{t:'3要件すべて',b:'①<strong>一等</strong> ②<strong>第一種機体認証</strong> ③<strong>国土交通大臣の許可・承認</strong>'}],ans:'一等技能証明＋第一種機体認証＋国土交通大臣の許可・承認'},
-{id:'r6',cat:'規則',tag:'⚖️ 規則',text:'登録記号の表示サイズについて正しいものを選びなさい。',choices:['25kg以上は25mm以上、25kg未満は3mm以上','重量に関わらず5mm以上','25kg以上は10mm以上、25kg未満は5mm以上'],answer:0,hint:'重量区分で異なります。',steps:[{t:'サイズ',b:'<strong>25kg以上→25mm以上</strong>、<strong>25kg未満→3mm以上</strong>。'}],ans:'25kg以上は25mm以上、25kg未満は3mm以上'},
-{id:'r7',cat:'規則',tag:'⚖️ 規則',text:'リモートIDの発信情報に含まれないものを選びなさい。',choices:['所有者の氏名・住所','製造番号・登録記号','位置・速度・高度・時刻'],answer:0,hint:'個人情報は含まれません。',steps:[{t:'静的情報',b:'製造番号・登録記号'},{t:'動的情報',b:'位置・速度・高度・時刻（1秒1回以上）'},{t:'含まれない',b:'<strong>所有者・使用者の情報</strong>'}],ans:'所有者の氏名・住所'},
-{id:'r8',cat:'規則',tag:'⚖️ 規則',text:'レベル3.5飛行の要件として誤っているものを選びなさい。',choices:['補助者の配置が必須である','操縦者が目視内飛行の限定解除を受けた技能証明を保有','第三者賠償責任保険に加入'],answer:0,hint:'機上カメラで何を代替するかが鍵です。',steps:[{t:'レベル3.5',b:'機上カメラで補助者配置・看板設置を<strong>代替</strong>。'},{t:'誤り',b:'補助者配置は必須ではない。要件は①機上カメラ＋地上モニター ②目視内飛行の限定解除 ③第三者賠償責任保険。'}],ans:'補助者の配置が必須である'},
-{id:'r9',cat:'規則',tag:'⚖️ 規則',text:'緊急用務空域について正しいものを選びなさい。',choices:['国土交通省が指定し、100g未満の模型航空機も飛行禁止になる','空港周辺のみに常設される','国の許可があれば飛行できる'],answer:0,hint:'飛行禁止の対象範囲を確認しましょう。',steps:[{t:'緊急用務空域',b:'消防・警察等の緊急用務航空機の安全確保のため国交省が指定。<strong>100g未満の模型航空機も禁止</strong>。他空域の許可があっても飛行不可。'}],ans:'国土交通省が指定し、100g未満の模型航空機も飛行禁止になる'},
-{id:'r10',cat:'規則',tag:'⚖️ 規則',text:'「2年以下の懲役または100万円以下の罰金」が科せられる違反を選びなさい。',choices:['事故発生時に危険防止措置を講じなかったとき','未登録の機体を飛行させたとき','アルコール影響下で飛行させたとき'],answer:0,hint:'最も重い罰則に対応する違反です。',steps:[{t:'罰則',b:'<strong>2年/100万円</strong>：事故時に危険防止措置を講じない'},{t:'',b:'1年/50万円：未登録機体／1年/30万円：アルコール・薬物'}],ans:'事故発生時に危険防止措置を講じなかったとき'},
-{id:'r11',cat:'規則',tag:'⚖️ 規則',text:'行政処分の点数で「技能証明の効力の取消」となる点数を選びなさい。',choices:['15点以上','12〜14点','9〜11点'],answer:0,hint:'最も重い処分の点数区分です。',steps:[{t:'処分区分',b:'15点以上→<strong>取消</strong>、12〜14→停止1年、9〜11→停止6月、6〜8→停止3月、3〜5→文書警告、1〜2→口頭注意'}],ans:'15点以上'},
-{id:'r12',cat:'規則',tag:'⚖️ 規則',text:'小型無人機等飛行禁止法の「小型無人機」について正しいものを選びなさい。',choices:['大きさや重さに関わらず100g未満も対象','100g以上のみ対象','200g以上のみ対象'],answer:0,hint:'航空法の無人航空機との違いです。',steps:[{t:'違い',b:'航空法は100g以上。飛行禁止法は<strong>重さに関わらず</strong>対象。対象施設は周囲おおむね300m。'}],ans:'大きさや重さに関わらず100g未満も対象'},
-{id:'r13',cat:'規則',tag:'⚖️ 規則',text:'危険物の輸送規制で、対象外（輸送可）となるものを選びなさい。',choices:['無人航空機の飛行に必要な燃料や電池','農薬（散布目的）','商業貨物としての高圧ガス'],answer:0,hint:'「飛行のため」の物件は特別扱いです。',steps:[{t:'対象外',b:'<strong>飛行のための燃料・電池</strong>、パラシュート展開用火薬類、業務用機器の電池。'}],ans:'無人航空機の飛行に必要な燃料や電池'},
-{id:'r14',cat:'規則',tag:'⚖️ 規則',text:'「目視による常時監視」に含まれるものを選びなさい。',choices:['眼鏡・コンタクトレンズを使用した目視','双眼鏡による監視','モニター（FPV）による監視'],answer:0,hint:'自分の目で見ることが原則です。',steps:[{t:'含まれる',b:'<strong>眼鏡・コンタクトレンズ</strong>'},{t:'含まれない',b:'双眼鏡・モニター(FPV)・補助者'}],ans:'眼鏡・コンタクトレンズを使用した目視'},
-{id:'r15',cat:'規則',tag:'⚖️ 規則',text:'十分な強度を有する紐等で係留する場合の長さの条件を選びなさい。',choices:['30m以下','50m以下','100m以下'],answer:0,hint:'係留の条件です。',steps:[{t:'係留',b:'<strong>30m以下</strong>で係留し立入管理すれば、人口集中地区・夜間・目視外・30m未満・物件投下の手続き不要。えい航は係留に該当せず。'}],ans:'30m以下'},
-{id:'r16',cat:'規則',tag:'⚖️ 規則',text:'航空交通管制区の高さの基準を選びなさい。',choices:['地表または水面から200m以上','地表または水面から150m以上','地表または水面から100m以上'],answer:0,hint:'管制区は無人機の150mとは別です。',steps:[{t:'管制区',b:'地表・水面から<strong>200m以上</strong>のうち国が指定した空域。'}],ans:'地表または水面から200m以上'},
-{id:'r17',cat:'規則',tag:'⚖️ 規則',text:'全ての空港に設定される制限表面の組み合わせを選びなさい。',choices:['進入表面・水平表面・転移表面','円錐表面・延長進入表面・外側水平表面','進入表面・円錐表面・水平表面'],answer:0,hint:'政令空港のみの表面と区別しましょう。',steps:[{t:'全空港',b:'<strong>進入表面・水平表面・転移表面</strong>'},{t:'政令空港等のみ',b:'円錐表面・延長進入表面・外側水平表面'}],ans:'進入表面・水平表面・転移表面'},
-{id:'r18',cat:'規則',tag:'⚖️ 規則',text:'技能証明の申請ができない者として正しいものを選びなさい。',choices:['16歳に満たない者','18歳に満たない者','20歳に満たない者'],answer:0,hint:'年齢要件です。',steps:[{t:'年齢要件',b:'<strong>16歳未満</strong>は申請不可。'}],ans:'16歳に満たない者'},
-{id:'r19',cat:'規則',tag:'⚖️ 規則',text:'2.4GHz帯の電波の特性として正しいものを選びなさい。',choices:['回折しにくく直進性が高いため障害物の影響を受けやすい','回折しやすく障害物を回り込める','水中での通信に適する'],answer:0,hint:'周波数と回折の関係です。',steps:[{t:'回折',b:'周波数が低いほど回り込みやすい。'},{t:'2.4GHz',b:'<strong>回折しにくく直進性が高い</strong>→障害物の影響大。'}],ans:'回折しにくく直進性が高いため障害物の影響を受けやすい'},
-{id:'r20',cat:'規則',tag:'⚖️ 規則',text:'アマチュア無線を使用した無人航空機について正しいものを選びなさい。',choices:['利益を目的とした業務には利用できない','業務利用が可能','免許不要で誰でも使える'],answer:0,hint:'アマチュア無線の目的を確認しましょう。',steps:[{t:'アマチュア無線',b:'個人的興味による通信。<strong>業務利用不可</strong>。資格と局免許が必要。'}],ans:'利益を目的とした業務には利用できない'},
-{id:'r21',cat:'規則',tag:'⚖️ 規則',text:'特定飛行の飛行計画の通報先・方法として正しいものを選びなさい。',choices:['ドローン情報基盤システムに入力して国土交通大臣に通報','警察署に書面提出','市区町村に届出'],answer:0,hint:'オンラインシステムで通報します。',steps:[{t:'通報',b:'特定飛行は<strong>ドローン情報基盤システム（飛行計画通報機能）</strong>に入力。困難なら事後通報可。'}],ans:'ドローン情報基盤システムに入力して国土交通大臣に通報'},
-{id:'r22',cat:'規則',tag:'⚖️ 規則',text:'無人航空機の「事故」として報告が必要なものを選びなさい。',choices:['人の死傷（重傷以上）または第三者物件の損壊','プロペラの軽微な摩耗','バッテリーの自然劣化'],answer:0,hint:'事故の定義を確認しましょう。',steps:[{t:'事故',b:'①人の死傷（<strong>重傷以上</strong>）②第三者物件の損壊（全て）③航空機との衝突・接触'}],ans:'人の死傷（重傷以上）または第三者物件の損壊'},
-
-{id:'s1',cat:'機体システム',tag:'🛸 システム',text:'マルチローターの前後・左右移動の仕組みを選びなさい。',choices:['指示した側のローター回転数を下げ反対側を上げて機体を傾ける','指示した側のローター回転数を上げて傾ける','全ローター同回転のまま傾ける'],answer:0,hint:'どちらのローターを下げるか。',steps:[{t:'仕組み',b:'移動方向（指示側）を<strong>下げ</strong>反対側を<strong>上げる</strong>。推力の合力が傾き機体が移動。'}],ans:'指示した側のローター回転数を下げ反対側を上げて機体を傾ける'},
-{id:'s2',cat:'機体システム',tag:'🛸 システム',text:'マルチローターの水平回転（ヨー）の仕組みを選びなさい。',choices:['揚力を得ている状態で回転を指示すると、指示方向のローター回転数が下がりトルクバランスが崩れ回転する','テールローターで制御','機体を傾けて回転'],answer:0,hint:'マルチローターにテールローターはありません。',steps:[{t:'仕組み',b:'反トルクバランスで制御。<strong>指示方向のローター回転数が下がり</strong>バランスが崩れ回転。'}],ans:'揚力を得ている状態で回転を指示すると、指示方向のローター回転数が下がりトルクバランスが崩れ回転する'},
-{id:'s3',cat:'機体システム',tag:'🛸 システム',text:'マルチローターの操縦用語「スロットル」の動作を選びなさい。',choices:['上昇・降下','左右移動','機首の旋回'],answer:0,hint:'4つの操縦軸を覚えましょう。',steps:[{t:'用語',b:'スロットル=<strong>上昇降下</strong>／エルロン=左右／エレベーター=前後／ラダー=機首旋回'}],ans:'上昇・降下'},
-{id:'s4',cat:'機体システム',tag:'🛸 システム',text:'飛行機（無人航空機）の特徴として正しいものを選びなさい。',choices:['ホバリングはできないが長距離・長時間飛行が可能','ホバリング・垂直離着陸が可能','後退飛行が可能'],answer:0,hint:'飛行機と回転翼の違いです。',steps:[{t:'飛行機',b:'ホバリング・垂直離着陸・後退は<strong>不可</strong>。翼で揚力。最低速度（失速速度）あり。推力喪失でも滑空。'}],ans:'ホバリングはできないが長距離・長時間飛行が可能'},
-{id:'s5',cat:'機体システム',tag:'🛸 システム',text:'大型機（25kg以上）の特徴として正しいものを選びなさい。',choices:['慣性力が大きく増速・減速・上昇・降下に要する時間と距離が長くなる','小型機より旋回半径が小さい','小型機より騒音が少ない'],answer:0,hint:'慣性（惰性）の大きさが鍵です。',steps:[{t:'大型機',b:'<strong>慣性力が大きい</strong>→時間と距離が必要。障害物回避に注意。緊急着陸地点も広く、騒音も大きい。'}],ans:'慣性力が大きく増速・減速・上昇・降下に要する時間と距離が長くなる'},
-{id:'s6',cat:'機体システム',tag:'🛸 システム',text:'ブラシレスモーターの特徴として正しいものを選びなさい。',choices:['メンテナンスが容易で静音・長寿命','ブラシの定期交換が必要','エンジン機にのみ使われる'],answer:0,hint:'ブラシがない＝何が不要か。',steps:[{t:'特徴',b:'ブラシ交換不要で<strong>メンテナンス容易・静音・長寿命</strong>。'}],ans:'メンテナンスが容易で静音・長寿命'},
-{id:'s7',cat:'機体システム',tag:'🛸 システム',text:'リチウムポリマーバッテリーの長期保管方法として正しいものを選びなさい。',choices:['充電60%を目安に保管する','満充電で保管する','完全放電して保管する'],answer:0,hint:'適切な充電率での保管が重要です。',steps:[{t:'保管',b:'長期は<strong>充電60%目安</strong>。満充電・放電状態は劣化・膨張の原因。高温(35℃超)・短絡・衝撃・水濡れを避ける。'}],ans:'充電60%を目安に保管する'},
-{id:'s8',cat:'機体システム',tag:'🛸 システム',text:'GNSSについて正しいものを選びなさい。',choices:['最低4個以上の人工衛星からの信号を同時受信して位置を計算','2個の衛星で計算できる','高度方向の精度が水平方向より高い'],answer:0,hint:'測位に必要な衛星数を確認しましょう。',steps:[{t:'GNSS',b:'<strong>最低4個以上</strong>の衛星信号で位置計算。<strong>高度方向の誤差が水平より大きい</strong>。'}],ans:'最低4個以上の人工衛星からの信号を同時受信して位置を計算'},
-{id:'s9',cat:'機体システム',tag:'🛸 システム',text:'IMUの説明として正しいものを選びなさい。',choices:['3軸ジャイロと3方向加速度センサで3次元の角速度と加速度を検出','地磁気で方位を測定','衛星電波で位置を取得'],answer:0,hint:'慣性計測装置です。',steps:[{t:'IMU',b:'<strong>3軸ジャイロ</strong>と<strong>3方向加速度センサ</strong>で角速度と加速度を検出。'}],ans:'3軸ジャイロと3方向加速度センサで3次元の角速度と加速度を検出'},
-{id:'s10',cat:'機体システム',tag:'🛸 システム',text:'ヘリコプターがメインローターの反トルクを打ち消す機構を選びなさい。',choices:['テールローター','スワッシュプレート','ESC'],answer:0,hint:'ヨー制御にも使われます。',steps:[{t:'機構',b:'<strong>テールローター</strong>で反トルクを相殺しヨー制御。スワッシュプレートは回転面の傾き・ピッチ角制御。'}],ans:'テールローター'},
-{id:'s11',cat:'機体システム',tag:'🛸 システム',text:'ESCの役割を選びなさい。',choices:['モーターの回転数を制御して揚力・推力を変化させる','機体の位置を測定','電波混信を防ぐ'],answer:0,hint:'モーター制御の装置です。',steps:[{t:'ESC',b:'<strong>モーター回転数を制御</strong>しローター回転数を増減させ揚力・推力を変化。'}],ans:'モーターの回転数を制御して揚力・推力を変化させる'},
-{id:'s12',cat:'機体システム',tag:'🛸 システム',text:'マルチパスの説明として正しいものを選びなさい。',choices:['電波が山や建物で反射・屈折し複数経路で伝搬する現象','電波が水中で減衰する現象','周波数が干渉する現象'],answer:0,hint:'複数経路がキーワードです。',steps:[{t:'マルチパス',b:'反射・屈折で<strong>複数経路</strong>を伝搬。わずかな遅れで一時的に操縦不能の要因。送信機を高く持ち向きを変えて復帰。'}],ans:'電波が山や建物で反射・屈折し複数経路で伝搬する現象'},
-{id:'s13',cat:'機体システム',tag:'🛸 システム',text:'地磁気センサの計測に影響を与えるものを選びなさい。',choices:['高圧線・変電所・鉄材を多く使った建物など','太陽光の強さ','気温の変化'],answer:0,hint:'地磁気＝磁力への影響を考えましょう。',steps:[{t:'影響',b:'<strong>鉄や電流</strong>が影響。高圧線・変電所・電波塔・鉄道・自動車等。飛行前の磁気キャリブレーションが重要。'}],ans:'高圧線・変電所・鉄材を多く使った建物など'},
-{id:'s14',cat:'機体システム',tag:'🛸 システム',text:'RTKやDGPSによる測位精度として正しいものを選びなさい。',choices:['数cm〜数mレベルの高精度測位が可能','数十mの精度','数百mの精度'],answer:0,hint:'単独測位との違いです。',steps:[{t:'精度',b:'単独測位は数十m。<strong>RTK・DGPS</strong>は固定局＋移動局で<strong>数cm〜数m</strong>。'}],ans:'数cm〜数mレベルの高精度測位が可能'},
-{id:'s15',cat:'機体システム',tag:'🛸 システム',text:'電波の減衰について正しいものを選びなさい。',choices:['進行距離の2乗に反比例して電力密度が減少する','進行距離に比例して増加する','距離に関係なく一定'],answer:0,hint:'距離2倍でどうなるか。',steps:[{t:'減衰',b:'電力密度は<strong>距離の2乗に反比例</strong>。距離2倍→1/4。水中では大きく減衰。'}],ans:'進行距離の2乗に反比例して電力密度が減少する'},
-{id:'s16',cat:'機体システム',tag:'🛸 システム',text:'リチウムポリマーバッテリーが膨らんでいる場合の対応を選びなさい。',choices:['可燃性ガス発生の可能性があるため早めに交換する','そのまま使い続ける','冷蔵庫で冷やして使う'],answer:0,hint:'膨張＝内部で何が起きているか。',steps:[{t:'対応',b:'膨張は<strong>可燃性ガス</strong>発生の可能性→<strong>早めに交換</strong>。'}],ans:'可燃性ガス発生の可能性があるため早めに交換する'},
-{id:'s17',cat:'機体システム',tag:'🛸 システム',text:'冬季のリチウムポリマーバッテリーの特性として正しいものを選びなさい。',choices:['気温低下で放電能力が下がり飛行時間が半減することがある','気温が低いほど飛行時間が延びる','気温の影響を受けない'],answer:0,hint:'低温時の挙動です。',steps:[{t:'低温時',b:'放電能力が極端に低下し<strong>飛行時間が半減</strong>することがある。'}],ans:'気温低下で放電能力が下がり飛行時間が半減することがある'},
-
-{id:'c_p1',cat:'仕事率計算',tag:'⚙️ 計算',text:'仕事率5W、回転角速度6500rpm、機体重量0.9kgの回転翼にペイロード0.3kgを搭載し、7800rpmに上げた場合の仕事率は？（空気密度は無関係）',given:'5W・0.9kg・6500rpm → +0.3kg・7800rpm',choices:['7W','8W','9W'],answer:1,hint:'(搭載後重量×rpm)÷(搭載前重量×rpm)を元の仕事率にかけます。',steps:[{t:'公式',b:'仕事率比=(搭載後重量×rpm)÷(搭載前重量×rpm)'},{t:'搭載前',b:'',c:'0.9×6500=5850'},{t:'搭載後',b:'1.2kg',c:'1.2×7800=9360'},{t:'比率',b:'',c:'9360÷5850=1.6'},{t:'答え',b:'',c:'5×1.6=8W'}],ans:'8W'},
-{id:'c_p2',cat:'仕事率計算',tag:'⚙️ 計算',text:'仕事率4W、7200rpm、0.8kgの回転翼にペイロード0.3kgを搭載し9600rpmに上げた場合の仕事率は？',given:'4W・0.8kg・7200rpm → +0.3kg・9600rpm',choices:['6W','7W','7.32W'],answer:2,hint:'搭載前0.8×7200、搭載後1.1×9600',steps:[{t:'搭載前',b:'',c:'0.8×7200=5760'},{t:'搭載後',b:'1.1kg',c:'1.1×9600=10560'},{t:'比率',b:'',c:'10560÷5760≒1.833'},{t:'答え',b:'',c:'4×1.833≒7.32W'}],ans:'7.32W'},
-{id:'c_p3',cat:'仕事率計算',tag:'⚙️ 計算',text:'仕事率3W、5000rpm、1.5kgの回転翼にペイロード0.5kgを搭載し8000rpmに上げた場合の仕事率は？',given:'3W・1.5kg・5000rpm → +0.5kg・8000rpm',choices:['5W','6.39W','8W'],answer:1,hint:'搭載前1.5×5000、搭載後2.0×8000',steps:[{t:'搭載前',b:'',c:'1.5×5000=7500'},{t:'搭載後',b:'2.0kg',c:'2.0×8000=16000'},{t:'比率',b:'',c:'16000÷7500≒2.133'},{t:'答え',b:'',c:'3×2.133≒6.39W'}],ans:'6.39W'},
-{id:'c_p4',cat:'仕事率計算',tag:'⚙️ 計算',text:'仕事率10W、3100rpm、1.2kgのヘリにペイロード0.8kgを搭載し3900rpmに上げた場合の仕事率は？',given:'10W・1.2kg・3100rpm → +0.8kg・3900rpm',choices:['15W','20W','22W'],answer:1,hint:'搭載前1.2×3100、搭載後2.0×3900',steps:[{t:'搭載前',b:'',c:'1.2×3100=3720'},{t:'搭載後',b:'2.0kg',c:'2.0×3900=7440'},{t:'比率',b:'',c:'7440÷3720=2.0'},{t:'答え',b:'',c:'10×2.0=20W'}],ans:'20W'},
-{id:'c_p5',cat:'仕事率計算',tag:'⚙️ 計算',text:'仕事率6W、4000rpm、1.0kgのマルチローターにペイロード0.5kgを搭載し6000rpmに上げた場合の仕事率は？',given:'6W・1.0kg・4000rpm → +0.5kg・6000rpm',choices:['12W','13.5W','15W'],answer:1,hint:'搭載前1.0×4000、搭載後1.5×6000',steps:[{t:'搭載前',b:'',c:'1.0×4000=4000'},{t:'搭載後',b:'1.5kg',c:'1.5×6000=9000'},{t:'比率',b:'',c:'9000÷4000=2.25'},{t:'答え',b:'',c:'6×2.25=13.5W'}],ans:'13.5W'},
-{id:'c_t1',cat:'旋回半径計算',tag:'✈️ 計算',text:'飛行速度70m/s、バンク角20°で定常旋回した時の旋回半径は？（tan20°=0.36、g=9.8）',given:'V=70　tan20°=0.36　g=9.8',choices:['約1200m','約1389m','約1500m'],answer:1,hint:'r=V²÷(g×tanφ)、70²=4900',steps:[{t:'公式',b:'r=V²÷(g×tanφ)'},{t:'計算',b:'',c:'4900÷(9.8×0.36)=4900÷3.528≒1389m'}],ans:'約1389m'},
-{id:'c_t2',cat:'旋回半径計算',tag:'✈️ 計算',text:'飛行速度23m/s、バンク角20°で定常旋回した時の旋回半径は？（tan20°=0.36、g=9.8）',given:'V=23　tan20°=0.36　g=9.8',choices:['約100m','約150m','約200m'],answer:1,hint:'23²=529',steps:[{t:'計算',b:'',c:'529÷3.528≒150m'}],ans:'約150m'},
-{id:'c_t3',cat:'旋回半径計算',tag:'✈️ 計算',text:'飛行速度30m/s、バンク角20°で定常旋回した時の旋回半径は？（tan20°=0.36、g=9.8）',given:'V=30　tan20°=0.36　g=9.8',choices:['約200m','約255m','約300m'],answer:1,hint:'30²=900',steps:[{t:'計算',b:'',c:'900÷3.528≒255m'}],ans:'約255m'},
-{id:'c_t4',cat:'旋回半径計算',tag:'✈️ 計算',text:'飛行速度50m/s、バンク角20°で定常旋回した時の旋回半径は？（tan20°=0.36、g=9.8）',given:'V=50　tan20°=0.36　g=9.8',choices:['約600m','約714m','約800m'],answer:1,hint:'50²=2500',steps:[{t:'計算',b:'',c:'2500÷3.528≒708≒714m'}],ans:'約714m'},
-{id:'c_t5',cat:'旋回半径計算',tag:'✈️ 計算',text:'飛行速度10m/s、バンク角20°で定常旋回した時の旋回半径は？（tan20°=0.36、g=9.8）',given:'V=10　tan20°=0.36　g=9.8',choices:['約28m','約40m','約55m'],answer:0,hint:'10²=100',steps:[{t:'計算',b:'',c:'100÷3.528≒28m'}],ans:'約28m'},
-{id:'c_g1',cat:'滑空距離計算',tag:'📐 計算',text:'高さ1,000m、滑空角γ=15°（tan15°=0.268）の滑空距離は？',given:'h=1000m　tanγ=0.268',choices:['約2,800m','約3,730m','約4,500m'],answer:1,hint:'d=h÷tanγ',steps:[{t:'公式',b:'d=h÷tanγ（=h×揚抗比）'},{t:'計算',b:'',c:'1000÷0.268≒3730m'}],ans:'約3,730m'},
-{id:'c_g2',cat:'滑空距離計算',tag:'📐 計算',text:'高さ500m、揚抗比15の滑空距離は？',given:'h=500m　揚抗比=15',choices:['5,000m','7,500m','9,000m'],answer:1,hint:'d=h×揚抗比',steps:[{t:'計算',b:'',c:'500×15=7500m'}],ans:'7,500m'},
-{id:'c_f1',cat:'フレネルゾーン',tag:'📡 計算',text:'2.4GHz、距離1,000mのフレネルゾーン半径の60%の値は？（光速3×10⁸）',given:'f=2.4GHz　D=1000m',choices:['約2.5m','約3.3m','約4.5m'],answer:1,hint:'λ=0.125、R=√(0.125×D/4)、×0.6',steps:[{t:'波長',b:'',c:'λ=3×10⁸÷2.4×10⁹=0.125m'},{t:'半径R',b:'',c:'√(0.125×250)=√31.25≒5.59m'},{t:'60%',b:'',c:'5.59×0.6≒3.3m'}],ans:'約3.3m'},
-{id:'c_f2',cat:'フレネルゾーン',tag:'📡 計算',text:'2.4GHz、距離2,000mのフレネルゾーン半径の60%の値は？',given:'f=2.4GHz　D=2000m',choices:['約4.0m','約4.7m','約5.5m'],answer:1,hint:'λ=0.125、R=√(0.125×500)',steps:[{t:'R',b:'',c:'√(0.125×500)=√62.5≒7.90m'},{t:'60%',b:'',c:'7.90×0.6≒4.7m'}],ans:'約4.7m'},
-{id:'c_f3',cat:'フレネルゾーン',tag:'📡 計算',text:'2.4GHz、距離2,800mのフレネルゾーン半径の60%の値は？',given:'f=2.4GHz　D=2800m',choices:['約4.5m','約5.6m','約6.5m'],answer:1,hint:'R=√(0.125×700)',steps:[{t:'R',b:'',c:'√(0.125×700)=√87.5≒9.35m'},{t:'60%',b:'',c:'9.35×0.6≒5.6m'}],ans:'約5.6m'},
-{id:'c_f4',cat:'フレネルゾーン',tag:'📡 計算',text:'2.4GHz、距離8,600mのフレネルゾーン半径の60%の値は？',given:'f=2.4GHz　D=8600m',choices:['約8.5m','約9.8m','約11m'],answer:1,hint:'R=√(0.125×2150)',steps:[{t:'R',b:'',c:'√(0.125×2150)=√268.75≒16.39m'},{t:'60%',b:'',c:'16.39×0.6≒9.8m'}],ans:'約9.8m'},
-{id:'c_a1',cat:'高度と速度',tag:'🌡️ 計算',text:'高度500m(空気密度1.17)で20m/sの飛行機が、高度3,000m(空気密度0.91)で水平定常飛行するのに必要な速度は？',given:'ρ₁=1.17 V₁=20　ρ₂=0.91',choices:['約20m/s','約22.6m/s','約25m/s'],answer:1,hint:'V₂=V₁×√(ρ₁÷ρ₂)',steps:[{t:'原理',b:'揚力L∝ρV²=一定'},{t:'ρ比',b:'',c:'1.17÷0.91≒1.286'},{t:'√',b:'',c:'√1.286≒1.134'},{t:'速度',b:'',c:'20×1.134≒22.6m/s'}],ans:'約22.6m/s'},
-{id:'c_x1',cat:'高度と速度',tag:'🌡️ 計算',text:'高度20mを10m/sで飛行する無人航空機が揚力を失い落下した場合の水平到達距離は？（g=9.8、空気抵抗無視）',given:'v=10m/s　h=20m　g=9.8',choices:['約20m','約30m','約45m'],answer:0,hint:'x=v×√(2h/g)',steps:[{t:'公式',b:'x=v×√(2h/g)'},{t:'計算',b:'',c:'10×√(40/9.8)=10×2.02≒20m'}],ans:'約20m'},
-
-{id:'o1',cat:'操縦・運航',tag:'🚁 操縦・運航',text:'マルチローターの離陸直後〜対地高度1m程度で起こりやすい現象を選びなさい。',choices:['地面効果','ボルテックス・リング・ステート','マルチパス'],answer:0,hint:'低高度での吹きおろし気流の現象です。',steps:[{t:'地面効果',b:'吹きおろし気流が<strong>地面付近で滞留</strong>し揚力が増す。離陸直後〜約1m。'}],ans:'地面効果'},
-{id:'o2',cat:'操縦・運航',tag:'🚁 操縦・運航',text:'CRMの説明として正しいものを選びなさい。',choices:['利用可能な全リソース（人・機材・情報）を活用してヒューマンエラーに対処する概念','操縦技術のみを向上させる訓練','機体整備のマニュアル'],answer:0,hint:'技量だけでは防げないエラーへの対処です。',steps:[{t:'CRM',b:'操縦技量だけでなく<strong>全リソースを活用</strong>。TEM（脅威とエラーの管理）を用いる。'},{t:'5スキル',b:'状況認識・意思決定・ワークロード管理・チームワーク・コミュニケーション'}],ans:'利用可能な全リソース（人・機材・情報）を活用してヒューマンエラーに対処する概念'},
-{id:'o3',cat:'操縦・運航',tag:'🚁 操縦・運航',text:'カテゴリーII飛行の申請書の提出期限を選びなさい。',choices:['飛行開始予定日の10開庁日前まで','20開庁日前まで','5開庁日前まで'],answer:0,hint:'カテゴリーIIとIIIで異なります。',steps:[{t:'期限',b:'カテゴリーII→<strong>10開庁日前</strong>、III→20開庁日前'}],ans:'飛行開始予定日の10開庁日前まで'},
-{id:'o4',cat:'操縦・運航',tag:'🚁 操縦・運航',text:'カテゴリーIII飛行の申請書の提出期限を選びなさい。',choices:['飛行開始予定日の20開庁日前まで','10開庁日前まで','30開庁日前まで'],answer:0,hint:'カテゴリーIIより長い期限です。',steps:[{t:'期限',b:'III→<strong>20開庁日前</strong>まで国土交通省航空局に提出。'}],ans:'飛行開始予定日の20開庁日前まで'},
-{id:'o5',cat:'操縦・運航',tag:'🚁 操縦・運航',text:'ガソリンを乗用車等で運搬する場合の制限を選びなさい。',choices:['消防法で定められた22リットル以下の専用容器','制限なし','10リットル以下の容器'],answer:0,hint:'ガソリンは危険物です。',steps:[{t:'運搬',b:'ガソリンは危険物。<strong>22リットル以下</strong>の専用容器。'}],ans:'消防法で定められた22リットル以下の専用容器'},
-{id:'o6',cat:'操縦・運航',tag:'🚁 操縦・運航',text:'手動操縦の特徴として正しいものを選びなさい。',choices:['細かな操作が可能だが高い再現性を求められる飛行には不向き','再現性が高く経過観察に最適','障害物の自動回避ができる'],answer:0,hint:'手動と自動の使い分けです。',steps:[{t:'手動操縦',b:'細かな操作が可能（点検・農薬散布・芸術的空撮）。<strong>高い再現性には不向き</strong>。GNSS等の機能不全時の危険回避にも必要。'}],ans:'細かな操作が可能だが高い再現性を求められる飛行には不向き'},
-{id:'o7',cat:'操縦・運航',tag:'🚁 操縦・運航',text:'フェールセーフ機能の説明として正しいものを選びなさい。',choices:['送信電波や電源容量の減少時に自動帰還や自動着陸へ切り替わる機能','障害物を自動で避ける機能','撮影画像を保存する機能'],answer:0,hint:'異常時の安全機能です。',steps:[{t:'フェールセーフ',b:'飛行継続困難時に<strong>自動帰還</strong>へ切替。バッテリー残量極小時はその場で<strong>自動着陸</strong>。'}],ans:'送信電波や電源容量の減少時に自動帰還や自動着陸へ切り替わる機能'},
-{id:'o8',cat:'操縦・運航',tag:'🚁 操縦・運航',text:'アルコールに関する規定として正しいものを選びなさい。',choices:['濃度に関わらず体内に保有する状態では飛行してはならない','基準値以下なら飛行できる','前夜の飲酒は影響しない'],answer:0,hint:'濃度の基準はありません。',steps:[{t:'規定',b:'微量でも影響の恐れ→<strong>濃度に関わらず</strong>保有状態では飛行禁止。前夜の飲酒も翌日まで影響する可能性。'}],ans:'濃度に関わらず体内に保有する状態では飛行してはならない'},
-{id:'o9',cat:'操縦・運航',tag:'🚁 操縦・運航',text:'目視外飛行で補助者を配置しない場合に追加で必要となる装備を選びなさい。',choices:['航空機からの視認性を高める灯火・塗色','双眼鏡','予備のバッテリー'],answer:0,hint:'補助者がいない分、機体側の要件が増えます。',steps:[{t:'追加装備',b:'補助者なし：<strong>灯火・塗色</strong>、飛行経路全体の航空機確認、第三者に危害を加えない機能、針路・姿勢等の把握など。'}],ans:'航空機からの視認性を高める灯火・塗色'},
-{id:'o10',cat:'操縦・運航',tag:'🚁 操縦・運航',text:'物件投下時、投下場所に補助者を配置しない場合の高度の原則を選びなさい。',choices:['原則1m以内','原則3m以内','原則5m以内'],answer:0,hint:'低い高度が原則です。',steps:[{t:'高度',b:'補助者を配置しない場合、物件投下は<strong>原則1m以内</strong>。'}],ans:'原則1m以内'},
-{id:'o11',cat:'操縦・運航',tag:'🚁 操縦・運航',text:'無人航空機の損害賠償責任保険について正しいものを選びなさい。',choices:['強制保険はなく任意保険だが加入が推奨される','自賠責のような強制保険がある','保険制度は存在しない'],answer:0,hint:'自動車の自賠責との違いです。',steps:[{t:'保険',b:'<strong>強制保険なし（全て任意）</strong>。加入推奨。カテゴリーIIIや一部のレベル3.5は第三者賠償責任保険が必要。'}],ans:'強制保険はなく任意保険だが加入が推奨される'},
-{id:'o12',cat:'操縦・運航',tag:'🚁 操縦・運航',text:'ヘリコプターの離陸時の注意として正しいものを選びなさい。',choices:['十分にローター回転が上昇してから離陸する','ローター回転が低いうちに素早く離陸する','垂直方向に急上昇する'],answer:0,hint:'回転不足での離陸の危険性を考えましょう。',steps:[{t:'注意',b:'回転が低い状態で無理に離陸すると反応が遅れ危険。<strong>十分に回転を上昇</strong>させてから離陸。垂直急上昇は避ける。'}],ans:'十分にローター回転が上昇してから離陸する'},
-
-{id:'k1',cat:'気象・リスク',tag:'🌤️ リスク・気象',text:'天気図の等圧線について正しいものを選びなさい。',choices:['間隔が狭いほど風が強い','間隔が広いほど風が強い','間隔は気温を表す'],answer:0,hint:'等圧線と風の関係です。',steps:[{t:'等圧線',b:'間隔が<strong>狭いほど風が強い</strong>。'}],ans:'間隔が狭いほど風が強い'},
-{id:'k2',cat:'気象・リスク',tag:'🌤️ リスク・気象',text:'ダウンバーストの説明として正しいものを選びなさい。',choices:['積乱雲等内の強烈な下降流が地表にぶつかり水平に広がる現象','海陸の気温差による局地風','高気圧中心の弱い下降気流'],answer:0,hint:'積乱雲に伴う激しい現象です。',steps:[{t:'ダウンバースト',b:'強烈な下降流が地表で水平に広がる。数百m〜10km。マイクロバーストは直径4km以下だが特に強烈。'}],ans:'積乱雲等内の強烈な下降流が地表にぶつかり水平に広がる現象'},
-{id:'k3',cat:'気象・リスク',tag:'🌤️ リスク・気象',text:'冬型（西高東低）の気圧配置の特徴を選びなさい。',choices:['西に高気圧・東に低気圧で日本海側に雪をもたらす','西に低気圧・東に高気圧','梅雨前線による長雨'],answer:0,hint:'「西高東低」の言葉通りです。',steps:[{t:'冬型',b:'<strong>西に高気圧・東に低気圧</strong>。シベリア高気圧が優勢で日本海側に雪。'}],ans:'西に高気圧・東に低気圧で日本海側に雪をもたらす'},
-{id:'k4',cat:'気象・リスク',tag:'🌤️ リスク・気象',text:'「ハザード」と「リスク」の定義として正しいものを選びなさい。',choices:['ハザード＝危険要素、リスク＝安全に影響する事象が発生する可能性','ハザード＝損害額、リスク＝事故原因','両者は同義'],answer:0,hint:'区別して理解しましょう。',steps:[{t:'定義',b:'ハザード=<strong>危険要素</strong>。リスク=安全に影響する<strong>事象が発生する可能性</strong>（発生確率×被害の大きさ）。'}],ans:'ハザード＝危険要素、リスク＝安全に影響する事象が発生する可能性'},
-{id:'k5',cat:'気象・リスク',tag:'🌤️ リスク・気象',text:'寒冷前線の通過時の天気変化として正しいものを選びなさい。',choices:['積乱雲で突風・雷を伴う強い雨、通過後は風向急変し気温が下がる','弱い雨が絶え間なく降り通過後に気温上昇','長期間停滞して長雨をもたらす'],answer:0,hint:'寒冷前線と温暖前線を区別しましょう。',steps:[{t:'寒冷前線',b:'積乱雲で<strong>突風・雷・短時間の強い雨</strong>。通過後は風向急変し<strong>気温低下</strong>。'},{t:'温暖前線',b:'弱い雨が絶え間なく降る。'}],ans:'積乱雲で突風・雷を伴う強い雨、通過後は風向急変し気温が下がる'},
-{id:'k6',cat:'気象・リスク',tag:'🌤️ リスク・気象',text:'ボルテックス・リング・ステートの発生状況と対策を選びなさい。',choices:['垂直降下時に揚力を失う現象。水平移動を合わせることで防止','上昇時に揚力が急増する現象','離陸時の地面効果'],answer:0,hint:'垂直降下時の現象です。',steps:[{t:'現象',b:'垂直降下時に空気が再循環し<strong>急激に揚力を失う</strong>。'},{t:'対策',b:'降下時に<strong>水平方向の移動を合わせる</strong>。'}],ans:'垂直降下時に揚力を失う現象。水平移動を合わせることで防止'},
-{id:'k7',cat:'気象・リスク',tag:'🌤️ リスク・気象',text:'安全マージンにおける危険半径の設定として正しいものを選びなさい。',choices:['高度と同じ数値または30mのいずれか長い方','常に30m固定','常に高度の2倍'],answer:0,hint:'高度と30mの比較です。',steps:[{t:'危険半径',b:'飛行領域に<strong>高度と同じ数値か30mのいずれか長い方</strong>を加えた範囲を無人地帯にする。'}],ans:'高度と同じ数値または30mのいずれか長い方'},
-{id:'k8',cat:'気象・リスク',tag:'🌤️ リスク・気象',text:'リスク評価ガイドラインが参考にした手法を選びなさい。',choices:['JARUSのSORA','ISO9001','PDCAサイクル'],answer:0,hint:'国際的なリスク評価手法です。',steps:[{t:'SORA',b:'<strong>JARUSのSORA</strong>を参考に作成。地上・空中リスクを評価しSAILを決定。'}],ans:'JARUSのSORA'},
-{id:'k9',cat:'気象・リスク',tag:'🌤️ リスク・気象',text:'ジオフェンス機能の役割として正しいものを選びなさい。',choices:['飛行禁止空域を設定し飛行の逸脱を防止する','障害物を物理的に遮断する','電波の混信を防ぐ'],answer:0,hint:'仮想の柵です。',steps:[{t:'ジオフェンス',b:'<strong>飛行禁止空域を設定</strong>し逸脱を防止。'}],ans:'飛行禁止空域を設定し飛行の逸脱を防止する'},
-{id:'k10',cat:'気象・リスク',tag:'🌤️ リスク・気象',text:'飛行を延期・中止すべき気象条件として正しいものを選びなさい。',choices:['降雨・降雪・霧の発生時・雷鳴が聞こえる時','晴天で微風の時','気温20℃の時'],answer:0,hint:'安全に飛行できない条件を選びましょう。',steps:[{t:'中止条件',b:'<strong>降雨・降雪・霧・雷鳴</strong>が聞こえる時は延期・中止が望ましい。'}],ans:'降雨・降雪・霧の発生時・雷鳴が聞こえる時'},
-{id:'k11',cat:'気象・リスク',tag:'🌤️ リスク・気象',text:'海陸風について正しいものを選びなさい。',choices:['日中は海から陸へ、夜間は陸から海へ吹き、入れ替わり時は無風（朝凪・夕凪）','常に海から陸へ吹く','山岳地帯特有の風'],answer:0,hint:'昼夜の温度差による風です。',steps:[{t:'海陸風',b:'日中は暖まりやすい陸へ、夜間は冷めにくい海へ。入れ替わり時は<strong>朝凪・夕凪</strong>。'}],ans:'日中は海から陸へ、夜間は陸から海へ吹き、入れ替わり時は無風（朝凪・夕凪）'},
-{id:'k12',cat:'気象・リスク',tag:'🌤️ リスク・気象',text:'低気圧の中心部の特徴として正しいものを選びなさい。',choices:['上昇気流が起こり雲が発生し一般的に天気が悪い','下降気流で天気が良い','風が吹き出す'],answer:0,hint:'高気圧との違いです。',steps:[{t:'低気圧',b:'反時計回りに吹き込み中心部で<strong>上昇気流</strong>→天気が悪い。'},{t:'高気圧',b:'時計回りに吹き出し下降気流→天気が良い。'}],ans:'上昇気流が起こり雲が発生し一般的に天気が悪い'},
-{id:'k13',cat:'気象・リスク',tag:'🌤️ リスク・気象',text:'カテゴリーIII飛行の機体選定に関するリスク低減策を選びなさい。',choices:['冗長性を備えた機体やパラシュート展開機能のある機体を使用','最も安価な機体を使用','軽量化のため安全装備を外す'],answer:0,hint:'第三者被害の低減策です。',steps:[{t:'機体選定',b:'<strong>適切な冗長性</strong>（多めのプロペラ・モーター）や<strong>パラシュート</strong>等の衝撃軽減機能を備えた機体を使用。'}],ans:'冗長性を備えた機体やパラシュート展開機能のある機体を使用'},
-
-{id:'r23',cat:'規則',tag:'⚖️ 規則',text:'第一種機体認証・第二種機体認証の有効期間の組み合わせとして正しいものを選びなさい。',choices:['第一種は1年、第二種は3年','第一種は3年、第二種は1年','両方とも3年'],answer:0,hint:'よりリスクの高い第一種ほど期間が短いです。',steps:[{t:'機体認証',b:'<strong>第一種=1年</strong>、<strong>第二種=3年</strong>。第一種はカテゴリーIII対応でリスクが高いため期間が短い。'}],ans:'第一種は1年、第二種は3年'},
-{id:'r24',cat:'規則',tag:'⚖️ 規則',text:'多数の者の集合する催し場所上空での飛行に際して必要な条件を選びなさい。',choices:['風速5m/s以上で飛行を中止し、接触時の危害を軽減する構造を用意する','風速10m/s以上で中止する','風速の制限はない'],answer:0,hint:'催し上空は特に厳しい条件が課されます。',steps:[{t:'催し上空',b:'<strong>風速5m/s以上で飛行中止</strong>。機体が第三者・物件に接触した場合の危害を軽減する構造が必要。'}],ans:'風速5m/s以上で飛行を中止し、接触時の危害を軽減する構造を用意する'},
-{id:'r25',cat:'規則',tag:'⚖️ 規則',text:'重量100g未満の模型航空機を飛行させる際、国土交通省への事前届出が必要となる空域を選びなさい。',choices:['高度250m以上の空域、空港等周辺、航空路内（150m以上）','高度50m以上の全ての空域','届出は一切不要'],answer:0,hint:'模型航空機にも一定の規制があります。',steps:[{t:'模型航空機',b:'空港等周辺・航空路内（150m以上）・<strong>高度250m以上</strong>で飛行させる場合は事前届出が必要。管制圏等は飛行禁止。'}],ans:'高度250m以上の空域、空港等周辺、航空路内（150m以上）'},
-{id:'s18',cat:'機体システム',tag:'🛸 システム',text:'パワードリフト機（Powered-lift）を飛行させるために必要な種類の限定を選びなさい。',choices:['回転翼航空機（マルチローター）と飛行機の両方の限定','回転翼航空機（ヘリコプター）のみ','飛行機のみ'],answer:0,hint:'垂直離着陸と前進飛行の両方の特徴を持つ機体です。',steps:[{t:'パワードリフト機',b:'垂直離着陸＋前進飛行の両特徴を持つ。<strong>マルチローターと飛行機の両方</strong>の種類の限定に係る資格が必要。'}],ans:'回転翼航空機（マルチローター）と飛行機の両方の限定'},
-{id:'s19',cat:'機体システム',tag:'🛸 システム',text:'翼の迎角と揚力の関係について正しいものを選びなさい。',choices:['迎角が大きくなりすぎると流れが剥離し失速を招く','迎角は揚力に影響しない','迎角が大きいほど常に揚力が増え続ける'],answer:0,hint:'迎角を増やし続けるとどうなるか。',steps:[{t:'迎角と揚力',b:'一般に迎角が増すと揚力・抗力とも増加するが、<strong>大きすぎると剥離し揚力が減少→失速</strong>。失速時は舵が効かなくなる。'}],ans:'迎角が大きくなりすぎると流れが剥離し失速を招く'},
-{id:'s20',cat:'機体システム',tag:'🛸 システム',text:'高度を計測するセンサの説明として正しいものを選びなさい。',choices:['気圧センサ・超音波センサ・LiDARなどが用いられる','GNSSのみで計測する','地磁気センサで計測する'],answer:0,hint:'高度計測には複数の方式があります。',steps:[{t:'高度センサ',b:'<strong>気圧センサ</strong>（気圧変化）、<strong>超音波センサ</strong>（音波反射）、<strong>LiDAR</strong>（レーザー反射）など。'}],ans:'気圧センサ・超音波センサ・LiDARなどが用いられる'},
-{id:'o13',cat:'操縦・運航',tag:'🚁 操縦・運航',text:'自動操縦の特徴として正しいものを選びなさい。',choices:['ウェイポイントを設定し再現性の高い飛行ができる','操縦者の技量で複雑な操作ができる','常に手動操縦より安全である'],answer:0,hint:'手動操縦との違い（再現性）に注目。',steps:[{t:'自動操縦',b:'地図上に<strong>ウェイポイント</strong>（経過点）を設定し<strong>再現性の高い飛行</strong>が可能。経過観察・離島輸送・耕作地等に利用。'},{t:'注意',b:'設定時に飛行経路上の障害物の事前現地確認が必要。'}],ans:'ウェイポイントを設定し再現性の高い飛行ができる'},
-{id:'k14',cat:'気象・リスク',tag:'🌤️ リスク・気象',text:'梅雨前線や秋雨前線が分類される前線の種類を選びなさい。',choices:['停滞前線','寒冷前線','閉塞前線'],answer:0,hint:'同じ場所に留まり長雨をもたらす前線です。',steps:[{t:'停滞前線',b:'気団同士の勢力が変わらず<strong>ほぼ同じ位置に留まる</strong>前線。長雨をもたらす<strong>梅雨前線・秋雨前線</strong>がこれにあたる。'},{t:'閉塞前線',b:'（参考）寒冷前線が温暖前線に追いついた前線。'}],ans:'停滞前線'},
-
-{id:'r26',cat:'規則',tag:'⚖️ 規則',text:'航空機と無人航空機の進路が交差・接近する場合の対応として正しいものを選びなさい。',choices:['無人航空機側が回避する（航空機が進路権を有する）','航空機側が回避する','どちらも高度を上げて回避する'],answer:0,hint:'人命に直結する航空機が優先されます。',steps:[{t:'進路権',b:'<strong>航空機が無人航空機に対して進路権</strong>を有する。無人航空機側が回避（地上に降下等）。航空機側からは無人機を視認しにくいため。'}],ans:'無人航空機側が回避する（航空機が進路権を有する）'},
-{id:'r27',cat:'規則',tag:'⚖️ 規則',text:'計器飛行方式（IFR）と有視界飛行方式（VFR）について正しいものを選びなさい。',choices:['IFRは管制機関の指示に常時従う方式で、高高度の旅客機が通常使う','VFRは管制機関の指示に常時従う方式','IFRは操縦者の判断のみで飛行する方式'],answer:0,hint:'旅客機がどちらを使うか考えましょう。',steps:[{t:'IFR',b:'<strong>計器飛行方式</strong>。管制機関の指示に常時従う。高高度の旅客機が通常使用。'},{t:'VFR',b:'<strong>有視界飛行方式</strong>。操縦者の判断で飛行。小型機・回転翼が多い。'}],ans:'IFRは管制機関の指示に常時従う方式で、高高度の旅客機が通常使う'},
-{id:'r28',cat:'規則',tag:'⚖️ 規則',text:'「物件の投下」に該当しない行為を選びなさい。',choices:['輸送した物件を地表に置く行為や人員に受け渡す行為','水や農薬等の液体の散布','霧状のものの散布'],answer:0,hint:'「落下させる」かどうかが基準です。',steps:[{t:'投下に含む',b:'水・農薬等の液体や霧状のものの散布も投下に<strong>含まれる</strong>。'},{t:'含まない',b:'地表等に落下させず<strong>人員に受け渡す</strong>・<strong>地表に置く</strong>行為は投下に該当しない。'}],ans:'輸送した物件を地表に置く行為や人員に受け渡す行為'},
-{id:'r29',cat:'規則',tag:'⚖️ 規則',text:'立入管理措置の内容として正しいものを選びなさい。',choices:['立入管理区画を設定し看板・コーン・補助者による監視等で第三者の立入りを制限','飛行を夜間に限定すること','機体に保険をかけること'],answer:0,hint:'第三者を物理的に立ち入らせない措置です。',steps:[{t:'立入管理措置',b:'第三者の立入りを制限する区画を設定し範囲を明示。<strong>看板・コーン・補助者による監視・口頭警告</strong>等。これを講じる＝カテゴリーII、講じない＝カテゴリーIII。'}],ans:'立入管理区画を設定し看板・コーン・補助者による監視等で第三者の立入りを制限'},
-{id:'r30',cat:'規則',tag:'⚖️ 規則',text:'飛行自粛要請空域について正しいものを選びなさい。',choices:['法令の規制ではないが、要請に基づき飛行自粛が求められる空域','法令で飛行が完全禁止される空域','許可を取れば必ず飛行できる空域'],answer:0,hint:'「法令の規制」かどうかがポイントです。',steps:[{t:'飛行自粛要請空域',b:'<strong>法令に基づく規制ではない</strong>が、警備上の観点等から国交省が飛行自粛を要請。HP・Xで公示。飛行前に該当を確認し適切に対応。'}],ans:'法令の規制ではないが、要請に基づき飛行自粛が求められる空域'},
-{id:'r31',cat:'規則',tag:'⚖️ 規則',text:'技能証明試験の受験順序について正しいものを選びなさい。',choices:['学科試験に合格しなければ実地試験を受けられない','実地試験に合格してから学科試験を受ける','順序は自由'],answer:0,hint:'学科と実地の順序です。',steps:[{t:'順序',b:'<strong>学科試験合格が先</strong>。学科に合格しないと実地試験を受けられない。登録講習機関の講習修了で実地試験は免除可能。'}],ans:'学科試験に合格しなければ実地試験を受けられない'},
-{id:'s21',cat:'機体システム',tag:'🛸 システム',text:'リチウムポリマーバッテリーの特徴として正しいものを選びなさい。',choices:['エネルギー密度が高く、電解質が可燃物である','メモリ効果が大きい','自己放電が非常に大きい'],answer:0,hint:'リポの長所と注意点を確認しましょう。',steps:[{t:'特徴',b:'<strong>エネルギー密度が高い・電圧が高い・自己放電が少ない・メモリ効果が小さい</strong>。一方<strong>電解質が可燃物</strong>のため発火に注意。'}],ans:'エネルギー密度が高く、電解質が可燃物である'},
-{id:'s22',cat:'機体システム',tag:'🛸 システム',text:'複数セルのリチウムポリマーバッテリーの充電時の注意として正しいものを選びなさい。',choices:['バランスコネクタを充電器に接続しセル間の充電量を補正しながら充電する','どのセルも無視して急速充電する','1セルだけ充電すればよい'],answer:0,hint:'セル間のバランスが重要です。',steps:[{t:'バランス充電',b:'セル間の電圧差が生じると過放電で急速劣化。<strong>バランスコネクタを充電器に接続</strong>しセル間バランスを補正しながら充電。'}],ans:'バランスコネクタを充電器に接続しセル間の充電量を補正しながら充電する'},
-{id:'s23',cat:'機体システム',tag:'🛸 システム',text:'地磁気センサが正常な方位を示さない原因の一つを選びなさい。',choices:['磁力線が示す北（磁北）と地図の北に偏角が生じるため','気温が高いため','GNSS衛星が多すぎるため'],answer:0,hint:'磁北と真北の違いです。',steps:[{t:'偏角',b:'磁力線が示す<strong>磁北</strong>と地図の北（真北）には<strong>偏角</strong>が生じる。鉄や電流の影響も受けるため磁気キャリブレーションが重要。'}],ans:'磁力線が示す北（磁北）と地図の北に偏角が生じるため'},
-{id:'s24',cat:'機体システム',tag:'🛸 システム',text:'無人航空機の制御用通信に多く使われる極超短波（300MHz〜3GHz）の特性を選びなさい。',choices:['直進性が強いが多少の山や建物の陰には回り込んで伝わる','波長が長く障害物を大きく回り込む','水中通信に最適'],answer:0,hint:'波長が短いほど直進性が強くなります。',steps:[{t:'極超短波',b:'波長10cm〜1m。<strong>直進性が強い</strong>が多少の障害物には回り込む。情報量が大きく小型アンテナで通信可能。携帯電話・無人航空機等に利用。'}],ans:'直進性が強いが多少の山や建物の陰には回り込んで伝わる'},
-{id:'o14',cat:'操縦・運航',tag:'🚁 操縦・運航',text:'TEM（Threat and Error Management）の説明として正しいものを選びなさい。',choices:['エラーを誘発する要因（スレット）を早期に把握・管理し事故を防ぐ手法','機体の整備手順','バッテリーの充電方法'],answer:0,hint:'CRMを実践するための手法です。',steps:[{t:'TEM',b:'<strong>スレット（脅威）＝エラーを誘発する要因</strong>を早期に把握・管理。気象変化・疲労・機材不具合等。望ましくない状態(UAS)を防ぐ。'}],ans:'エラーを誘発する要因（スレット）を早期に把握・管理し事故を防ぐ手法'},
-{id:'o15',cat:'操縦・運航',tag:'🚁 操縦・運航',text:'操縦者のパフォーマンス低下への対応として正しいものを選びなさい。',choices:['疲労を感じても飛行を継続しがちなため、適切に飛行時間を管理する','疲労は飛行に影響しない','ストレスは多いほど集中できる'],answer:0,hint:'疲労・ストレスへの注意です。',steps:[{t:'パフォーマンス',b:'操縦者は<strong>疲労を感じても継続しがち</strong>。飛行時間の管理が必要。高ストレスは安全を妨げる→コミュニケーションでストレス軽減。'}],ans:'疲労を感じても飛行を継続しがちなため、適切に飛行時間を管理する'},
-{id:'o16',cat:'操縦・運航',tag:'🚁 操縦・運航',text:'飛行機（無人航空機）の離着陸時の風向の原則を選びなさい。',choices:['向かい風を選ぶのが原則（追い風は失速の危険）','追い風で行うのが原則','無風時以外は飛行しない'],answer:0,hint:'追い風だとどうなるか考えましょう。',steps:[{t:'風向',b:'離着陸は<strong>向かい風</strong>が原則。横風でもできる限り向かい風方向を選ぶ。<strong>追い風は失速の危険</strong>。'}],ans:'向かい風を選ぶのが原則（追い風は失速の危険）'},
-{id:'k15',cat:'気象・リスク',tag:'🌤️ リスク・気象',text:'風速の定義として正しいものを選びなさい。',choices:['単に風速と言えば観測時の前10分間の平均風速を指す','常に瞬間風速を指す','1時間の平均風速を指す'],answer:0,hint:'平均風速の時間幅です。',steps:[{t:'風速',b:'単に風速＝<strong>前10分間の平均風速</strong>。平均風速の最大値=最大風速、瞬間風速の最大値=最大瞬間風速。'}],ans:'単に風速と言えば観測時の前10分間の平均風速を指す'},
-{id:'k16',cat:'気象・リスク',tag:'🌤️ リスク・気象',text:'ビル風の特徴として正しいものを選びなさい。',choices:['周辺の風より風速が速く継続して吹き、建物の配置で種類が異なる','周辺の風より必ず弱い','夜間のみ発生する'],answer:0,hint:'高層ビル周辺の風です。',steps:[{t:'ビル風',b:'高層ビル等の周辺に発生。<strong>周辺の風より風速が速く継続</strong>。剥離流・吹き降ろし・逆流・谷間風・街路風等、建物配置で種類が異なる。'}],ans:'周辺の風より風速が速く継続して吹き、建物の配置で種類が異なる'},
-{id:'k17',cat:'気象・リスク',tag:'🌤️ リスク・気象',text:'積乱雲を含む積雲系の雲が伴う降水の傾向を選びなさい。',choices:['断続的でしゅう雨性の降水','連続的で穏やかな降水','降水を伴わない'],answer:0,hint:'層雲系との違いです。',steps:[{t:'雲と降水',b:'<strong>積雲系（積乱雲等）→断続的・しゅう雨性</strong>の降水。<strong>層雲系→連続的</strong>な降水。雲は10種雲形に分類。'}],ans:'断続的でしゅう雨性の降水'},
-{id:'k18',cat:'気象・リスク',tag:'🌤️ リスク・気象',text:'低温時・高温時の無人航空機への影響として正しいものを選びなさい。',choices:['特に低温時はバッテリーの飛行可能時間が普段より短くなる','高温時のみ飛行時間が延びる','気温は飛行に影響しない'],answer:0,hint:'運用可能範囲内でも温度の影響があります。',steps:[{t:'温度の影響',b:'運用可能範囲内でも低温・高温で影響。特に<strong>低温時はバッテリー持続時間が短く</strong>なる。市街地・運動場では上昇気流やつむじ風にも注意。'}],ans:'特に低温時はバッテリーの飛行可能時間が普段より短くなる'},
-
-{id:'e1',cat:'出題実績',tag:'🎯 出題実績',text:'無人航空機登録制度の目的として正しい組み合わせを選びなさい。',choices:['①事故時の所有者把握 ②事故の原因究明など安全確保上必要な措置 ③安全上問題のある機体の登録拒否','①納税の管理 ②飛行回数の集計 ③操縦者の評価','①保険料の算定 ②機体価格の把握 ③販売店の登録'],answer:0,hint:'登録制度は「安全確保」のための3つの目的があります。',steps:[{t:'3つの目的',b:'①<strong>事故発生時などの所有者把握</strong> ②<strong>事故の原因究明など安全確保上必要な措置の実施</strong> ③<strong>安全上問題のある機体の登録を拒否</strong>し安全を確保。'}],ans:'①事故時の所有者把握 ②事故の原因究明など安全確保上必要な措置 ③安全上問題のある機体の登録拒否'},
-{id:'e2',cat:'出題実績',tag:'🎯 出題実績',text:'無人航空機の飛行における「直接関与者」に該当する者を選びなさい。',choices:['操縦者、現に操縦していないが操縦する可能性のある者、補助者','映画の空撮における俳優','たまたま現場の近くを通った歩行者'],answer:0,hint:'飛行の安全確保に必要な要員かどうかです。',steps:[{t:'直接関与者',b:'<strong>操縦者・操縦する可能性のある者・補助者</strong>等、飛行の安全確保に必要な要員。第三者に該当しない。'},{t:'間接関与者',b:'飛行目的を操縦者と共有する俳優・スタッフ・人文字の生徒等（3条件を満たす者）。'}],ans:'操縦者、現に操縦していないが操縦する可能性のある者、補助者'},
-{id:'e3',cat:'出題実績',tag:'🎯 出題実績',text:'「間接関与者」の例として正しいものを選びなさい。',choices:['映画の空撮における俳優やスタッフ、学校等での人文字の空撮における生徒','信号待ちで偶然集まった人々','飛行を全く知らない近隣住民'],answer:0,hint:'飛行目的を操縦者と共有し、指示を受けている人です。',steps:[{t:'間接関与者の3条件',b:'①操縦者が飛行目的への関与を認識 ②計画外挙動時の指示・安全注意を受けている ③関与するか自ら決定できる。'},{t:'例',b:'<strong>映画の俳優・スタッフ、人文字の生徒</strong>等。これらは第三者ではない。'}],ans:'映画の空撮における俳優やスタッフ、学校等での人文字の空撮における生徒'},
-{id:'e4',cat:'出題実績',tag:'🎯 出題実績',text:'行政処分の「個別事情による加減表」で加重となる事情を選びなさい。',choices:['第三者の負傷の結果が生じた場合（加重1〜3点）','違反内容が軽微で情状をくむべき場合','処分事由を自主的に申し出た場合'],answer:0,hint:'被害が重い・悪質なものは加重、改善努力は軽減です。',steps:[{t:'加重',b:'重大な悪意・害意=加重3点、<strong>第三者の負傷=加重1〜3点</strong>、常習的=加重3点、社会的影響大=加重1〜3点。'},{t:'軽減',b:'やむを得ない事情・軽微・自主的な解消や申出=軽減1〜3点。'}],ans:'第三者の負傷の結果が生じた場合（加重1〜3点）'},
-{id:'e5',cat:'出題実績',tag:'🎯 出題実績',text:'過去に「技能証明の取消」を受けた者が再び処分事由に該当した場合の扱いを選びなさい。',choices:['技能証明の取消となる','加重2点で文書警告','影響しない'],answer:0,hint:'最も重い過去処分の影響です。',steps:[{t:'過去処分の取扱表',b:'過去に<strong>取消</strong>を受けていると、今回も<strong>取消</strong>。停止歴は加重4〜6点、口頭注意・文書警告歴は加重2〜4点。'}],ans:'技能証明の取消となる'},
-{id:'e6',cat:'出題実績',tag:'🎯 出題実績',text:'小型無人機等飛行禁止法の「特定航空用機器」に該当するものを選びなさい。',choices:['気球、ハンググライダー、パラグライダー','回転翼航空機（マルチローター）','飛行機型ドローン'],answer:0,hint:'人が乗って飛行できる機器です。',steps:[{t:'特定航空用機器',b:'航空機以外で<strong>人が飛行できる</strong>機器。<strong>気球・ハンググライダー・パラグライダー</strong>等。小型無人機（重さ問わず）とは別区分。'}],ans:'気球、ハンググライダー、パラグライダー'},
-{id:'e7',cat:'出題実績',tag:'🎯 出題実績',text:'小型無人機等飛行禁止法でレッドゾーン（対象施設の敷地・区域上空）で飛行した者の罰則を選びなさい。',choices:['1年以下の懲役または50万円以下の罰金','3年以下の懲役','過料のみ'],answer:0,hint:'重要施設の上空飛行・命令違反の罰則です。',steps:[{t:'罰則',b:'レッドゾーンで飛行した者・警察官等の命令違反者は<strong>1年以下の懲役または50万円以下の罰金</strong>。'}],ans:'1年以下の懲役または50万円以下の罰金'},
-{id:'e8',cat:'出題実績',tag:'🎯 出題実績',text:'フライトコントロールシステムのデバイスの説明として正しいものを選びなさい。',choices:['ジャイロセンサは回転角速度を測定する','地磁気センサは加速度を測定する','GNSSは機体の向き（方位）を測定する'],answer:0,hint:'各センサが何を測るかを区別しましょう。',steps:[{t:'各デバイス',b:'<strong>ジャイロ=回転角速度</strong>／加速度センサ=加速度／地磁気センサ=方位／GNSS=位置・高度／高度センサ=地上からの高度。'}],ans:'ジャイロセンサは回転角速度を測定する'},
-{id:'e9',cat:'出題実績',tag:'🎯 出題実績',text:'物件投下用のウインチ機構で物件を吊り下げる場合の注意点を選びなさい。',choices:['物件の揺れ、投下前後の重心の変化に注意する','物件の色だけ確認すればよい','重心は変化しないので気にしなくてよい'],answer:0,hint:'吊り下げると機体の状態がどう変わるか考えましょう。',steps:[{t:'注意',b:'ウインチで吊り下げる場合は<strong>物件の揺れ・投下前後の重心変化</strong>に注意。物件投下装置は意図せず落下しない構造だが、搭載方法・投下手順を熟知する必要がある。'}],ans:'物件の揺れ、投下前後の重心の変化に注意する'},
-{id:'e10',cat:'出題実績',tag:'🎯 出題実績',text:'極超短波（300MHz〜3GHz）とマイクロ波（3〜30GHz）の用途として正しいものを選びなさい。',choices:['極超短波は無人機の制御用通信、マイクロ波は画像伝送や衛星通信に多く使われる','両方とも水中通信に使われる','極超短波は衛星放送専用'],answer:0,hint:'波長が短いほど情報量が大きく直進性が強くなります。',steps:[{t:'極超短波',b:'波長10cm〜1m。<strong>無人機の制御用通信</strong>・携帯電話等。多少の障害物には回り込む。'},{t:'マイクロ波',b:'波長1〜10cm。直進性が強く情報量大。<strong>画像伝送・衛星通信・無線LAN・レーダー</strong>。'}],ans:'極超短波は無人機の制御用通信、マイクロ波は画像伝送や衛星通信に多く使われる'},
-{id:'e11',cat:'出題実績',tag:'🎯 出題実績',text:'飛行機（無人航空機）の運航の特徴として正しいものを選びなさい。',choices:['回転翼機より最小旋回半径が大きく、上空待機はサークルを描く旋回で行う','ホバリングで上空待機できる','追い風で離着陸するのが原則'],answer:0,hint:'飛行機はホバリングできません。',steps:[{t:'飛行機の運航',b:'回転翼より<strong>広い離着陸エリア・最小旋回半径が大きい</strong>。ホバリング不可→上空待機は<strong>サークル旋回</strong>。離着陸は<strong>向かい風</strong>が原則（追い風は失速の危険）。'}],ans:'回転翼機より最小旋回半径が大きく、上空待機はサークルを描く旋回で行う'},
-{id:'e12',cat:'出題実績',tag:'🎯 出題実績',text:'ヘリコプターでボルテックス・リング・ステートを予防する方法を選びなさい。',choices:['前進させながら降下する','垂直に素早く降下する','降下を止めてホバリングし続ける'],answer:0,hint:'垂直降下が原因なので、それを避けます。',steps:[{t:'予防',b:'垂直降下・降下を伴う低速前進で発生。<strong>前進させながら降下</strong>すると予防に有効。'},{t:'関連',b:'ヘリは前進しながら上昇すると必要パワーを削減できる（垂直上昇は避ける）。'}],ans:'前進させながら降下する'},
-{id:'e13',cat:'出題実績',tag:'🎯 出題実績',text:'オートローテーション機構の説明として正しいものを選びなさい。',choices:['動力が停止しても軟着陸が可能（入るには必要な操作・高度範囲・速度範囲がある）','動力停止時は必ず墜落する','上昇専用の機構である'],answer:0,hint:'エンジン停止時の安全機構です。',steps:[{t:'オートローテーション',b:'動力停止でも<strong>軟着陸が可能</strong>。ただし入るには必要な操作・飛行高度範囲・速度範囲がある。'}],ans:'動力が停止しても軟着陸が可能（入るには必要な操作・高度範囲・速度範囲がある）'},
-{id:'e14',cat:'出題実績',tag:'🎯 出題実績',text:'リスク評価の6ステップの最初（Step1）として正しいものを選びなさい。',choices:['運航計画（CONOPS）の説明','地上リスクの把握','隣接エリアの考慮'],answer:0,hint:'まず何を明確にするかです。',steps:[{t:'6ステップ',b:'①<strong>運航計画(CONOPS)</strong>→②地上リスク→③空中リスク→④安全目標(SAIL→OSO)→⑤隣接エリア→⑥評価結果への対応（飛行マニュアル作成）'}],ans:'運航計画（CONOPS）の説明'},
-{id:'e15',cat:'出題実績',tag:'🎯 出題実績',text:'「戦略的対策」と「戦術的対策」の違いとして正しいものを選びなさい。',choices:['戦略的＝飛行前に遭遇確率を下げる対策、戦術的＝飛行中に衝突を回避する対策','戦略的＝飛行中、戦術的＝飛行前','両者は同じ意味'],answer:0,hint:'「前もって」か「その場で」かです。',steps:[{t:'区別',b:'<strong>戦略的＝飛行前</strong>（時間帯・境界の限定で遭遇確率を下げる）。<strong>戦術的＝飛行中</strong>（航空機との衝突を回避）。'}],ans:'戦略的＝飛行前に遭遇確率を下げる対策、戦術的＝飛行中に衝突を回避する対策'},
-{id:'e16',cat:'出題実績',tag:'🎯 出題実績',text:'緊急時の対応の基本方針として正しいものを選びなさい。',choices:['離陸地点に戻すことを前提とせず、速やかに近くの安全な無人地帯へ不時着させる','必ず離陸地点まで戻す','その場で上昇させて待機する'],answer:0,hint:'戻すことにこだわらないのがポイントです。',steps:[{t:'緊急時',b:'離陸地点に戻すことを前提とせず<strong>速やかに近くの安全な無人地帯へ不時着</strong>。フェールセーフ機能で自動帰還・自動着陸する機体もある。'}],ans:'離陸地点に戻すことを前提とせず、速やかに近くの安全な無人地帯へ不時着させる'},
-{id:'e17',cat:'出題実績',tag:'🎯 出題実績',text:'マルチパスによって一時的に操縦不能になった場合の対処を選びなさい。',choices:['送信機をできるだけ高い位置に持ち、アンテナの向きを変えて復帰を試みる','すぐに電源を切る','その場で待つしかない'],answer:0,hint:'電波の受信状態を改善する操作です。',steps:[{t:'マルチパス対処',b:'反射・屈折で複数経路を通り一時的に操縦不能に。<strong>送信機を高く持ちアンテナの向きを変えて</strong>復帰を試みる。'}],ans:'送信機をできるだけ高い位置に持ち、アンテナの向きを変えて復帰を試みる'},
-{id:'e18',cat:'出題実績',tag:'🎯 出題実績',text:'機体ごとの離陸地点と操縦者・補助者との推奨距離として正しいものを選びなさい。',choices:['マルチローターは3m以上、飛行機・ヘリコプターは20m以上が推奨','すべて10m以上','すべて50m以上'],answer:0,hint:'機種でローターの大きさ・リスクが異なります。',steps:[{t:'推奨距離',b:'<strong>マルチローター＝操縦者・補助者と3m以上</strong>。<strong>飛行機・ヘリコプター＝20m以上</strong>を推奨。いずれも周囲の物件からは30m以上。'}],ans:'マルチローターは3m以上、飛行機・ヘリコプターは20m以上が推奨'},
-{id:'e19',cat:'出題実績',tag:'🎯 出題実績',text:'自動操縦におけるヒューマンエラーの傾向として正しいものを選びなさい。',choices:['ウェイポイント設定時の障害物確認不足で衝突・墜落が起きうるため事前に現地確認する','自動操縦ではエラーは起きない','設定後の確認は不要'],answer:0,hint:'設定ミスが事故につながります。',steps:[{t:'自動操縦のエラー',b:'ウェイポイント設定時の<strong>障害物確認不足</strong>で衝突・墜落。設定した飛行経路上の障害物は<strong>事前に現地確認</strong>する。'}],ans:'ウェイポイント設定時の障害物確認不足で衝突・墜落が起きうるため事前に現地確認する'},
-{id:'e20',cat:'出題実績',tag:'🎯 出題実績',text:'フレネルゾーンの説明として正しいものを選びなさい。',choices:['電力損失なく電波が到達するために必要な領域で、確保された状態が「見通しが良い」','電波が全く届かない領域','機体のバッテリー残量を示す領域'],answer:0,hint:'「見通しが良い」の意味を確認しましょう。',steps:[{t:'フレネルゾーン',b:'電力損失なく電波が到達するために必要な<strong>楕円体の領域</strong>。確保された状態＝「<strong>見通しが良い</strong>」。内部に障害物があると通信距離が短くなる。周波数が高い・距離が短いほど半径は小さい。'}],ans:'電力損失なく電波が到達するために必要な領域で、確保された状態が「見通しが良い」'},
-
-{id:'e21',cat:'出題実績',tag:'🎯 出題実績',text:'緊急用務空域における無人航空機の飛行の扱いとして正しいものを選びなさい。',choices:['国や地方公共団体、又はこれらから依頼を受けた者が捜索・救助の目的で行う場合は飛行できる','消防署の職員であればいつでも自由に飛行できる','空港周辺の飛行許可を持っていれば飛行できる'],answer:0,hint:'「いつでも」「許可があれば」は誤り。誰が・何の目的か、です。',steps:[{t:'原則',b:'緊急用務空域は原則飛行禁止。他空域の許可があっても飛べない。100g未満も禁止。'},{t:'特例（捜索救助）',b:'<strong>国や地方公共団体、又はこれらから依頼を受けた者</strong>が事故・災害に際し<strong>捜索・救助の目的</strong>で飛行する場合は空域・方法の規制が適用されない。'},{t:'ひっかけ',b:'「消防署の職員はいつでも可能」は誤り（目的が必要）。独自活動は特例対象外。'}],ans:'国や地方公共団体、又はこれらから依頼を受けた者が捜索・救助の目的で行う場合は飛行できる'},
-{id:'e22',cat:'出題実績',tag:'🎯 出題実績',text:'捜索又は救助のための特例について正しいものを選びなさい。',choices:['国・地方公共団体に関わらない独自の活動は特例の対象外で、許可・承認が必要','どんな個人でも災害時なら自由に飛行できる','特例は夜間飛行のみに適用される'],answer:0,hint:'「国・地方公共団体」が関わるかどうかが境目です。',steps:[{t:'特例の範囲',b:'特例は<strong>国・地方公共団体、又はこれらから依頼を受けた者</strong>が対象。'},{t:'対象外',b:'国・地方公共団体に<strong>関わらない独自の活動</strong>は特例対象外→通常の許可・承認が必要。'}],ans:'国・地方公共団体に関わらない独自の活動は特例の対象外で、許可・承認が必要'},
-{id:'e23',cat:'出題実績',tag:'🎯 出題実績',text:'大阪国際空港の近くで高度85mで無人航空機を飛行させる場合の扱いとして正しいものを選びなさい。',choices:['150m未満であっても空港周辺の制限表面にかかる空域は飛行禁止空域に該当し、管制機関と調整し許可が必要','150m未満なので手続きなしで自由に飛行できる','人口集中地区でなければ許可は不要'],answer:0,hint:'「空港の近く」は高度が低くても規制対象になります。',steps:[{t:'空港周辺の空域',b:'高度150m以上の規制とは<strong>別</strong>。空港周辺は進入表面・水平表面・転移表面等の<strong>制限表面</strong>があり、<strong>85mでも飛行禁止空域</strong>に該当しうる。'},{t:'大阪空港',b:'新千歳・成田・羽田・中部・関西・大阪・福岡・那覇の<strong>8空港</strong>は特に規制が厳しい。'},{t:'必要な対応',b:'管轄の<strong>航空交通管制機関と調整し許可</strong>を受ける。'}],ans:'150m未満であっても空港周辺の制限表面にかかる空域は飛行禁止空域に該当し、管制機関と調整し許可が必要'},
-{id:'e24',cat:'出題実績',tag:'🎯 出題実績',text:'許可を受けて空港周辺の限られた範囲で飛行する際の、適切なリスク軽減策を選びなさい。',choices:['ジオフェンス機能を設定し、許可を受けた飛行範囲から逸脱しないようにする','許可範囲を気にせず自由に飛行する','逸脱しそうになったら電源を切る'],answer:0,hint:'飛行範囲を超えないための機能は何でしょう。',steps:[{t:'ジオフェンス',b:'<strong>飛行禁止空域・飛行範囲を設定</strong>し逸脱を防止する機能。許可範囲から外れないための適切な対策。'},{t:'補足',b:'飛行計画に従って飛行する義務があり、経路を変える場合は飛行計画を通報し直す。'}],ans:'ジオフェンス機能を設定し、許可を受けた飛行範囲から逸脱しないようにする'},
-{id:'e25',cat:'出題実績',tag:'🎯 出題実績',text:'エンジン機の燃料の扱いとして正しいものを選びなさい。',choices:['メーカーが指定する燃料を使用し、混合燃料は指定された混合比で使用する','燃料は絶対に混ぜてはいけない','どのエンジンも同じ燃料で動く'],answer:0,hint:'「混ぜてはいけない」は誤り。混合比がポイントです。',steps:[{t:'燃料の扱い',b:'<strong>メーカー指定の燃料</strong>を適切に使用。混合燃料を使う場合は<strong>指定された混合比</strong>で使用する（混ぜること自体は禁止ではない）。'},{t:'ひっかけ',b:'「燃料を混ぜてはいけない」は誤り。エンジンの種類（ガソリン・ディーゼル・ジェット・グロー）で潤滑方式・燃焼サイクル・着火温度が異なる。'}],ans:'メーカーが指定する燃料を使用し、混合燃料は指定された混合比で使用する'},
-{id:'ct1',cat:'出題実績',tag:'🎯 カテゴリー',text:'航空法の「構造上人が乗ることができない」の解釈として正しいものを選びなさい。',choices:['座席の有無だけでなく、機器の概括的な大きさや潜在的な能力を含めた構造・性能で判断される','人が乗ることができる座席の有無のみで判断される','機体の重量のみで判断される'],answer:0,hint:'「座席の有無だけ」では判断しません。',steps:[{t:'定義の解釈',b:'「構造上人が乗ることができない」＝<strong>単に座席の有無を意味するものではなく</strong>、大きさ・潜在的能力を含めた<strong>構造・性能</strong>で判断。'},{t:'関連',b:'航空機を改造し航空機に近い構造・性能なら航空機に分類。気球・ロケットは航空機にも無人航空機にも該当しない。'}],ans:'座席の有無だけでなく、機器の概括的な大きさや潜在的な能力を含めた構造・性能で判断される'},
-{id:'ct2',cat:'出題実績',tag:'🎯 カテゴリー',text:'カテゴリーIIA飛行（資格があっても許可・承認が必要）に該当しないものを選びなさい。',choices:['夜間飛行','高度150m以上の飛行','催し場所上空の飛行'],answer:0,hint:'IIAは「空・高・催・危・投・重」。それ以外はIIB。',steps:[{t:'IIA（許可承認必要）',b:'空港周辺・150m以上・催し上空・危険物輸送・物件投下・25kg以上'},{t:'IIB（資格あれば不要）',b:'<strong>夜間</strong>・目視外・30m未満・人口集中地区上空'},{t:'答え',b:'夜間飛行はIIBなのでIIAに該当しない。'}],ans:'夜間飛行'},
-{id:'ct3',cat:'出題実績',tag:'🎯 カテゴリー',text:'二等技能証明者が第二種機体認証機を飛行させる場合、許可・承認が「不要」な飛行を選びなさい。',choices:['目視外飛行','催し場所上空の飛行','危険物の輸送'],answer:0,hint:'IIBは不要、IIAは必要です。',steps:[{t:'不要（IIB）',b:'<strong>目視外飛行</strong>は IIB → 資格＋機体認証なら許可承認不要（飛行マニュアル遵守）。'},{t:'必要（IIA）',b:'催し上空・危険物輸送はIIA→許可承認が必要。'}],ans:'目視外飛行'},
-{id:'ct4',cat:'出題実績',tag:'🎯 カテゴリー',text:'二等技能証明者が第二種機体認証機で人口集中地区（DID）上空を飛行する場合の扱いを選びなさい。',choices:['カテゴリーIIBに当たり、許可・承認は不要（飛行マニュアル遵守）','必ず許可・承認が必要である','カテゴリーIに当たり一切の手続きが不要'],answer:0,hint:'DID上空はIIAの6項目に入っていません。',steps:[{t:'DID上空',b:'人口集中地区上空はIIA一覧（空・高・催・危・投・重）に<strong>含まれない→IIB</strong>。'},{t:'扱い',b:'二等＋第二種機体認証なら<strong>許可・承認不要</strong>（特定飛行なので飛行計画通報・飛行マニュアルは必要）。'}],ans:'カテゴリーIIBに当たり、許可・承認は不要（飛行マニュアル遵守）'},
-{id:'ct5',cat:'出題実績',tag:'🎯 カテゴリー',text:'カテゴリーII飛行について正しいものを選びなさい。',choices:['二等技能証明者が第二種機体認証機を飛行させても、カテゴリーIIA飛行は許可・承認が必要','カテゴリーIIならどのような飛行でも許可・承認は不要','カテゴリーII飛行は航空法上の手続きが一切不要'],answer:0,hint:'「どんな飛行でも不要」は誤りです。',steps:[{t:'ポイント',b:'資格＋機体認証があっても<strong>IIA飛行は許可・承認が必要</strong>。「どのような飛行でも不要」は誤り。'}],ans:'二等技能証明者が第二種機体認証機を飛行させても、カテゴリーIIA飛行は許可・承認が必要'},
-{id:'ct6',cat:'出題実績',tag:'🎯 カテゴリー',text:'立入管理措置を講じないで行う特定飛行（カテゴリーIII）に必要な要件を選びなさい。',choices:['一等無人航空機操縦士＋第一種機体認証＋国土交通大臣の許可・承認','二等以上の技能証明＋第二種以上の機体認証','第一種機体認証のみ'],answer:0,hint:'最高リスクの飛行に必要な3点セットです。',steps:[{t:'カテゴリーIII',b:'第三者上空＝最高リスク。<strong>一等＋第一種機体認証＋許可・承認</strong>。'},{t:'ひっかけ',b:'「二等以上＋第二種以上」は誤り（IIIは一等・第一種が必須）。'}],ans:'一等無人航空機操縦士＋第一種機体認証＋国土交通大臣の許可・承認'},
-{id:'ct7',cat:'出題実績',tag:'🎯 特定飛行',text:'特定飛行「30m未満」の規制における「物件」の説明として正しいものを選びなさい。',choices:['第三者の物件を指し、飛行関係者が所有・管理する物件は含まない','飛行関係者が所有する物件も含まれる','土地や樹木などの自然物も含まれる'],answer:0,hint:'「人又は物件」はどちらも第三者のものです。',steps:[{t:'物件の定義',b:'30m規制の「人又は物件」＝<strong>第三者</strong>又は第三者の物件。<strong>飛行関係者の所有・管理物件は含まない</strong>。'},{t:'補足',b:'土地・自然物（樹木・雑草等）は「物件」に該当しない。'}],ans:'第三者の物件を指し、飛行関係者が所有・管理する物件は含まない'},
-{id:'ct8',cat:'出題実績',tag:'🎯 特定飛行',text:'危険物輸送の規制について正しいものを選びなさい。',choices:['火薬類・高圧ガス・引火性液体等が危険物で、食品の輸送は危険物輸送に当たらない','食品を輸送し目的地で投下することも危険物輸送に含まれる','すべての物件の輸送が危険物輸送に当たる'],answer:0,hint:'危険物は火薬類・高圧ガス等です。',steps:[{t:'危険物',b:'火薬類・高圧ガス・引火性液体・可燃性物質・酸化性物質・毒物・放射性物質・腐食性物質。<strong>食品は危険物でない</strong>。'},{t:'補足',b:'飛行のための燃料・電池・パラシュート用火薬類等は危険物の対象外。'}],ans:'火薬類・高圧ガス・引火性液体等が危険物で、食品の輸送は危険物輸送に当たらない'},
-{id:'ct9',cat:'出題実績',tag:'🎯 特定飛行',text:'高度150m以上の飛行禁止空域の説明として正しいものを選びなさい。',choices:['無人航空機が飛行している直下の地表または水面からの高度差が150m以上の空域（海抜高度ではない）','海抜高度150m以上の空域','高度150m以下の空域'],answer:0,hint:'「直下の地表から」「海抜ではない」がポイント。',steps:[{t:'150m以上',b:'<strong>直下の地表または水面からの高度差</strong>が150m以上。海抜高度ではない。山岳部では意図せず150m差になるので注意。'},{t:'ひっかけ',b:'規制は150m"以上"。空港周辺は低高度でも別途規制。'}],ans:'無人航空機が飛行している直下の地表または水面からの高度差が150m以上の空域（海抜高度ではない）'},
-{id:'ct10',cat:'出題実績',tag:'🎯 特定飛行',text:'夜間飛行に必要な装備について正しいものを選びなさい。',choices:['姿勢・方向が視認できる灯火が必要だが、飛行範囲が照明等で十分照らされている場合はこの限りではない','いかなる場合も灯火は必須である','夜間飛行に灯火は不要である'],answer:0,hint:'照明で十分照らされている場合の例外があります。',steps:[{t:'夜間飛行の灯火',b:'姿勢・方向が視認できる<strong>灯火が必要</strong>。ただし<strong>飛行範囲が照明等で十分照らされている場合はこの限りではない</strong>。'}],ans:'姿勢・方向が視認できる灯火が必要だが、飛行範囲が照明等で十分照らされている場合はこの限りではない'},
-{id:'ct11',cat:'出題実績',tag:'🎯 特定飛行',text:'目視外飛行の説明として正しいものを選びなさい。',choices:['双眼鏡やモニター（FPV）を通した監視は目視に含まれず、目視外飛行に当たる','眼鏡・コンタクトでの操縦は目視外飛行に当たる','目視外飛行とは目視により常時監視して飛行させることである'],answer:0,hint:'「目視により常時監視」は目視内飛行の定義です。',steps:[{t:'目視外飛行',b:'自分の目で見る以外の飛行。<strong>双眼鏡・モニター(FPV)・補助者による監視は目視外</strong>扱い。'},{t:'ひっかけ',b:'眼鏡・コンタクトは目視に含む（目視内）。「目視により常時監視」は目視内飛行の定義。'}],ans:'双眼鏡やモニター（FPV）を通した監視は目視に含まれず、目視外飛行に当たる'},
-{id:'ct12',cat:'出題実績',tag:'🎯 特定飛行',text:'航空交通管制圏の説明として正しいものを選びなさい。',choices:['航空機の離着陸が頻繁に行われる空港及びその周辺の空域である','空港の真上の上空のみを指す','地表から200m以上の指定空域を指す'],answer:0,hint:'「空港の上空のみ」ではありません。',steps:[{t:'管制圏',b:'<strong>空港及びその周辺の空域</strong>。全航空機が管制機関と連絡し離着陸順序等の指示に従う。'},{t:'区別',b:'地表200m以上の指定空域は「航空交通管制<strong>区</strong>」。'}],ans:'航空機の離着陸が頻繁に行われる空港及びその周辺の空域である'},
-{id:'n1',cat:'出題実績',tag:'🎯 制度・法規',text:'航空機が最終直線進入を行うまでの経路の安全を確保するために必要な制限表面の名称を選びなさい。',choices:['外側水平表面','延長進入表面','最終直線進入表面'],answer:0,hint:'「最終直線進入表面」という表面は存在しません。',steps:[{t:'外側水平表面',b:'航空機が最終直線進入を行うまでの経路の安全を確保＝<strong>外側水平表面</strong>。'},{t:'区別',b:'延長進入表面＝精密進入方式の最終直線進入の安全。円錐表面＝旋回飛行の安全。「最終直線進入表面」は存在しない。'}],ans:'外側水平表面'},
-{id:'n2',cat:'出題実績',tag:'🎯 制度・法規',text:'飛行日誌を携行せずに特定飛行を行った場合の罰則を選びなさい。',choices:['10万円以下の罰金','20万円以下の罰金','30万円以下の罰金'],answer:0,hint:'最も軽い罰則のグループです。',steps:[{t:'10万円以下',b:'<strong>技能証明書不携帯</strong>・<strong>飛行日誌の不携行/不記載/虚偽記載</strong>での特定飛行＝10万円以下の罰金。'}],ans:'10万円以下の罰金'},
-{id:'n3',cat:'出題実績',tag:'🎯 制度・法規',text:'技能証明の申請ができない者についての記述として正しいものを選びなさい。',choices:['技能証明を取り消された日から2年以内の者は申請できない','技能証明を取り消された日から1年以内の者は申請できない','技能証明を拒否された日から2年以内の者は申請できない'],answer:0,hint:'取消と拒否・保留で年数が違います。',steps:[{t:'年数',b:'<strong>取消＝2年以内</strong>は申請不可。<strong>拒否・保留＝1年以内</strong>は申請不可。'}],ans:'技能証明を取り消された日から2年以内の者は申請できない'},
-{id:'n4',cat:'出題実績',tag:'🎯 制度・法規',text:'技能証明試験の受験順序として正しいものを選びなさい。',choices:['学科試験に合格しなければ実地試験を受けることができない','実地試験に合格しなければ学科試験を受けることができない','学科と実地の順序は自由である'],answer:0,hint:'どちらが先か。',steps:[{t:'順序',b:'<strong>学科合格が先</strong>→実地。登録講習機関の講習修了で実地試験は免除可。'}],ans:'学科試験に合格しなければ実地試験を受けることができない'},
-{id:'n5',cat:'出題実績',tag:'🎯 制度・法規',text:'重大インシデントの報告対象として正しいものを選びなさい。',choices:['重傷に至らない無人航空機による人の負傷','重傷以上の人の負傷','物件の損壊額が一定以上のもの'],answer:0,hint:'重傷以上は「事故」、それ未満が「重大インシデント」です。',steps:[{t:'重大インシデント',b:'飛行中航空機との衝突・接触のおそれ／<strong>重傷に至らない負傷</strong>／制御不能／飛行中の発火。'},{t:'事故',b:'人の死傷（<strong>重傷以上</strong>）／第三者物件の損壊／航空機との衝突・接触。'}],ans:'重傷に至らない無人航空機による人の負傷'},
-{id:'n6',cat:'出題実績',tag:'🎯 制度・法規',text:'小型無人機等飛行禁止法の飛行禁止の例外について正しいものを選びなさい。',choices:['例外に当たる飛行でも、対象施設周辺で飛行する場合は都道府県公安委員会等へ通報が必要','例外に当たれば通報は一切不要','重要施設周辺はいかなる場合も飛行禁止である'],answer:0,hint:'例外でも「通報」は必要です。',steps:[{t:'通報義務',b:'管理者の同意等で例外に当たる場合でも、対象施設及び周囲おおむね300mで飛行するなら<strong>公安委員会等へ通報</strong>が必要。'}],ans:'例外に当たる飛行でも、対象施設周辺で飛行する場合は都道府県公安委員会等へ通報が必要'},
-{id:'n7',cat:'出題実績',tag:'🎯 制度・法規',text:'小型無人機等飛行禁止法のレッドゾーン（対象防衛関係施設・対象空港の敷地・区域上空）での飛行について正しいものを選びなさい。',choices:['国・地方公共団体の業務でも対象施設の管理者の同意が必要','国・地方公共団体の業務なら同意なく飛行できる','土地所有者の同意があれば自由に飛行できる'],answer:0,hint:'防衛施設・空港のレッドゾーンは特に厳しいです。',steps:[{t:'レッドゾーン（防衛・空港）',b:'土地所有者の同意や国・地方公共団体の業務であっても、<strong>対象施設の管理者の同意が必要</strong>（管理者・同意者による飛行のみ可）。'}],ans:'国・地方公共団体の業務でも対象施設の管理者の同意が必要'},
-{id:'n8',cat:'出題実績',tag:'🎯 制度・法規',text:'小型無人機等飛行禁止法の罰則・措置について正しいものを選びなさい。',choices:['レッドゾーンで飛行した者や警察官等の命令に違反した者は1年以下の懲役または50万円以下の罰金','警察官は退去を命じた後でなければ機器の妨害等の措置を一切とれない','イエローゾーンを飛行しただけで直ちに罰金となる'],answer:0,hint:'罰則対象はレッドゾーン飛行と命令違反です。',steps:[{t:'罰則',b:'<strong>レッドゾーンで飛行した者</strong>・<strong>警察官等の命令に違反した者</strong>＝1年/50万円。'},{t:'措置',b:'警察官等は命令に加え、やむを得ない限度で妨害・破損等の措置も可能（命令が前提ではない）。'}],ans:'レッドゾーンで飛行した者や警察官等の命令に違反した者は1年以下の懲役または50万円以下の罰金'},
-{id:'n9',cat:'出題実績',tag:'🎯 制度・法規',text:'微弱無線局（ラジコン用）の定義として正しいものを選びなさい。',choices:['無線設備から500mの距離での電界強度が200μV/m以下のもの','空中線電力が2W以下のもの','技適マークがあればどの周波数でも免許不要のもの'],answer:0,hint:'500mと200μV/mがキーワードです。',steps:[{t:'微弱無線局',b:'<strong>500mで電界強度200μV/m以下</strong>。免許・無線従事者資格不要。'},{t:'小電力',b:'空中線電力<strong>1W以下</strong>（2Wは誤り）。技適マークは必要だが周波数帯による。'}],ans:'無線設備から500mの距離での電界強度が200μV/m以下のもの'},
-{id:'n10',cat:'出題実績',tag:'🎯 機体・原理',text:'回転翼航空機（マルチローター）でローターの反トルクバランスを崩すときに起こる運動を選びなさい。',choices:['水平回転（ヨー）','上昇・降下','前後・左右移動'],answer:0,hint:'トルクのバランスが崩れると機首が回ります。',steps:[{t:'水平回転',b:'反トルクバランスを崩す→<strong>水平回転（ヨー）</strong>。上昇降下は全ローター増減、前後左右は片側を下げ反対を上げる。'}],ans:'水平回転（ヨー）'},
-{id:'n11',cat:'出題実績',tag:'🎯 機体・原理',text:'回転翼航空機（マルチローター）の前後左右移動時のローターの動きとして正しいものを選びなさい。',choices:['進行方向側のローター回転数を下げ、反対側の回転数を上げる','進行方向側のローター回転数を上げ、反対側を下げる','進行方向側のローターを停止させ反対側は変えない'],answer:0,hint:'機体を傾けて移動します。下げるのはどちら側？',steps:[{t:'移動の仕組み',b:'<strong>進行方向側を下げ・反対側を上げる</strong>→機体が傾き、推力の合力が傾いた方向に向き移動。'}],ans:'進行方向側のローター回転数を下げ、反対側の回転数を上げる'},
-{id:'n12',cat:'出題実績',tag:'🎯 機体・原理',text:'回転翼航空機（ヘリコプター）が空力的に効率よく揚力を得られる比較対象として正しいものを選びなさい。',choices:['回転翼航空機（マルチローター）に比べて効率がよい','飛行機に比べて効率がよい','すべての航空機の中で最も効率がよい'],answer:0,hint:'1組の大きなローターと、複数の小さなローターの比較です。',steps:[{t:'比較',b:'ヘリは1組のローターで直径が大きく、<strong>マルチローターに比べ</strong>空力的に効率よく揚力を得られる。飛行機は翼で効率的に揚力を得て長距離飛行が可能（別の効率）。'}],ans:'回転翼航空機（マルチローター）に比べて効率がよい'},
-{id:'n13',cat:'出題実績',tag:'🎯 機体・原理',text:'ヘリコプターのテールローターの役割として正しいものを選びなさい。',choices:['メインローターの反トルクを打ち消し、ヨー方向（向き）の操縦に用いる','機体の上下移動を補助する','揚力の主たる発生源である'],answer:0,hint:'テールローターは向きの制御に使います。',steps:[{t:'テールローター',b:'<strong>反トルクを打ち消し</strong>、<strong>ヨー（向き）の操縦</strong>に用いる。上下移動の補助ではない。'}],ans:'メインローターの反トルクを打ち消し、ヨー方向（向き）の操縦に用いる'},
-{id:'n14',cat:'出題実績',tag:'🎯 機体・原理',text:'飛行機が失速する原因として当てはまらないものを選びなさい。',choices:['過度に旋回半径を大きくした','過度に上昇角度を大きくした','過度に速度を下げた'],answer:0,hint:'失速は迎角が大きくなりすぎると起こります。',steps:[{t:'失速の原因',b:'過度の低速・過度の上昇角度・過度に<strong>旋回半径を小さく</strong>すると失速。'},{t:'答え',b:'旋回半径を「大きく」するのは失速原因ではない。'}],ans:'過度に旋回半径を大きくした'},
-{id:'n15',cat:'出題実績',tag:'🎯 機体・原理',text:'飛行中の機体に流入する空気の角度を表す2つの角度として正しいものを選びなさい。',choices:['迎角と横滑り角','迎角と滑空角','滑空角とバンク角'],answer:0,hint:'前後軸とのなす角と、左右のずれの角です。',steps:[{t:'2つの角度',b:'<strong>迎角</strong>（前後軸とのなす角）と<strong>横滑り角</strong>（機体右側から空気が流入すると正）。滑空角ではない。'}],ans:'迎角と横滑り角'},
-{id:'n16',cat:'出題実績',tag:'🎯 機体・原理',text:'定常飛行（つり合い飛行）が行われる条件として正しいものを選びなさい。',choices:['機体に働く力が釣り合ったとき','機体に働く力が崩れたとき','推力が重力を大きく上回ったとき'],answer:0,hint:'力が「つり合う」から「つり合い飛行」です。',steps:[{t:'定常飛行',b:'機体に働く力が<strong>釣り合ったとき</strong>、速度と姿勢を一定とする定常飛行（つり合い飛行）を行う。'}],ans:'機体に働く力が釣り合ったとき'},
-{id:'n17',cat:'出題実績',tag:'🎯 センサ・電池',text:'ジャイロセンサの説明として正しいものを選びなさい。',choices:['単位時間当たりの回転角度の変化（回転角速度）を検出する装置','地球の磁力を検出して方位を測定する装置','操作の指令を機体へ送信する装置'],answer:0,hint:'回転の速さを測ります。',steps:[{t:'ジャイロ',b:'<strong>回転角度の変化（回転角速度）</strong>を検出。方位＝地磁気センサ、指令送信＝送信機。'}],ans:'単位時間当たりの回転角度の変化（回転角速度）を検出する装置'},
-{id:'n18',cat:'出題実績',tag:'🎯 センサ・電池',text:'マルチローターの送信機のスティック操作モードについて正しいものを選びなさい。',choices:['エルロン舵とラダー舵はモード1とモード2で同じである','エレベーター舵はモード1とモード2で同じである','スロットルはモード1とモード2で同じである'],answer:0,hint:'左右に倒す舵はモード共通、上下に倒す舵はモードで入れ替わります。',steps:[{t:'モード共通',b:'<strong>エルロン（右スティック左右）・ラダー（左スティック左右）はモード1/2で同じ</strong>。'},{t:'モードで異なる',b:'スロットル・エレベーター（上下操作）は左右スティックが入れ替わる。'}],ans:'エルロン舵とラダー舵はモード1とモード2で同じである'},
-{id:'n19',cat:'出題実績',tag:'🎯 センサ・電池',text:'リチウムポリマーバッテリーの特徴として誤っているものを選びなさい。',choices:['自己放電が多くメモリ効果も大きい','エネルギー密度が高い','電圧が高い'],answer:0,hint:'リポの自己放電・メモリ効果は？',steps:[{t:'リポの特徴',b:'エネルギー密度高い・電圧高い・<strong>自己放電が少ない</strong>・<strong>メモリ効果が小さい</strong>・電解質が可燃物・強い衝撃や短絡で発火の可能性。'},{t:'答え',b:'「自己放電が多くメモリ効果も大きい」は誤り。'}],ans:'自己放電が多くメモリ効果も大きい'},
-{id:'n20',cat:'出題実績',tag:'🎯 センサ・電池',text:'無人航空機のエンジンと燃料について正しいものを選びなさい。',choices:['オイル等を混ぜた混合燃料が使用されることがあり、指定された混合比で使用する','混合燃料が使用されることはない','どのエンジンも着火温度は同じである'],answer:0,hint:'混合燃料は「使われる」。混合比がポイント。',steps:[{t:'燃料',b:'<strong>混合燃料は使用される</strong>（指定された混合比で）。エンジンの種類で潤滑方式・燃焼サイクル・着火温度が異なる。'}],ans:'オイル等を混ぜた混合燃料が使用されることがあり、指定された混合比で使用する'},
-{id:'n21',cat:'出題実績',tag:'🎯 緊急・電波',text:'緊急時の対応について正しいものを選びなさい。',choices:['フェールセーフ機能発動中に飛行が継続できない場合、機体は着陸動作に移り着陸を試みる','GNSSを使用しない機体操作は危険なので禁止されている','緊急時の対応手順を事前に決めておくことは推奨されない'],answer:0,hint:'GNSS不使用操作はむしろ訓練が必要です。',steps:[{t:'正しい',b:'フェールセーフ中に継続不能なら<strong>着陸動作に遷移し着陸を試みる</strong>。'},{t:'誤り',b:'GNSS不使用操作は緊急時に求められ<strong>訓練が必要</strong>。対応手順は<strong>事前に決めておく</strong>。'}],ans:'フェールセーフ機能発動中に飛行が継続できない場合、機体は着陸動作に移り着陸を試みる'},
-{id:'n22',cat:'出題実績',tag:'🎯 緊急・電波',text:'電波の性質について正しいものを選びなさい。',choices:['波長が短い（周波数が高い）ほど直進性が高くなる','波長が長い（周波数が低い）ほど直進性が高くなる','直進性は波長に関係しない'],answer:0,hint:'2.4GHz（短い波長）は直進性が高いですね。',steps:[{t:'直進性',b:'波長が<strong>短い（周波数が高い）ほど直進性が高い</strong>。波長が長いほど回折しやすく直進性は弱いが減衰しにくい。'}],ans:'波長が短い（周波数が高い）ほど直進性が高くなる'},
-{id:'n23',cat:'出題実績',tag:'🎯 緊急・電波',text:'マルチパスで一時的に操縦不能になった場合の対処として正しいものを選びなさい。',choices:['送信機をできるだけ高い位置に持ち、アンテナの向きを変えて操縦の復帰を試みる','送信機を再起動する','その場で電源を切って待つ'],answer:0,hint:'受信状態を良くする操作です。',steps:[{t:'対処',b:'<strong>送信機を高く持ち、アンテナの向きを変えて</strong>復帰を試みる。再起動ではない。'}],ans:'送信機をできるだけ高い位置に持ち、アンテナの向きを変えて操縦の復帰を試みる'},
-
-{id:'cp1',cat:'推力パワー計算',tag:'⚡ 計算',text:'回転角速度300rpm・仕事率9Wのヘリコプターの回転角速度を360rpmに上げた場合の仕事率は？（機体重量・空気密度は一定）',given:'P ∝ ω³（回転数だけ変化）',choices:['15.55W','14.44W','13.33W'],answer:0,hint:'回転数だけ変わるときはパワーは「比率の3乗」。',steps:[{t:'公式',b:'<strong>新P = 元P ×（新rpm÷元rpm）³</strong>'},{t:'比率',b:'',c:'360÷300 = 1.2'},{t:'計算',b:'',c:'9 × 1.2³ = 9×1.728 ≒ 15.55W'}],ans:'15.55W'},
-{id:'cp2',cat:'推力パワー計算',tag:'⚡ 計算',text:'消費パワー4W・回転角速度200rpmの回転翼機の回転角速度を300rpmにした場合の消費パワーは？（機体重量・空気密度は一定）',given:'P ∝ ω³',choices:['13.5W','12.5W','14.5W'],answer:0,hint:'(300/200)³をかけます。',steps:[{t:'比率',b:'',c:'300÷200 = 1.5'},{t:'計算',b:'',c:'4 × 1.5³ = 4×3.375 = 13.5W'}],ans:'13.5W'},
-{id:'cp3',cat:'推力パワー計算',tag:'⚡ 計算',text:'消費パワー5W・回転角速度250rpmの回転翼機の回転角速度を350rpmにした場合の消費パワーは？（機体重量・空気密度は一定）',given:'P ∝ ω³',choices:['13.72W','13.82W','13.92W'],answer:0,hint:'(350/250)³をかけます。',steps:[{t:'比率',b:'',c:'350÷250 = 1.4'},{t:'計算',b:'',c:'5 × 1.4³ = 5×2.744 ≒ 13.72W'}],ans:'13.72W'},
-{id:'xd1',cat:'高度と速度',tag:'🌡️ 計算',text:'高度500mを飛行速度30m/sで飛行中に揚力を失い落下した場合の水平到達距離は？（g=9.8、空気抵抗無視）',given:'x = v×√(2h/g)　h=500 v=30',choices:['約303m','約284m','約269m'],answer:0,hint:'x=v×√(2h/g)',steps:[{t:'公式',b:'<strong>x = v × √(2h/g)</strong>'},{t:'計算',b:'',c:'30×√(1000/9.8)=30×10.1 ≒ 303m'}],ans:'約303m'},
-{id:'xd2',cat:'高度と速度',tag:'🌡️ 計算',text:'高度100mを飛行速度25m/sで飛行中に揚力を失い落下した場合の水平到達距離は？（g=9.8、空気抵抗無視）',given:'h=100 v=25',choices:['約113m','約121m','約102m'],answer:0,hint:'x=v×√(2h/g)',steps:[{t:'計算',b:'',c:'25×√(200/9.8)=25×4.52 ≒ 113m'}],ans:'約113m'},
-{id:'xd3',cat:'高度と速度',tag:'🌡️ 計算',text:'高度149mを飛行速度33m/sで飛行中に揚力を失い落下した場合の水平到達距離は？（g=9.8、空気抵抗無視）',given:'h=149 v=33',choices:['約182m','約195m','約207m'],answer:0,hint:'x=v×√(2h/g)',steps:[{t:'計算',b:'',c:'33×√(298/9.8)=33×5.51 ≒ 182m'}],ans:'約182m'},
-{id:'fr1',cat:'フレネルゾーン',tag:'📡 計算',text:'2.4GHz、距離1,600mのフレネルゾーン半径の60%の値は？（光速3×10⁸）',given:'f=2.4GHz　D=1600m',choices:['約4.23m','約4.65m','約5.02m'],answer:0,hint:'λ=0.125、R=√(0.125×400)、×0.6',steps:[{t:'R',b:'',c:'√(0.125×400)=√50≒7.07m'},{t:'60%',b:'',c:'7.07×0.6≒4.23m'}],ans:'約4.23m'},
-
-{id:'en1',cat:'出題実績',tag:'🎯 制度・法規',text:'2.4GHz帯・5.7GHz帯の無人移動体画像伝送システムのバックアップ回線として使われる周波数帯を選びなさい。',choices:['169MHz帯','920MHz帯','73MHz帯'],answer:0,hint:'バックアップ専用の周波数帯です。',steps:[{t:'169MHz帯',b:'2.4GHz・5.7GHzの画像伝送システムの<strong>バックアップ回線</strong>として使用。'}],ans:'169MHz帯'},
-{id:'en2',cat:'出題実績',tag:'🎯 機体・原理',text:'磁気キャリブレーションについて正しいものを選びなさい。',choices:['飛行させる場所により地磁気の方向が異なるため、場所が変われば都度行う必要がある','1日の飛行であれば違う場所でも再実施は不要','一度行えば二度と不要'],answer:0,hint:'地磁気は場所ごとに違います。',steps:[{t:'磁気キャリブレーション',b:'その場所の地磁気を検出して方位を取得。<strong>場所により地磁気が異なるので、場所が変われば都度実施</strong>が必要。'}],ans:'飛行させる場所により地磁気の方向が異なるため、場所が変われば都度行う必要がある'},
-{id:'en3',cat:'出題実績',tag:'🎯 機体・原理',text:'GNSSの説明として正しいものを選びなさい。',choices:['最低4個以上の人工衛星から信号を同時に受信して位置を計算する','最低3個以上の衛星から受信すればよい','国内ではGPSとみちびきしか利用できない'],answer:0,hint:'必要な衛星数を確認。',steps:[{t:'GNSS',b:'<strong>最低4個以上</strong>の衛星信号で位置計算。GPS(米)・GLONASS(露)・Galileo(欧)・QZSSみちびき(日)等の総称。'}],ans:'最低4個以上の人工衛星から信号を同時に受信して位置を計算する'},
-{id:'en4',cat:'出題実績',tag:'🎯 機体・原理',text:'ヘリコプターの着陸時の注意として正しいものを選びなさい。',choices:['地面効果範囲内のホバリングは避け、速やかに着陸させる','地面効果範囲内でゆっくり時間をかけて着陸させる','地面効果範囲内で長くホバリングしてから着陸する'],answer:0,hint:'地面効果範囲内は不安定です。',steps:[{t:'着陸',b:'地面効果範囲内のホバリングは避け<strong>速やかに着陸</strong>。接地後ローター停止まで近づかない。'}],ans:'地面効果範囲内のホバリングは避け、速やかに着陸させる'},
-{id:'en5',cat:'出題実績',tag:'🎯 機体・原理',text:'飛行機の離着陸の風向について正しいものを選びなさい。',choices:['向かい風方向に滑走できるエリアを確保して離着陸する','追い風方向に滑走できるエリアを確保して離着陸する','風向は関係ない'],answer:0,hint:'追い風は失速の危険。',steps:[{t:'風向',b:'<strong>向かい風</strong>が原則。追い風は失速の危険。横風でもできる限り向かい風方向。'}],ans:'向かい風方向に滑走できるエリアを確保して離着陸する'},
-{id:'en6',cat:'出題実績',tag:'🎯 機体・原理',text:'ボルテックス・リング・ステートについて正しいものを選びなさい。',choices:['垂直降下時に揚力を失う危険現象で、水平移動を合わせて予防する','降下時に積極的に活用して機体をコントロールする','上昇時に揚力を増やす有益な現象である'],answer:0,hint:'これは「避けるべき」現象です。',steps:[{t:'ボルテックスRS',b:'垂直降下時に<strong>急激に揚力を失う危険現象</strong>。<strong>水平移動を合わせて予防</strong>。「活用する」は誤り。'}],ans:'垂直降下時に揚力を失う危険現象で、水平移動を合わせて予防する'},
-{id:'en7',cat:'出題実績',tag:'🎯 制度・法規',text:'天気図で気温を摂氏の数字で表す位置を選びなさい。',choices:['天気記号の左上','天気記号の右上','天気記号の右下'],answer:0,hint:'気温の位置を覚えましょう。',steps:[{t:'気温',b:'天気記号の<strong>左上</strong>に摂氏の度数で表す。'}],ans:'天気記号の左上'},
-{id:'en8',cat:'出題実績',tag:'🎯 制度・法規',text:'飛行日誌の記載について正しいものを選びなさい。',choices:['特定飛行に該当しない飛行でも、飛行日誌に記載することが望ましい','特定飛行でない場合は記載しない方がよい','リスク対応が不十分でも記録は不要である'],answer:0,hint:'記録は基本的に「望ましい」。',steps:[{t:'飛行日誌',b:'特定飛行は記載義務。<strong>特定飛行でなくても記載が望ましい</strong>。リスク対応が不十分と感じたら今後に備えた記録も望ましい。'}],ans:'特定飛行に該当しない飛行でも、飛行日誌に記載することが望ましい'},
-{id:'en9',cat:'出題実績',tag:'🎯 制度・法規',text:'高度150m以上の空域の飛行許可・承認申請の提出先として正しいものを選びなさい。',choices:['東京航空局長または大阪航空局長','東京空港事務所長または関西空港事務所長','市区町村役場'],answer:0,hint:'地方航空局長が原則の宛先です。',steps:[{t:'提出先',b:'飛行許可・承認申請は原則<strong>東京航空局長または大阪航空局長</strong>（地方航空局長）宛て。'}],ans:'東京航空局長または大阪航空局長'},
-{id:'en10',cat:'出題実績',tag:'🎯 制度・法規',text:'カテゴリーIII飛行の経路設定で正しいものを選びなさい。',choices:['ジオフェンス機能の設定に、当日の他の航空機との空域調整結果が反映されていることを確認する','緊急着陸場所があれば人が立ち入らない経路設定は不要','異常時対応として目視可能な補助者を複数配置すればよい'],answer:0,hint:'ジオフェンスと空域調整がキーワード。',steps:[{t:'経路設定',b:'可能な限り第三者の立入りが少ない経路を設定し、ジオフェンスで逸脱防止。<strong>当日の空域調整結果がジオフェンスに反映されているか確認</strong>。'}],ans:'ジオフェンス機能の設定に、当日の他の航空機との空域調整結果が反映されていることを確認する'},
-{id:'en11',cat:'出題実績',tag:'🎯 制度・法規',text:'カテゴリーIII飛行であらかじめ手順を決めておく緊急時対応に「含まれない」ものを選びなさい。',choices:['飛行前の点検手順の明確化','墜落時の安全優先順位の明確化','GNSSによる位置安定機能を用いない飛行訓練'],answer:0,hint:'「緊急時対応」の項目かどうか。',steps:[{t:'緊急時対応の項目',b:'GNSS不使用飛行訓練・緊急着陸地点確保・フェールセーフが動作しない距離の把握・墜落時の安全優先順位・発火時の消火方法・緊急連絡網。'},{t:'含まれない',b:'「飛行前の点検手順」は緊急時対応の項目ではない。'}],ans:'飛行前の点検手順の明確化'},
-{id:'en12',cat:'出題実績',tag:'🎯 制度・法規',text:'回転翼航空機（マルチローター）の運航計画の例として正しいものを選びなさい。',choices:['プロペラガード等の安全装備がない機体の場合、立入制限できる場所の選定または補助者配置を検討する','プロペラガード等の安全装備を必ず装備しなければならない','安全装備があれば緊急着陸地点の選定は不要'],answer:0,hint:'「必ず装備」とは書かれていません。',steps:[{t:'ポイント',b:'プロペラガード等が<strong>ない機体の場合</strong>に、第三者の立入制限できる場所の選定・補助者配置を検討。「必ず装備」は誤り。'}],ans:'プロペラガード等の安全装備がない機体の場合、立入制限できる場所の選定または補助者配置を検討する'},
-{id:'en13',cat:'出題実績',tag:'🎯 制度・法規',text:'回転翼航空機（ヘリコプター）の離陸後の上昇について正しいものを選びなさい。',choices:['離陸後は速やかに地面効果外まで上昇し、機体状況の確認は地面効果外で行う','離陸後はゆっくりと地面効果外まで上昇する','地面効果範囲内で機体状況を確認する'],answer:0,hint:'地面効果範囲は不安定なので素早く抜けます。',steps:[{t:'上昇',b:'離陸後は<strong>速やかに地面効果外</strong>まで上昇。機体確認は地面効果外で。'}],ans:'離陸後は速やかに地面効果外まで上昇し、機体状況の確認は地面効果外で行う'},
-{id:'en14',cat:'出題実績',tag:'🎯 制度・法規',text:'夜間飛行のリスク軽減策として正しいものを選びなさい。',choices:['機体の向きを視認できる灯火を装備し、灯火が認識できる範囲の飛行に限定する','機体を塗色し、塗色が認識できる範囲の飛行に限定する','操縦の妨げになるので補助者の助言は行わない'],answer:0,hint:'夜間は塗色では見えません。何で見せる？',steps:[{t:'夜間飛行',b:'夜間は<strong>灯火</strong>で機体の向きを視認（塗色ではない）。灯火が認識できる範囲に限定。補助者は必要な助言を行う。'}],ans:'機体の向きを視認できる灯火を装備し、灯火が認識できる範囲の飛行に限定する'},
-{id:'en15',cat:'出題実績',tag:'🎯 制度・法規',text:'目視外飛行で補助者を配置する場合について正しいものを選びなさい。',choices:['補助者にも機体の特性を十分理解させておく必要がある','補助者には機体の特性まで理解させる必要はない','補助者は機体を見る必要はない'],answer:0,hint:'補助者も機体を理解しておくべきです。',steps:[{t:'補助者',b:'双眼鏡等で飛行経路全体を監視し操縦者へ助言。<strong>補助者にも機体特性を理解させる</strong>。'}],ans:'補助者にも機体の特性を十分理解させておく必要がある'},
-{id:'en16',cat:'出題実績',tag:'🎯 制度・法規',text:'リスク評価の「ロバスト性」の説明として正しいものを選びなさい。',choices:['安全性の水準と保証の水準の双方を勘案し、低い方に準じて評価する','無人航空機の運航に伴うリスク・ハザード・脅威・安全確保措置の一般的な枠組みである','航空機との遭遇確率を表す指標である'],answer:0,hint:'「枠組み」は総合リスクモデルの定義です。',steps:[{t:'ロバスト性',b:'<strong>安全性の水準</strong>（安全性の増加）と<strong>保証の水準</strong>（確実な実施の証明）の双方で評価。低・中・高があり<strong>低い方に準じて</strong>評価。'},{t:'区別',b:'「リスク・ハザード・脅威・安全確保措置の枠組み」は<strong>総合リスクモデル</strong>の定義。'}],ans:'安全性の水準と保証の水準の双方を勘案し、低い方に準じて評価する'},
-{id:'ea1',cat:'出題実績',tag:'🎯 機体・原理',text:'ピッチ角を調整する操作として正しいものを選びなさい。',choices:['エレベーター','エルロン','ラダー（ヨー）'],answer:0,hint:'ピッチ＝機首の上げ下げ（前後）です。',steps:[{t:'操作と軸',b:'<strong>エレベーター＝ピッチ</strong>（前後/機首上下）／エルロン＝ロール（左右）／ラダー＝ヨー（機首旋回）。'}],ans:'エレベーター'},
-{id:'ea2',cat:'出題実績',tag:'🎯 機体・原理',text:'GNSSとGPSの関係として正しいものを選びなさい。',choices:['GPSはGNSSの一部であり、GNSSは各国の衛星測位システムの総称である','GNSSはアメリカが単独で運用するシステムである','GNSSは日本が単独で運用するシステムである'],answer:0,hint:'GNSSは総称、GPSはその一つ。',steps:[{t:'関係',b:'<strong>GNSS＝総称</strong>（GPS(米)・GLONASS(露)・Galileo(欧)・QZSSみちびき(日)等）。<strong>GPSはその一部</strong>。特定の国のシステムではない。'}],ans:'GPSはGNSSの一部であり、GNSSは各国の衛星測位システムの総称である'},
-{id:'ea3',cat:'出題実績',tag:'🎯 機体・原理',text:'地磁気センサが正常な方位を示さない原因となる「角」を選びなさい。',choices:['偏角（磁北と地図の北のずれ）','迎角','横滑り角'],answer:0,hint:'磁北と真北のずれです。',steps:[{t:'偏角',b:'磁力線が示す<strong>磁北</strong>と地図の北（真北）の<strong>ずれ＝偏角</strong>。迎角・横滑り角は飛行中の空気の流入角度。'}],ans:'偏角（磁北と地図の北のずれ）'},
-{id:'ea4',cat:'出題実績',tag:'🎯 制度・法規',text:'無人航空機の登録を受けることができない機体（拒否事由）に当たらないものを選びなさい。',choices:['改造した機体（改造自体は拒否事由ではない）','表面に不要な突起物があり衝突時に安全を著しく損なう機体','遠隔操作・自動操縦による制御が著しく困難な機体'],answer:0,hint:'改造でも安全なら登録できます。',steps:[{t:'登録拒否事由',b:'①国が登録できないと指定（リコール・事故多発）②突起物等で衝突時に安全を著しく損なう ③制御が著しく困難。'},{t:'答え',b:'「改造した機体」自体は拒否事由ではない。'}],ans:'改造した機体（改造自体は拒否事由ではない）'},
-{id:'ea5',cat:'出題実績',tag:'🎯 制度・法規',text:'小型無人機等飛行禁止法の対象施設に「当たらない」ものを選びなさい。',choices:['政令指定都市の市役所','在日米軍施設','原子力事業所'],answer:0,hint:'国の重要施設・防衛・空港・原子力などが対象。',steps:[{t:'対象施設',b:'国会議事堂・首相官邸・皇居等／危機管理行政機関／対象政党事務所／外国公館／<strong>自衛隊・在日米軍施設</strong>／対象空港／<strong>原子力事業所</strong>。'},{t:'答え',b:'政令指定都市の市役所は対象外。'}],ans:'政令指定都市の市役所'},
-{id:'ea6',cat:'出題実績',tag:'🎯 機体・原理',text:'プロペラ（ローター）交換時に留意すべきことを選びなさい。',choices:['モーターの回転方向（CW/CCW）に合った向き・形状で取り付ける','回転方向は気にせず取り付けてよい','大きさだけ合っていれば向きは自由'],answer:0,hint:'CW/CCWに合った形状があります。',steps:[{t:'交換時',b:'ローターは回転方向（時計回りCW／反時計回りCCW）に<strong>合わせた形状</strong>。モーターの回転方向に合わせて取り付ける。'}],ans:'モーターの回転方向（CW/CCW）に合った向き・形状で取り付ける'},
-{id:'ea7',cat:'出題実績',tag:'🎯 機体・原理',text:'ブラシレスモーターの特性として誤っているものを選びなさい。',choices:['寿命が短い','メンテナンスが容易','静音である'],answer:0,hint:'ブラシレスは長持ちします。',steps:[{t:'特性',b:'メンテナンス容易・静音・<strong>長寿命</strong>。「寿命が短い」は誤り。'}],ans:'寿命が短い'},
-{id:'ea8',cat:'出題実績',tag:'🎯 制度・法規',text:'リスク評価の6ステップで、運航計画（CONOPS）の説明の「次」に行うステップを選びなさい。',choices:['地上リスクの把握','隣接エリアの考慮','評価結果への対応'],answer:0,hint:'順番：CONOPS→地上→空中→安全目標→隣接→対応。',steps:[{t:'順番',b:'①運航計画(CONOPS)→②<strong>地上リスク</strong>→③空中リスク→④安全目標(SAIL→OSO)→⑤隣接エリア→⑥評価結果への対応。'}],ans:'地上リスクの把握'},
-{id:'ea9',cat:'出題実績',tag:'🎯 特定飛行',text:'「危険物の輸送」の規制対象（危険物に該当）となるものを選びなさい。',choices:['販売・輸送する商品としての火薬類や高圧ガス','無人航空機の飛行のために必要なバッテリー','安全装置のパラシュートを開傘するための火薬類'],answer:0,hint:'「飛行のため」の物は対象外です。',steps:[{t:'対象',b:'輸送する貨物・商品としての火薬類・高圧ガス等＝危険物。'},{t:'対象外',b:'<strong>飛行のための</strong>燃料・電池、パラシュート開傘用火薬、業務機器の電池は危険物の対象外。'}],ans:'販売・輸送する商品としての火薬類や高圧ガス'},
-{id:'ea10',cat:'出題実績',tag:'🎯 緊急・電波',text:'極超短波（300MHz〜3GHz）の特徴として正しいものを選びなさい。',choices:['超短波より直進性が強いが、多少の山や建物の陰には回り込んで伝わる','超短波より直進性が弱く減衰しにくい','水中通信に最も適している'],answer:0,hint:'無人機の制御によく使われる帯域です。',steps:[{t:'極超短波(UHF)',b:'波長10cm〜1m。超短波より<strong>直進性が強い</strong>が多少回り込む。情報量大・小型アンテナで通信可。無人機制御・携帯等。'},{t:'超短波(VHF)',b:'波長1〜10m（30〜300MHz）。'}],ans:'超短波より直進性が強いが、多少の山や建物の陰には回り込んで伝わる'},
-{id:'ea11',cat:'出題実績',tag:'🎯 制度・法規',text:'CRMの考え方として正しいものを選びなさい。',choices:['補助者や関係者と相互確認し、全ての利用可能なリソースを活用して安全を確保する','操縦者は操縦に専念し、監視等は別スタッフに任せきりにする','操縦技量だけを高めればヒューマンエラーは完全になくせる'],answer:0,hint:'CRMは「連携」と「全リソース活用」。',steps:[{t:'CRM',b:'操縦技量だけでは限界→<strong>全リソース（人・機材・情報）を活用し相互確認・コミュニケーション</strong>でエラーに対処。'}],ans:'補助者や関係者と相互確認し、全ての利用可能なリソースを活用して安全を確保する'},
-{id:'cp4',cat:'推力パワー計算',tag:'⚡ 計算',text:'回転角速度300rpm・仕事率9.4Wの回転翼機の回転角速度を370rpmに上げた場合の仕事率は？（機体重量・空気密度は一定）',given:'P ∝ ω³',choices:['約17.6W','約14.3W','約11.6W'],answer:0,hint:'パワーは「比率の3乗」。370÷300=1.233',steps:[{t:'比率',b:'',c:'370÷300 ≒ 1.233'},{t:'計算',b:'',c:'9.4 × 1.233³ = 9.4×1.876 ≒ 17.6W'}],ans:'約17.6W'},
-
-{id:'pw1',cat:'推力パワー計算',tag:'⚡ 計算',text:'回転翼の回転角速度ωを2倍にすると、推力Tは何倍になるか。（空気密度は一定）',given:'関係式：T ∝ ρ × ω²',choices:['2倍','4倍','8倍'],answer:1,hint:'推力は回転角速度の2乗に比例します。',steps:[{t:'公式',b:'<strong>T ∝ ω²</strong>（密度一定）'},{t:'計算',b:'',c:'2² = 4倍'}],ans:'4倍'},
-{id:'pw2',cat:'推力パワー計算',tag:'⚡ 計算',text:'回転翼の回転角速度ωを2倍にすると、消費パワー（仕事率）Pは何倍になるか。（空気密度は一定）',given:'関係式：P ∝ ρ × ω³',choices:['4倍','6倍','8倍'],answer:2,hint:'パワーは回転角速度の3乗に比例します。',steps:[{t:'公式',b:'<strong>P ∝ ω³</strong>（密度一定）'},{t:'計算',b:'',c:'2³ = 8倍'}],ans:'8倍'},
-{id:'pw3',cat:'推力パワー計算',tag:'⚡ 計算',text:'ペイロード搭載で機体重量が2倍になった。同じ高度で飛行（ホバリング）するために必要な回転角速度ωは何倍になるか。',given:'ホバリング：W＝T ∝ ω²',choices:['約1.4倍','約2倍','約2.8倍'],answer:0,hint:'重量＝推力∝ω²なので、ωは重量のルートに比例します。',steps:[{t:'考え方',b:'ホバリングでは W＝T ∝ ω²。重量2倍→推力も2倍必要→<strong>ω ∝ √重量</strong>'},{t:'計算',b:'',c:'√2 ≒ 1.4倍'}],ans:'約1.4倍'},
-{id:'pw4',cat:'推力パワー計算',tag:'⚡ 計算',text:'機体重量が2倍になったとき、回転翼の消費パワーは何倍になるか。（高度などの条件は同じ）',given:'W＝T∝ω²、P∝ω³',choices:['約1.4倍','約2.8倍','約4倍'],answer:1,hint:'まずωが√2倍、パワーはその3乗です。',steps:[{t:'ステップ1',b:'重量2倍→ω＝√2倍（pw3と同じ）'},{t:'ステップ2',b:'P∝ω³なので',c:'(√2)³ = 2√2 ≒ 2.8倍'}],ans:'約2.8倍'},
-{id:'pw5',cat:'推力パワー計算',tag:'⚡ 計算',text:'空気密度が0.74倍になる高度で、同じ機体重量を飛ばす（ホバリング）のに必要な回転角速度は何倍になるか。',given:'T∝ρω²（推力T＝重量で一定）',choices:['約1.16倍','約0.86倍','約1.35倍'],answer:0,hint:'推力一定で密度が下がるので、ωを上げて補います。ω∝√(1/ρ)。',steps:[{t:'考え方',b:'推力T一定。T∝ρω²より<strong>ω ∝ √(1/ρ)</strong>'},{t:'計算',b:'',c:'√(1/0.74) ≒ √1.35 ≒ 1.16倍'}],ans:'約1.16倍'},
-{id:'pw6',cat:'推力パワー計算',tag:'⚡ 計算',text:'飛行機の機体重量が2倍になったとき、同じ迎角で水平飛行するのに必要な飛行速度は何倍になるか。',given:'W＝L∝ρV²',choices:['約1.4倍','約2倍','約2.8倍'],answer:0,hint:'揚力∝速度の2乗なので、速度は重量のルートに比例します。',steps:[{t:'考え方',b:'W＝L∝ρV²。重量2倍→<strong>V ∝ √重量</strong>'},{t:'計算',b:'',c:'√2 ≒ 1.4倍（失速速度も同様に1.4倍になる）'}],ans:'約1.4倍'},
-];
-
-const FORMULAS=[
-{title:'⚙️ 仕事率（マルチローター）',formula:'仕事率比 = (搭載後重量×搭載後rpm)÷(搭載前重量×搭載前rpm)',formula2:'新しい仕事率 = 元の仕事率 × 仕事率比',note:'「重量×rpm」の比率が仕事率の変化比率。空気密度は「関係しない」場合は無視。',ex:'例：5W・6500rpm・0.9kg→+0.3kg・7800rpm\n搭載前0.9×6500=5850　搭載後1.2×7800=9360\n9360÷5850=1.6　5×1.6=8W'},
-{title:'✈️ 旋回半径',formula:'r = V² ÷ (g × tanφ)',note:'V=速度(m/s)、g=9.8、φ=バンク角。tan20°≒0.36が頻出。',ex:'例：V=70, 20°\n70²÷(9.8×0.36)=4900÷3.528≒1389m'},
-{title:'📐 滑空距離',formula:'d = h ÷ tanγ',formula2:'d = h × 揚抗比(L/D)',note:'h=高さ、γ=滑空角。揚抗比が与えられたら掛け算が楽。',ex:'例：h=1000, tan15°=0.268→3730m\nh=500, 揚抗比15→7500m'},
-{title:'📡 フレネルゾーン半径',formula:'R = √(λ × D/4)',formula2:'λ = 光速(3×10⁸) ÷ 周波数(Hz)',note:'2.4GHzならλ=0.125m（暗記）。60%値=R×0.6。D=送受信間距離。',ex:'例：2.4GHz, D=1000m\nR=√(0.125×250)=5.59m　60%→3.3m'},
-{title:'🌡️ 高度変化と速度',formula:'V₂ = V₁ × √(ρ₁ ÷ ρ₂)',note:'高度上昇で空気密度ρ低下→速度UP。L∝ρV²=一定。高度1000m増で密度約0.9倍。',ex:'例：500m(1.17)で20m/s→3000m(0.91)\n√(1.17÷0.91)=1.134　20×1.134≒22.6m/s'},
-{title:'💥 水平到達距離（落下時）',formula:'x = v × √(2h/g)',note:'v=速度、h=高度、g=9.8。揚力喪失で落下開始した地点からの水平距離。',ex:'例：v=10, h=20\n10×√(40/9.8)=10×2.02≒20m'},
-{title:'🔋 バッテリー基礎',formula:'出力(W)=電圧(V)×電流(A)',formula2:'容量(Ah)=電流(A)×時間(h)',note:'リポは1セル3.7V。長期保管は充電60%。膨張時は早めに交換。'},
-{title:'📊 重要な数値の暗記',formula:'登録=3年／技能証明=3年／高度150m／距離30m',formula2:'係留30m以下／重要施設300m／管制区200m以上',note:'罰則最高=2年/100万円　行政処分取消=15点　DID=令和2年国勢調査　合格ライン=90%程度'},
-];
-
-const CHEATSHEET=[
-{title:'📏 重要な数値（最頻出）',points:['<b>100g以上</b>＝無人航空機（未満は模型航空機）','<b>150m以上</b>＝飛行禁止空域（直下の地表からの高度差）','<b>30m未満</b>＝第三者・物件との距離規制','<b>25kg</b>＝大型機の境界（登録記号25mm以上）','<b>300m</b>＝重要施設の周辺（飛行禁止法）','<b>200m以上</b>＝航空交通管制区','<b>250m以上</b>＝模型航空機の届出が必要な高度','<b>16歳</b>＝技能証明の最低年齢']},
-{title:'⏳ 有効期間・期限',points:['登録＝<b>3年</b>／技能証明（一等・二等）＝<b>3年</b>','機体認証 第一種＝<b>1年</b>／第二種＝<b>3年</b>','カテゴリーII申請＝<b>10開庁日前</b>','カテゴリーIII申請＝<b>20開庁日前</b>','更新講習＝申請日前3月以内／申請＝満了6月以内']},
-{title:'🗂 カテゴリーとレベル',points:['カテゴリーI＝特定飛行に該当しない（手続き不要）','カテゴリーII＝立入管理措置あり（レベル3）','カテゴリーIII＝立入管理措置なし＝第三者上空（レベル4）','レベル3.5＝機上カメラで補助者を代替','カテゴリーIII＝一等＋第一種機体認証＋許可承認']},
-{title:'⚖️ 罰則・行政処分',points:['<b>2年/100万円</b>＝事故時に危険防止措置せず','<b>1年/50万円</b>＝未登録機体の飛行','<b>1年/30万円</b>＝アルコール・薬物影響下','点数<b>15点以上</b>＝技能証明の取消','12〜14点＝停止1年、9〜11＝6月、6〜8＝3月']},
-{title:'🌀 紛らわしい現象・用語',points:['<b>地面効果</b>＝低高度で揚力が増す（離陸直後〜1m）','<b>ボルテックスRS</b>＝垂直降下で揚力を失う（水平移動で防止）','<b>マルチパス</b>＝反射で複数経路・一時的に操縦不能','スロットル=上下／エルロン=左右／エレベーター=前後／ラダー=機首旋回','マルチローター移動＝指示側を下げ反対側を上げる']},
-{title:'🌤 気象のポイント',points:['等圧線が<b>狭いほど風が強い</b>','高気圧=下降気流・晴れ／低気圧=上昇気流・悪天','寒冷前線=突風・雷・強い雨、通過後に気温低下','停滞前線=梅雨・秋雨前線（長雨）','冬型=西高東低（日本海側に雪）','風速=前10分間の平均']},
-{title:'📡 電波・センサ',points:['2.4GHz＝回折しにくく直進性が高い（障害物に弱い）','減衰＝距離の2乗に反比例（2倍で1/4）','GNSS＝最低4衛星／高度方向の誤差が大','RTK・DGPS＝数cm〜数mの高精度','地磁気は鉄・電流の影響を受ける→キャリブレーション']},
-{title:'🔋 バッテリー（リポ）',points:['長期保管＝<b>充電60%</b>目安','満充電・完全放電での保管はNG（劣化・膨張）','膨張時＝可燃性ガス発生→早めに交換','高温(35℃超)・短絡・衝撃・水濡れを避ける','低温時は飛行時間が半減することがある','複数セルはバランスコネクタで充電']},
-];
-
-const CATEGORIES={};Q.forEach(q=>{CATEGORIES[q.cat]=CATEGORIES[q.cat]||[];CATEGORIES[q.cat].push(q)});
-CATEGORIES['全問ランダム']=[...Q];
-const CAT_META={'出題実績':{icon:'🎯',desc:'実際に本番で出た論点を集中対策'},'推力パワー計算':{icon:'⚡',desc:'√や3乗が出る難しい版の計算'},'規則':{icon:'⚖️',desc:'航空法・飛行禁止法・電波法'},'機体システム':{icon:'🛸',desc:'機体特性・センサ・電波'},'仕事率計算':{icon:'⚙️',desc:'ペイロード搭載後の仕事率'},'旋回半径計算':{icon:'✈️',desc:'バンク角・速度から旋回半径'},'滑空距離計算':{icon:'📐',desc:'高さ・滑空角から滑空距離'},'フレネルゾーン':{icon:'📡',desc:'通信・アンテナ高さ'},'高度と速度':{icon:'🌡️',desc:'空気密度・落下距離'},'操縦・運航':{icon:'🚁',desc:'操縦知識・申請・緊急時'},'気象・リスク':{icon:'🌤️',desc:'気象・リスク評価'},'全問ランダム':{icon:'🎯',desc:'全分野からランダム'}};
-
-let curQ=[],curOrders=[],idx=0,correct=0,answered=false,curCat='',wrongAns=[],stats={total:0,correct:0};
-let isMock=false,mockAnswers=[],timerId=null,timeLeft=0;
-
-// 弱点リスト（localStorageに永続化）
-function getWrongSet(){try{return new Set(JSON.parse(localStorage.getItem('droneWrong')||'[]'))}catch(e){return new Set()}}
-function saveWrongSet(s){try{localStorage.setItem('droneWrong',JSON.stringify([...s]))}catch(e){}}
-function markWrong(id){const s=getWrongSet();s.add(id);saveWrongSet(s)}
-function markCorrect(id){const s=getWrongSet();if(s.delete(id))saveWrongSet(s)}
-function updateWeakCard(){const n=getWrongSet().size;const el=document.getElementById('weakCount');if(el)el.textContent=n+'問'}
-function startWeak(){
-  const s=getWrongSet();const pool=Q.filter(q=>s.has(q.id));
-  if(pool.length===0){alert('弱点問題はまだありません。\n練習や模擬試験で問題を解くと、間違えた問題がここに溜まります。');return}
-  isMock=false;curCat='__weak__';curQ=shuffle(pool);curOrders=curQ.map(q=>shuffle(q.choices.map((_,i)=>i)));idx=0;correct=0;
-  document.getElementById('timer').style.display='none';
-  document.getElementById('hintBtn').style.display='inline-block';
-  document.getElementById('prevBtn').style.display='none';
-  document.getElementById('submitBtn').style.display='none';
-  showTab('quiz');renderQ();
-}
-
-function buildHome(){
-  const g=document.getElementById('catGrid');g.innerHTML='';
-  Object.keys(CAT_META).forEach(cat=>{
-    const m=CAT_META[cat],cnt=CATEGORIES[cat]?CATEGORIES[cat].length:0;
-    const c=document.createElement('div');c.className='cat-card';
-    c.innerHTML=`<div class="icon">${m.icon}</div><h3>${cat}</h3><p>${m.desc}</p><div class="qc">${cat==='全問ランダム'?Q.length+'問':cnt+'問'}</div>`;
-    c.onclick=()=>startQuiz(cat);g.appendChild(c);
-  });
-}
-function updateStat(){const s=stats;if(s.total===0){document.getElementById('stat-bar').style.display='none';return}
-  document.getElementById('stat-bar').style.display='flex';
-  document.getElementById('stat-total').textContent=s.total;
-  document.getElementById('stat-correct').textContent=s.correct;
-  document.getElementById('stat-wrong').textContent=s.total-s.correct;
-  document.getElementById('stat-pct').textContent=Math.round(s.correct/s.total*100)+'%';
-}
-function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
-
-function startQuiz(cat){
-  isMock=false;curCat=cat;curQ=shuffle(CATEGORIES[cat]||Q);curOrders=curQ.map(q=>shuffle(q.choices.map((_,i)=>i)));idx=0;correct=0;
-  document.getElementById('timer').style.display='none';
-  document.getElementById('hintBtn').style.display='inline-block';
-  document.getElementById('prevBtn').style.display='none';
-  document.getElementById('submitBtn').style.display='none';
-  showTab('quiz');renderQ();
-}
-function retryQuiz(){if(curCat==='__mock__')startMock();else if(curCat==='__weak__')startWeak();else startQuiz(curCat)}
-
-function startMock(){
-  isMock=true;curCat='__mock__';
-  curQ=shuffle(Q).slice(0,Math.min(70,Q.length));
-  curOrders=curQ.map(q=>shuffle(q.choices.map((_,i)=>i)));
-  mockAnswers=new Array(curQ.length).fill(null);idx=0;correct=0;
-  document.getElementById('hintBtn').style.display='none';
-  document.getElementById('timer').style.display='inline-block';
-  timeLeft=75*60;updateTimer();
-  if(timerId)clearInterval(timerId);
-  timerId=setInterval(()=>{timeLeft--;updateTimer();if(timeLeft<=0){clearInterval(timerId);submitMock()}},1000);
-  showTab('quiz');renderQ();
-}
-function updateTimer(){
-  const m=Math.floor(timeLeft/60),s=timeLeft%60;
-  const t=document.getElementById('timer');
-  t.textContent=`${m}:${s<10?'0':''}${s}`;t.classList.toggle('warn',timeLeft<=300);
-}
-
-function renderQ(){
-  const q=curQ[idx];answered=false;
-  document.getElementById('hintPanel').classList.remove('show');
-  document.getElementById('explanation').classList.remove('show');
-  document.getElementById('explanation').innerHTML='';
-  document.getElementById('progressFill').style.width=(idx/curQ.length*100)+'%';
-  document.getElementById('qCount').textContent=(idx+1)+'/'+curQ.length;
-  document.getElementById('qCatTag').textContent=q.tag;
-  document.getElementById('qNum').textContent='Q'+(idx+1);
-  document.getElementById('qText').textContent=q.text;
-  const ge=document.getElementById('qGiven');
-  if(q.given){ge.style.display='block';ge.textContent=q.given}else{ge.style.display='none'}
-  if(!isMock)document.getElementById('hintText').textContent=q.hint||'';
-  const ce=document.getElementById('choices');ce.innerHTML='';
-  const order=curOrders[idx];
-  order.forEach((origIdx,p)=>{
-    const b=document.createElement('button');b.className='choice-btn';
-    b.innerHTML=`<span class="choice-label">${['A','B','C'][p]}.</span>${q.choices[origIdx]}`;
-    if(isMock){if(mockAnswers[idx]===origIdx)b.classList.add('selected');b.onclick=()=>selectMock(origIdx)}
-    else{b.onclick=()=>selectPractice(origIdx)}
-    ce.appendChild(b);
-  });
-  if(isMock){
-    document.getElementById('prevBtn').style.display=idx>0?'inline-block':'none';
-    const last=idx===curQ.length-1;
-    document.getElementById('nextBtn').style.display=last?'none':'inline-block';
-    document.getElementById('submitBtn').style.display=last?'inline-block':'none';
-  }else{
-    document.getElementById('nextBtn').style.display='none';
-    document.getElementById('prevBtn').style.display='none';
-    document.getElementById('submitBtn').style.display='none';
-  }
-}
-
-function selectPractice(i){
-  if(answered)return;answered=true;
-  const q=curQ[idx],btns=document.querySelectorAll('.choice-btn'),order=curOrders[idx];
-  btns.forEach(b=>b.disabled=true);
-  const dispSel=order.indexOf(i),dispCor=order.indexOf(q.answer);
-  stats.total++;
-  if(i===q.answer){btns[dispSel].classList.add('correct');correct++;stats.correct++;markCorrect(q.id)}
-  else{btns[dispSel].classList.add('wrong');btns[dispCor].classList.add('reveal');wrongAns.push({q,yourIdx:i});markWrong(q.id)}
-  updateStat();showExplanation(q);
-  document.getElementById('nextBtn').style.display='inline-block';
-}
-function selectMock(i){
-  mockAnswers[idx]=i;
-  const order=curOrders[idx];
-  document.querySelectorAll('.choice-btn').forEach((b,p)=>b.classList.toggle('selected',order[p]===i));
-}
-function showExplanation(q){
-  const el=document.getElementById('explanation');let h='<h4>解説</h4>';
-  if(q.steps)q.steps.forEach((s,i)=>{
-    h+=`<div class="step"><div class="step-num">${i+1}</div><div class="step-body">`;
-    if(s.t)h+=`<strong>${s.t}</strong><br>`;if(s.b)h+=s.b;if(s.c)h+=`<span class="calc">${s.c}</span>`;
-    h+='</div></div>';
-  });
-  h+=`<div class="answer-highlight">正解：${q.ans}</div>`;
-  el.innerHTML=h;el.classList.add('show');
-}
-function toggleHint(){document.getElementById('hintPanel').classList.toggle('show')}
-function prevQuestion(){if(idx>0){idx--;renderQ()}}
-function nextQuestion(){idx++;if(idx>=curQ.length){if(isMock)return;showResult(false)}else renderQ()}
-function quitQuiz(){
-  if(isMock&&!confirm('模擬試験を中断しますか？（成績は記録されません）'))return;
-  if(timerId){clearInterval(timerId);timerId=null}
-  showTab('home');
-}
-function submitMock(){
-  if(timerId){clearInterval(timerId);timerId=null}
-  correct=0;wrongAns=[];
-  curQ.forEach((q,i)=>{if(mockAnswers[i]===q.answer){correct++;markCorrect(q.id)}else{wrongAns.push({q,yourIdx:mockAnswers[i]});markWrong(q.id)}});
-  showResult(true);
-}
-function showResult(mock){
-  const total=curQ.length,pct=Math.round(correct/total*100);
-  document.getElementById('resultScore').textContent=pct+'%';
-  document.getElementById('rCorrect').textContent=correct;
-  document.getElementById('rTotal').textContent=total;
-  document.getElementById('rWrong').textContent=total-correct;
-  const badge=document.getElementById('passBadge'),note=document.getElementById('passLineNote');
-  if(mock){
-    const pass=pct>=90;
-    badge.style.display='inline-block';badge.className='pass-badge '+(pass?'pass':'fail');
-    badge.textContent=pass?'合格':'不合格';
-    note.textContent='本番の合格ライン：正答率90%程度';
-    document.getElementById('resultMsg').textContent=pass?'おめでとうございます！本番でもこの調子で。':'あと'+(Math.ceil(total*0.9)-correct)+'問で合格ラインです。間違いを復習しましょう。';
-  }else{
-    badge.style.display='none';note.textContent='';
-    document.getElementById('resultMsg').textContent=pct>=90?'素晴らしい！合格レベルです。':pct>=70?'あと一息！苦手分野を復習しましょう。':'公式集と解説で基礎を固めましょう。';
-  }
-  document.getElementById('reviewBtn').style.display=wrongAns.length>0?'inline-block':'none';
-  document.getElementById('screen-quiz').classList.remove('active');
-  document.getElementById('screen-result').classList.add('active');
-}
-function reviewWrong(){
-  const el=document.getElementById('reviewList');
-  if(wrongAns.length===0){el.innerHTML='<p style="color:#64748b;text-align:center;padding:20px">間違えた問題はありません！</p>'}
-  else{el.innerHTML='';wrongAns.forEach(({q,yourIdx})=>{
-    const d=document.createElement('div');d.className='review-item';
-    const your=yourIdx==null?'（未回答）':q.choices[yourIdx];
-    d.innerHTML=`<div class="rtag">${q.tag}</div><div class="rq">${q.text}</div><div class="ya">✗ あなた：${your}</div><div class="ca">✓ 正解：${q.ans}</div>`;
-    el.appendChild(d);
-  })}
-  showTab('review');
-}
-function buildFormulas(){
-  const el=document.getElementById('formulaList');el.innerHTML='';
-  FORMULAS.forEach(f=>{
-    const d=document.createElement('div');d.className='formula-item';
-    let h=`<h4>${f.title}</h4><div class="f-box">${f.formula}</div>`;
-    if(f.formula2)h+=`<div class="f-box">${f.formula2}</div>`;
-    if(f.note)h+=`<p>${f.note.replace(/\n/g,'<br>')}</p>`;
-    if(f.ex)h+=`<div class="example">${f.ex.replace(/\n/g,'<br>')}</div>`;
-    d.innerHTML=h;el.appendChild(d);
-  });
-}
-function buildCheat(){
-  const el=document.getElementById('cheatList');el.innerHTML='';
-  CHEATSHEET.forEach(c=>{
-    const d=document.createElement('div');d.className='formula-item';
-    let h=`<h4>${c.title}</h4><p style="line-height:1.9">`;
-    h+=c.points.map(p=>'・'+p).join('<br>');
-    h+='</p>';d.innerHTML=h;el.appendChild(d);
-  });
-}
-function showTab(name){
-  if(timerId&&name!=='quiz'){clearInterval(timerId);timerId=null;document.getElementById('timer').style.display='none'}
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.getElementById('screen-'+name).classList.add('active');
-  if(name==='home')updateWeakCard();
-  const map={home:0,cheat:1,formulas:2,review:3};
-  if(map[name]!==undefined)document.querySelectorAll('.tab')[map[name]]?.classList.add('active');
-}
-buildHome();buildFormulas();buildCheat();updateWeakCard();
-</script>
+  <p class="note">
+    📲 各アプリはスマホの「ホーム画面に追加」でアプリとして使えます<br>
+    学科=教則第4版(令和7年2月)準拠/実地=令和8年6月5日施行の新基準対応
+  </p>
+</main>
 </body>
 </html>

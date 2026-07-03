@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>一等無人航空機 学科試験対策アプリ</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Meiryo', 'Yu Gothic', sans-serif; background: #0f172a; color: #e2e8f0; min-height: 100vh; }
+
+  header {
+    background: linear-gradient(135deg, #1e3a5f, #0f172a);
+    padding: 20px 24px;
+    border-bottom: 2px solid #2563eb;
+    display: flex; align-items: center; gap: 14px;
+  }
+  header h1 { font-size: 1.3rem; font-weight: 700; color: #60a5fa; }
+  header .badge { background: #2563eb; color: #fff; border-radius: 20px; padding: 3px 12px; font-size: 0.75rem; }
+
+  .main { max-width: 820px; margin: 0 auto; padding: 24px 16px; }
+
+  /* ---- カテゴリ選択 ---- */
+  .category-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; margin-top: 8px; }
+  .cat-card {
+    background: #1e293b; border: 1.5px solid #334155; border-radius: 12px;
+    padding: 20px 18px; cursor: pointer; transition: all .2s;
+  }
+  .cat-card:hover { border-color: #2563eb; transform: translateY(-2px); box-shadow: 0 4px 20px #2563eb33; }
+  .cat-card .icon { font-size: 2rem; margin-bottom: 8px; }
+  .cat-card h3 { font-size: 0.95rem; color: #93c5fd; margin-bottom: 4px; }
+  .cat-card p  { font-size: 0.78rem; color: #64748b; }
+
+  /* ---- 問題画面 ---- */
+  .q-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+  .q-progress-bar { background: #1e293b; border-radius: 99px; height: 8px; flex: 1; margin: 0 14px; }
+  .q-progress-fill { background: #2563eb; height: 100%; border-radius: 99px; transition: width .4s; }
+  .q-count { font-size: 0.82rem; color: #94a3b8; white-space: nowrap; }
+
+  .q-card { background: #1e293b; border-radius: 14px; padding: 26px 24px; margin-bottom: 18px; border: 1px solid #334155; }
+  .q-category-tag { font-size: 0.72rem; background: #1d4ed833; color: #60a5fa; border: 1px solid #2563eb55; border-radius: 20px; padding: 2px 10px; display: inline-block; margin-bottom: 12px; }
+  .q-text { font-size: 1rem; line-height: 1.75; color: #e2e8f0; margin-bottom: 10px; }
+  .q-given { background: #0f172a; border-left: 3px solid #2563eb; border-radius: 0 8px 8px 0; padding: 12px 16px; margin: 14px 0; font-size: 0.88rem; color: #94a3b8; line-height: 1.8; }
+
+  .choices { display: flex; flex-direction: column; gap: 10px; }
+  .choice-btn {
+    background: #0f172a; border: 1.5px solid #334155; border-radius: 10px;
+    padding: 14px 18px; text-align: left; cursor: pointer;
+    color: #cbd5e1; font-size: 0.92rem; transition: all .15s; width: 100%;
+  }
+  .choice-btn:hover:not(:disabled) { border-color: #3b82f6; background: #1e293b; }
+  .choice-btn.correct  { border-color: #22c55e; background: #14532d33; color: #86efac; }
+  .choice-btn.wrong    { border-color: #ef4444; background: #7f1d1d33; color: #fca5a5; }
+  .choice-btn.reveal   { border-color: #22c55e; background: #14532d22; color: #86efac; }
+  .choice-btn:disabled { cursor: default; opacity: 0.85; }
+
+  /* ---- 解説 ---- */
+  .explanation {
+    background: #0c1a2e; border: 1px solid #1d4ed8; border-radius: 12px;
+    padding: 20px 22px; margin-top: 16px; display: none;
+  }
+  .explanation.show { display: block; }
+  .explanation h4 { color: #60a5fa; margin-bottom: 12px; font-size: 0.95rem; }
+  .step { display: flex; gap: 12px; margin-bottom: 14px; align-items: flex-start; }
+  .step-num { background: #2563eb; color: #fff; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; flex-shrink: 0; margin-top: 1px; }
+  .step-body { font-size: 0.88rem; line-height: 1.7; color: #cbd5e1; }
+  .step-body strong { color: #93c5fd; }
+  .step-body .calc { background: #1e3a5f55; border-radius: 6px; padding: 6px 12px; margin-top: 6px; font-family: monospace; font-size: 0.9rem; color: #7dd3fc; display: block; }
+  .formula-box { background: #1e293b; border: 1px dashed #2563eb; border-radius: 8px; padding: 12px 16px; margin: 10px 0; text-align: center; font-size: 1.05rem; color: #fbbf24; letter-spacing: 0.04em; }
+  .answer-highlight { background: #064e3b; border: 1.5px solid #22c55e; border-radius: 8px; padding: 10px 16px; margin-top: 10px; text-align: center; color: #86efac; font-size: 1rem; font-weight: 700; }
+
+  /* ---- ナビゲーションボタン ---- */
+  .nav-btns { display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px; flex-wrap: wrap; }
+  .btn { padding: 10px 22px; border-radius: 8px; border: none; cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: all .15s; }
+  .btn-primary { background: #2563eb; color: #fff; }
+  .btn-primary:hover { background: #1d4ed8; }
+  .btn-secondary { background: #334155; color: #cbd5e1; }
+  .btn-secondary:hover { background: #475569; }
+  .btn-hint { background: #92400e44; color: #fbbf24; border: 1px solid #92400e; }
+  .btn-hint:hover { background: #92400e66; }
+
+  /* ---- 結果画面 ---- */
+  .result-card { background: #1e293b; border-radius: 16px; padding: 36px 28px; text-align: center; border: 1px solid #334155; }
+  .result-score { font-size: 4rem; font-weight: 800; color: #60a5fa; line-height: 1; }
+  .result-label { font-size: 1rem; color: #94a3b8; margin: 8px 0 22px; }
+  .result-msg { font-size: 1.1rem; margin-bottom: 28px; }
+  .result-breakdown { display: flex; justify-content: center; gap: 30px; margin-bottom: 28px; }
+  .result-breakdown div { text-align: center; }
+  .result-breakdown .val { font-size: 1.8rem; font-weight: 700; }
+  .result-breakdown .lbl { font-size: 0.78rem; color: #64748b; }
+  .green { color: #22c55e; } .red { color: #ef4444; }
+
+  /* ---- 公式集 ---- */
+  .formula-list { display: grid; gap: 14px; }
+  .formula-item { background: #1e293b; border-radius: 10px; padding: 18px 20px; border: 1px solid #334155; }
+  .formula-item h4 { color: #60a5fa; margin-bottom: 10px; font-size: 0.92rem; }
+  .formula-item .f-box { background: #0f172a; border-radius: 6px; padding: 10px 14px; font-family: monospace; color: #fbbf24; font-size: 1rem; margin-bottom: 8px; }
+  .formula-item p { font-size: 0.82rem; color: #64748b; line-height: 1.6; }
+
+  /* ---- メモ欄 ---- */
+  .hint-panel { background: #1c1a0e; border: 1px solid #92400e; border-radius: 10px; padding: 14px 18px; margin-top: 12px; display: none; }
+  .hint-panel.show { display: block; }
+  .hint-panel p { font-size: 0.85rem; color: #fde68a; line-height: 1.7; }
+
+  /* ---- タブ ---- */
+  .tabs { display: flex; gap: 6px; margin-bottom: 22px; flex-wrap: wrap; }
+  .tab { padding: 8px 18px; border-radius: 8px; border: 1.5px solid #334155; background: transparent; color: #64748b; cursor: pointer; font-size: 0.85rem; transition: all .15s; }
+  .tab.active { background: #2563eb; border-color: #2563eb; color: #fff; }
+  .tab:hover:not(.active) { border-color: #475569; color: #cbd5e1; }
+
+  .screen { display: none; }
+  .screen.active { display: block; }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>一等無人航空機 学科試験対策</h1>
+    <span style="font-size:0.78rem;color:#475569;">計算問題マスターコース</span>
+  </div>
+  <span class="badge">BETA</span>
+</header>
+
+<div class="main">
+  <!-- タブ -->
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('home')">ホーム</button>
+    <button class="tab" onclick="showTab('quiz')">練習問題</button>
+    <button class="tab" onclick="showTab('formulas')">公式集</button>
+  </div>
+
+  <!-- ホーム -->
+  <div id="screen-home" class="screen active">
+    <p style="color:#94a3b8;margin-bottom:20px;font-size:0.92rem;">カテゴリを選んで練習をはじめましょう。各問題にはステップ解説が付いています。</p>
+    <div class="category-grid">
+      <div class="cat-card" onclick="startQuiz('power')">
+        <div class="icon">⚙️</div>
+        <h3>仕事率計算</h3>
+        <p>ペイロード搭載後の仕事率を求める</p>
+      </div>
+      <div class="cat-card" onclick="startQuiz('turn')">
+        <div class="icon">✈️</div>
+        <h3>旋回半径計算</h3>
+        <p>バンク角・速度から旋回半径を求める</p>
+      </div>
+      <div class="cat-card" onclick="startQuiz('glide')">
+        <div class="icon">📐</div>
+        <h3>滑空距離計算</h3>
+        <p>高さと滑空角から滑空距離を求める</p>
+      </div>
+      <div class="cat-card" onclick="startQuiz('fresnel')">
+        <div class="icon">📡</div>
+        <h3>フレネルゾーン</h3>
+        <p>通信障害物回避に必要な半径を求める</p>
+      </div>
+      <div class="cat-card" onclick="startQuiz('altitude')">
+        <div class="icon">🌡️</div>
+        <h3>高度と速度</h3>
+        <p>空気密度の変化による必要速度を求める</p>
+      </div>
+      <div class="cat-card" onclick="startQuiz('knowledge')">
+        <div class="icon">🚁</div>
+        <h3>マルチローター知識</h3>
+        <p>機体特性・操作に関する知識問題</p>
+      </div>
+      <div class="cat-card" onclick="startQuiz('all')">
+        <div class="icon">🎯</div>
+        <h3>全問ランダム</h3>
+        <p>すべてのカテゴリからランダム出題</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 問題画面 -->
+  <div id="screen-quiz" class="screen">
+    <div class="q-header">
+      <button class="btn btn-secondary" style="padding:6px 14px;font-size:0.8rem;" onclick="showTab('home')">← 戻る</button>
+      <div class="q-progress-bar"><div class="q-progress-fill" id="progressFill"></div></div>
+      <span class="q-count" id="qCount">1 / 10</span>
+    </div>
+    <div class="q-card">
+      <span class="q-category-tag" id="qCatTag"></span>
+      <div class="q-text" id="qText"></div>
+      <div class="q-given" id="qGiven" style="display:none"></div>
+    </div>
+    <div class="choices" id="choices"></div>
+    <div class="hint-panel" id="hintPanel"><p id="hintText"></p></div>
+    <div class="explanation" id="explanation"></div>
+    <div class="nav-btns">
+      <button class="btn btn-hint" id="hintBtn" onclick="showHint()">💡 ヒント</button>
+      <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" style="display:none">次の問題 →</button>
+    </div>
+  </div>
+
+  <!-- 結果画面 -->
+  <div id="screen-result" class="screen">
+    <div class="result-card">
+      <div class="result-score" id="resultScore"></div>
+      <div class="result-label">正解率</div>
+      <div class="result-breakdown">
+        <div><div class="val green" id="correctCount"></div><div class="lbl">正解</div></div>
+        <div><div class="val red" id="wrongCount"></div><div class="lbl">不正解</div></div>
+      </div>
+      <div class="result-msg" id="resultMsg"></div>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <button class="btn btn-primary" onclick="retryQuiz()">もう一度挑戦</button>
+        <button class="btn btn-secondary" onclick="showTab('home')">カテゴリ選択へ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 公式集 -->
+  <div id="screen-formulas" class="screen">
+    <div class="formula-list">
+      <div class="formula-item">
+        <h4>⚙️ 仕事率（マルチローター）</h4>
+        <div class="f-box">仕事率比 = (搭載後重量 × 搭載後rpm) ÷ (搭載前重量 × 搭載前rpm)</div>
+        <div class="f-box">新しい仕事率 = 元の仕事率 × 仕事率比</div>
+        <p>ポイント：「重量 × rpm」の比率が仕事率の変化比率になる。空気密度は無視。</p>
+      </div>
+      <div class="formula-item">
+        <h4>✈️ 旋回半径</h4>
+        <div class="f-box">r = V² ÷ (g × tanφ)</div>
+        <p>V = 飛行速度(m/s)、g = 重力加速度(9.8m/s²)、φ = バンク角<br>tan20° = 0.36 がよく使われる</p>
+      </div>
+      <div class="formula-item">
+        <h4>📐 滑空距離</h4>
+        <div class="f-box">d = h ÷ tanγ</div>
+        <p>h = 高さ(m)、γ = 滑空角<br>または d = h × 揚抗比 でも求められる</p>
+      </div>
+      <div class="formula-item">
+        <h4>📡 フレネルゾーン半径</h4>
+        <div class="f-box">R = √(λ × D/4)</div>
+        <div class="f-box">λ = 光速(3×10⁸) ÷ 周波数(Hz)</div>
+        <div class="f-box">2.4GHz の場合：λ = 0.125m</div>
+        <p>60%クリアランス = R × 0.6<br>D = 送受信間距離(m)</p>
+      </div>
+      <div class="formula-item">
+        <h4>🌡️ 高度変化と速度</h4>
+        <div class="f-box">V₂ = V₁ × √(ρ₁ ÷ ρ₂)</div>
+        <p>ρ = 空気密度。高度が上がると空気密度が下がるため速度を上げる必要がある。<br>揚力 L ∝ ρV² が一定のため。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [
+  // ---- 仕事率 ----
+  {
+    id: 'p1', cat: '仕事率計算', catTag: '⚙️ 仕事率',
+    text: '仕事率 5W、回転角速度 6500rpm で機体重量 0.9kg の回転翼航空機にペイロード 0.3kg を搭載し、回転角速度を 7800rpm に上げた場合の仕事率はいくらか。（空気密度は関係しない）',
+    given: '元の仕事率：5W　元の重量：0.9kg　元のrpm：6500\nペイロード：0.3kg　新rpm：7800',
+    choices: ['6W', '7W', '8W', '9W'],
+    answer: 2,
+    hint: '「重量 × rpm」の搭載前後の比率を求め、元の仕事率にかけましょう。\n搭載前：0.9 × 6500 = ?　搭載後：(0.9+0.3) × 7800 = ?',
+    steps: [
+      { title: '公式を確認', body: '仕事率の変化比率 = <strong>（搭載後重量 × 搭載後rpm）÷（搭載前重量 × 搭載前rpm）</strong>', calc: null },
+      { title: '搭載前の値', body: '機体重量 × 回転角速度を計算します。', calc: '0.9 × 6500 = 5,850 kg·rpm' },
+      { title: '搭載後の値', body: '搭載後の重量 = 0.9 + 0.3 = <strong>1.2kg</strong>', calc: '1.2 × 7800 = 9,360 kg·rpm' },
+      { title: '比率を計算', body: '搭載後 ÷ 搭載前', calc: '9,360 ÷ 5,850 = 1.6倍' },
+      { title: '仕事率を求める', body: '元の仕事率 × 比率', calc: '5W × 1.6 = <strong>8W</strong>' },
+    ],
+    finalAnswer: '8W'
+  },
+  {
+    id: 'p2', cat: '仕事率計算', catTag: '⚙️ 仕事率',
+    text: '仕事率 4W、回転角速度 7200rpm で機体重量 0.8kg の回転翼航空機にペイロード 0.3kg を搭載し、回転角速度を 9600rpm に上げた場合の仕事率はいくらか。（空気密度は関係しない）',
+    given: '元の仕事率：4W　元の重量：0.8kg　元のrpm：7200\nペイロード：0.3kg　新rpm：9600',
+    choices: ['5.5W', '6W', '7W', '7.32W'],
+    answer: 3,
+    hint: '搭載前：0.8 × 7200　搭載後：(0.8+0.3) × 9600　の比率を求めます。',
+    steps: [
+      { title: '搭載前の値', body: '', calc: '0.8 × 7200 = 5,760 kg·rpm' },
+      { title: '搭載後の値', body: '重量：0.8 + 0.3 = <strong>1.1kg</strong>', calc: '1.1 × 9600 = 10,560 kg·rpm' },
+      { title: '比率', body: '', calc: '10,560 ÷ 5,760 ≒ 1.833倍' },
+      { title: '仕事率', body: '', calc: '4W × 1.833 ≒ <strong>7.32W</strong>' },
+    ],
+    finalAnswer: '7.32W'
+  },
+  {
+    id: 'p3', cat: '仕事率計算', catTag: '⚙️ 仕事率',
+    text: '仕事率 3W、回転角速度 5000rpm で機体重量 1.5kg の回転翼航空機にペイロード 0.5kg を搭載し、回転角速度を 8000rpm に上げた場合の仕事率はいくらか。（空気密度は関係しない）',
+    given: '元の仕事率：3W　元の重量：1.5kg　元のrpm：5000\nペイロード：0.5kg　新rpm：8000',
+    choices: ['5W', '6W', '6.39W', '7W'],
+    answer: 2,
+    hint: '搭載前：1.5 × 5000　搭載後：(1.5+0.5) × 8000　の比率を求めます。',
+    steps: [
+      { title: '搭載前', body: '', calc: '1.5 × 5,000 = 7,500 kg·rpm' },
+      { title: '搭載後', body: '重量：1.5 + 0.5 = <strong>2.0kg</strong>', calc: '2.0 × 8,000 = 16,000 kg·rpm' },
+      { title: '比率', body: '', calc: '16,000 ÷ 7,500 ≒ 2.133倍' },
+      { title: '仕事率', body: '', calc: '3W × 2.133 ≒ <strong>6.39W</strong>' },
+    ],
+    finalAnswer: '6.39W'
+  },
+  {
+    id: 'p4', cat: '仕事率計算', catTag: '⚙️ 仕事率',
+    text: '仕事率 10W、回転角速度 3100rpm で機体重量 1.2kg のヘリコプターにペイロード 0.8kg を搭載し、回転角速度を 3900rpm に上げた場合の仕事率はいくらか。（空気密度は関係しない）',
+    given: '元の仕事率：10W　元の重量：1.2kg　元のrpm：3100\nペイロード：0.8kg　新rpm：3900',
+    choices: ['15W', '18W', '20W', '22W'],
+    answer: 2,
+    hint: '搭載前：1.2 × 3100 = 3720　搭載後：2.0 × 3900 = 7440　比率 = 7440/3720 = 2',
+    steps: [
+      { title: '搭載前', body: '', calc: '1.2 × 3,100 = 3,720 kg·rpm' },
+      { title: '搭載後', body: '重量：1.2 + 0.8 = <strong>2.0kg</strong>', calc: '2.0 × 3,900 = 7,440 kg·rpm' },
+      { title: '比率', body: '', calc: '7,440 ÷ 3,720 = <strong>2.0倍</strong>' },
+      { title: '仕事率', body: '', calc: '10W × 2.0 = <strong>20W</strong>' },
+    ],
+    finalAnswer: '20W'
+  },
+
+  // ---- 旋回半径 ----
+  {
+    id: 't1', cat: '旋回半径計算', catTag: '✈️ 旋回半径',
+    text: '飛行速度 70m/s、バンク角 20° で定常旋回した時の旋回半径はいくらか。\ntan20° = 0.36、g = 9.8m/s²',
+    given: 'V = 70m/s　バンク角φ = 20°　tan20° = 0.36　g = 9.8',
+    choices: ['約1000m', '約1200m', '約1389m', '約1500m'],
+    answer: 2,
+    hint: '公式：r = V² ÷ (g × tanφ)\nまず V² = 70² = 4900 を計算しましょう。',
+    steps: [
+      { title: '公式', body: '<strong>r = V² ÷ (g × tanφ)</strong>', calc: null },
+      { title: 'V² を計算', body: '', calc: '70² = 4,900' },
+      { title: 'g × tanφ を計算', body: '', calc: '9.8 × 0.36 = 3.528' },
+      { title: '旋回半径', body: '', calc: '4,900 ÷ 3.528 ≒ <strong>1,389m</strong>' },
+    ],
+    finalAnswer: '約1389m'
+  },
+  {
+    id: 't2', cat: '旋回半径計算', catTag: '✈️ 旋回半径',
+    text: '飛行速度 23m/s、バンク角 20° で定常旋回した時の旋回半径はいくらか。\ntan20° = 0.36、g = 9.8m/s²',
+    given: 'V = 23m/s　バンク角φ = 20°　tan20° = 0.36　g = 9.8',
+    choices: ['約100m', '約150m', '約200m', '約250m'],
+    answer: 1,
+    hint: 'r = V² ÷ (g × tanφ)　23² = 529',
+    steps: [
+      { title: '公式', body: '<strong>r = V² ÷ (g × tanφ)</strong>', calc: null },
+      { title: 'V²', body: '', calc: '23² = 529' },
+      { title: 'g × tanφ', body: '', calc: '9.8 × 0.36 = 3.528' },
+      { title: '旋回半径', body: '', calc: '529 ÷ 3.528 ≒ <strong>150m</strong>' },
+    ],
+    finalAnswer: '約150m'
+  },
+  {
+    id: 't3', cat: '旋回半径計算', catTag: '✈️ 旋回半径',
+    text: '飛行速度 30m/s、バンク角 20° で定常旋回した時の旋回半径はいくらか。\ntan20° = 0.36、g = 9.8m/s²',
+    given: 'V = 30m/s　バンク角φ = 20°　tan20° = 0.36　g = 9.8',
+    choices: ['約200m', '約255m', '約300m', '約350m'],
+    answer: 1,
+    hint: 'r = V² ÷ (g × tanφ)　30² = 900',
+    steps: [
+      { title: '公式', body: '<strong>r = V² ÷ (g × tanφ)</strong>', calc: null },
+      { title: 'V²', body: '', calc: '30² = 900' },
+      { title: 'g × tanφ', body: '', calc: '9.8 × 0.36 = 3.528' },
+      { title: '旋回半径', body: '', calc: '900 ÷ 3.528 ≒ <strong>255m</strong>' },
+    ],
+    finalAnswer: '約255m'
+  },
+
+  // ---- 滑空距離 ----
+  {
+    id: 'g1', cat: '滑空距離計算', catTag: '📐 滑空距離',
+    text: '高さ 1,000m、滑空角 γ = 15°（tan15° = 0.268）の場合の滑空距離はいくらか。',
+    given: 'h = 1,000m　tanγ = 0.268',
+    choices: ['約2,800m', '約3,200m', '約3,730m', '約4,000m'],
+    answer: 2,
+    hint: '公式：d = h ÷ tanγ\n1,000 ÷ 0.268 = ?',
+    steps: [
+      { title: '公式', body: '<strong>d = h ÷ tanγ</strong>', calc: null },
+      { title: '代入', body: 'h = 1,000　tanγ = 0.268', calc: '1,000 ÷ 0.268 ≒ <strong>3,731m ≒ 3,730m</strong>' },
+    ],
+    finalAnswer: '約3,730m'
+  },
+
+  // ---- フレネルゾーン ----
+  {
+    id: 'f1', cat: 'フレネルゾーン', catTag: '📡 フレネルゾーン',
+    text: '使用周波数 2.4GHz、距離 1,000m のフレネルゾーン半径の 60% の値はいくらか。\n光速 = 3×10⁸ m/s',
+    given: 'f = 2.4GHz　D = 1,000m　光速 = 3×10⁸',
+    choices: ['約2.5m', '約3.3m', '約4.0m', '約5.0m'],
+    answer: 1,
+    hint: '手順：① λ = 3×10⁸ ÷ 2.4×10⁹ = 0.125m\n② R = √(0.125 × 1000/4)\n③ R × 0.6',
+    steps: [
+      { title: '公式', body: '<strong>R = √(λ × D/4)</strong>', calc: null },
+      { title: '波長λを計算', body: 'λ = 光速 ÷ 周波数', calc: '3×10⁸ ÷ 2.4×10⁹ = 0.125m' },
+      { title: 'R を計算', body: 'D = 1,000m', calc: '√(0.125 × 1000/4) = √(0.125 × 250) = √31.25 ≒ 5.59m' },
+      { title: '60%の値', body: '', calc: '5.59 × 0.6 ≒ <strong>3.3m</strong>' },
+    ],
+    finalAnswer: '約3.3m'
+  },
+  {
+    id: 'f2', cat: 'フレネルゾーン', catTag: '📡 フレネルゾーン',
+    text: '使用周波数 2.4GHz、距離 2,000m のフレネルゾーン半径の 60% の値はいくらか。\n光速 = 3×10⁸ m/s',
+    given: 'f = 2.4GHz　D = 2,000m　光速 = 3×10⁸',
+    choices: ['約3.5m', '約4.0m', '約4.7m', '約5.5m'],
+    answer: 2,
+    hint: 'λ = 0.125m（2.4GHz 固定）\nR = √(0.125 × 2000/4) = √(0.125 × 500)',
+    steps: [
+      { title: '波長λ（2.4GHz 共通）', body: '', calc: 'λ = 0.125m' },
+      { title: 'R を計算', body: 'D = 2,000m', calc: '√(0.125 × 2000/4) = √(0.125 × 500) = √62.5 ≒ 7.90m' },
+      { title: '60%の値', body: '', calc: '7.90 × 0.6 = <strong>4.74m ≒ 4.7m</strong>' },
+    ],
+    finalAnswer: '約4.7m'
+  },
+  {
+    id: 'f3', cat: 'フレネルゾーン', catTag: '📡 フレネルゾーン',
+    text: '使用周波数 2.4GHz、距離 2,800m のフレネルゾーン半径の 60% の値はいくらか。\n光速 = 3×10⁸ m/s',
+    given: 'f = 2.4GHz　D = 2,800m　光速 = 3×10⁸',
+    choices: ['約4.5m', '約5.0m', '約5.6m', '約6.2m'],
+    answer: 2,
+    hint: 'λ = 0.125m\nR = √(0.125 × 2800/4) = √(0.125 × 700)',
+    steps: [
+      { title: '波長λ', body: '', calc: 'λ = 0.125m' },
+      { title: 'R を計算', body: 'D = 2,800m', calc: '√(0.125 × 2800/4) = √(0.125 × 700) = √87.5 ≒ 9.35m' },
+      { title: '60%の値', body: '', calc: '9.35 × 0.6 ≒ <strong>5.6m</strong>' },
+    ],
+    finalAnswer: '約5.6m'
+  },
+  {
+    id: 'f4', cat: 'フレネルゾーン', catTag: '📡 フレネルゾーン',
+    text: '使用周波数 2.4GHz、距離 8,600m のフレネルゾーン半径の 60% の値はいくらか。\n光速 = 3×10⁸ m/s',
+    given: 'f = 2.4GHz　D = 8,600m　光速 = 3×10⁸',
+    choices: ['約7.5m', '約8.5m', '約9.8m', '約11m'],
+    answer: 2,
+    hint: 'λ = 0.125m\nR = √(0.125 × 8600/4) = √(0.125 × 2150)',
+    steps: [
+      { title: '波長λ', body: '', calc: 'λ = 0.125m' },
+      { title: 'R を計算', body: 'D = 8,600m', calc: '√(0.125 × 8600/4) = √(0.125 × 2150) = √268.75 ≒ 16.39m' },
+      { title: '60%の値', body: '', calc: '16.39 × 0.6 ≒ <strong>9.8m</strong>' },
+    ],
+    finalAnswer: '約9.8m'
+  },
+
+  // ---- 高度と速度 ----
+  {
+    id: 'a1', cat: '高度と速度', catTag: '🌡️ 高度と速度',
+    text: '飛行機Aが高度500m（空気密度1.17）で速度20m/sで水平定常飛行している。高度3,000m（空気密度0.91）での水平定常飛行に必要な速度はいくらか。',
+    given: '高度500m：ρ₁ = 1.17、V₁ = 20m/s\n高度3,000m：ρ₂ = 0.91',
+    choices: ['約20m/s', '約21.5m/s', '約22.6m/s', '約25m/s'],
+    answer: 2,
+    hint: '公式：V₂ = V₁ × √(ρ₁ ÷ ρ₂)\nまず ρ₁/ρ₂ = 1.17/0.91 ≒ 1.286 を計算し、√をとります。',
+    steps: [
+      { title: '原理', body: '揚力 L ∝ ρV² = 一定。ρが下がればVを上げる必要がある。', calc: null },
+      { title: '公式', body: '<strong>V₂ = V₁ × √(ρ₁ ÷ ρ₂)</strong>', calc: null },
+      { title: '密度の比率', body: '', calc: 'ρ₁ ÷ ρ₂ = 1.17 ÷ 0.91 ≒ 1.286' },
+      { title: '√をとる', body: '', calc: '√1.286 ≒ 1.134' },
+      { title: '新しい速度', body: '', calc: '20 × 1.134 ≒ <strong>22.7m/s ≒ 22.6m/s</strong>' },
+    ],
+    finalAnswer: '約22.6m/s'
+  },
+
+  // ---- 知識問題 ----
+  {
+    id: 'k1', cat: 'マルチローター知識', catTag: '🚁 機体特性',
+    text: '回転翼航空機（マルチローター）における機体の特徴として正しいものはどれか。',
+    given: null,
+    choices: [
+      '揚力を得ている状態で右または左回転を指示すると、指示した方向のローターの回転数が下がりトルクバランスが崩れ回転が始まる。',
+      '推力を得ている状態で右または左回転を指示すると、指示した方向のローターの回転数が下がりトルクバランスが崩れ回転が始まる。',
+      '機体の前後左右移動は、指示した側のローターの回転数を下げ、反対側を上げることで機体が傾き移動する。',
+      '全てのローターは同じ回転方向で飛行する。'
+    ],
+    answer: 0,
+    hint: '「揚力」を得ている状態での左右回転指示に注目。どのローターの回転が変化するかを考えましょう。',
+    steps: [
+      { title: '正解の理由', body: '<strong>揚力を得ている状態</strong>で右または左回転を指示すると、<strong>指示した回転方向のローターの回転数が下がり</strong>、トルクバランスが崩れて機体が回転する。', calc: null },
+      { title: '選択肢2の誤り', body: '「推力」ではなく「揚力」が正しい。', calc: null },
+      { title: '選択肢3の誤り', body: '前後左右移動は「指示した側のローターを下げ、反対側を上げる」ではなく、<strong>指示した側を下げ反対側を上げる</strong>（これは正しい）が、選択肢の文章が逆になっている問題が多い。正確には「指示した側を下げ」が正解。', calc: null },
+    ],
+    finalAnswer: '選択肢1（揚力を得ている状態で…）'
+  },
+  {
+    id: 'k2', cat: 'マルチローター知識', catTag: '🚁 機体特性',
+    text: '大型機の飛行特性として正しいものはどれか。',
+    given: null,
+    choices: [
+      '大型機は機体の遠心力が大きいことから、増速・減速・上昇・降下などに要する時間と距離が長くなる。',
+      '大型機は軽量なため、増速・減速に要する時間が短い。',
+      '大型機は小型機より旋回半径が小さい。',
+      '大型機は空気抵抗が少なく、高速飛行に向いている。'
+    ],
+    answer: 0,
+    hint: '大型機の「慣性（惰性）」の大きさについて考えましょう。',
+    steps: [
+      { title: '正解の理由', body: '大型機は<strong>機体の遠心力（慣性）が大きい</strong>ため、速度・高度の変化に多くの時間と距離が必要になる。これは安全上の重要な特性。', calc: null },
+    ],
+    finalAnswer: '選択肢1（大型機は機体の遠心力が大きいことから…）'
+  },
+];
+
+const CATEGORIES = {
+  power:     QUESTIONS.filter(q => q.cat === '仕事率計算'),
+  turn:      QUESTIONS.filter(q => q.cat === '旋回半径計算'),
+  glide:     QUESTIONS.filter(q => q.cat === '滑空距離計算'),
+  fresnel:   QUESTIONS.filter(q => q.cat === 'フレネルゾーン'),
+  altitude:  QUESTIONS.filter(q => q.cat === '高度と速度'),
+  knowledge: QUESTIONS.filter(q => q.cat.includes('知識') || q.cat.includes('機体')),
+  all:       [...QUESTIONS],
+};
+
+let currentQuestions = [];
+let currentIndex = 0;
+let correctCount = 0;
+let answered = false;
+let currentCat = 'all';
+
+function showTab(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+  const tabs = { home: 0, quiz: 1, formulas: 2, result: 1 };
+  if (tabs[name] !== undefined) {
+    document.querySelectorAll('.tab')[tabs[name]]?.classList.add('active');
+  }
+  if (name === 'home') document.querySelectorAll('.tab')[0].classList.add('active');
+  if (name === 'formulas') document.querySelectorAll('.tab')[2].classList.add('active');
+}
+
+function shuffle(arr) {
+  return [...arr].sort(() => Math.random() - 0.5);
+}
+
+function startQuiz(cat) {
+  currentCat = cat;
+  let pool = CATEGORIES[cat] || QUESTIONS;
+  currentQuestions = shuffle(pool);
+  currentIndex = 0;
+  correctCount = 0;
+  showTab('quiz');
+  renderQuestion();
+}
+
+function retryQuiz() {
+  startQuiz(currentCat);
+}
+
+function renderQuestion() {
+  const q = currentQuestions[currentIndex];
+  answered = false;
+  document.getElementById('hintPanel').classList.remove('show');
+  document.getElementById('explanation').classList.remove('show');
+  document.getElementById('explanation').innerHTML = '';
+  document.getElementById('nextBtn').style.display = 'none';
+
+  // progress
+  const pct = ((currentIndex) / currentQuestions.length) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('qCount').textContent = (currentIndex + 1) + ' / ' + currentQuestions.length;
+
+  document.getElementById('qCatTag').textContent = q.catTag;
+  document.getElementById('qText').textContent = q.text;
+
+  const givenEl = document.getElementById('qGiven');
+  if (q.given) {
+    givenEl.style.display = 'block';
+    givenEl.textContent = q.given;
+  } else {
+    givenEl.style.display = 'none';
+  }
+
+  document.getElementById('hintText').innerHTML = q.hint.replace(/\n/g, '<br>');
+
+  const choicesEl = document.getElementById('choices');
+  choicesEl.innerHTML = '';
+  q.choices.forEach((c, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.innerHTML = `<span style="color:#475569;margin-right:10px;">${['A','B','C','D'][i]}.</span>${c}`;
+    btn.onclick = () => selectAnswer(i);
+    choicesEl.appendChild(btn);
+  });
+}
+
+function selectAnswer(idx) {
+  if (answered) return;
+  answered = true;
+  const q = currentQuestions[currentIndex];
+  const btns = document.querySelectorAll('.choice-btn');
+  btns.forEach(b => b.disabled = true);
+
+  if (idx === q.answer) {
+    btns[idx].classList.add('correct');
+    correctCount++;
+  } else {
+    btns[idx].classList.add('wrong');
+    btns[q.answer].classList.add('reveal');
+  }
+
+  showExplanation(q);
+  document.getElementById('nextBtn').style.display = 'inline-block';
+}
+
+function showExplanation(q) {
+  const el = document.getElementById('explanation');
+  let html = `<h4>解説</h4>`;
+
+  if (q.steps && q.steps.length) {
+    html += `<div style="margin-bottom:12px;"><div class="formula-box">${q.catTag} 解法ステップ</div></div>`;
+    q.steps.forEach((s, i) => {
+      html += `<div class="step"><div class="step-num">${i+1}</div><div class="step-body">`;
+      if (s.title) html += `<strong>${s.title}</strong><br>`;
+      if (s.body) html += s.body;
+      if (s.calc) html += `<span class="calc">${s.calc}</span>`;
+      html += `</div></div>`;
+    });
+  }
+
+  html += `<div class="answer-highlight">正解：${q.finalAnswer}</div>`;
+  el.innerHTML = html;
+  el.classList.add('show');
+}
+
+function showHint() {
+  document.getElementById('hintPanel').classList.toggle('show');
+}
+
+function nextQuestion() {
+  currentIndex++;
+  if (currentIndex >= currentQuestions.length) {
+    showResult();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showResult() {
+  const total = currentQuestions.length;
+  const pct = Math.round((correctCount / total) * 100);
+  document.getElementById('resultScore').textContent = pct + '%';
+  document.getElementById('correctCount').textContent = correctCount;
+  document.getElementById('wrongCount').textContent = total - correctCount;
+
+  let msg = '';
+  if (pct >= 90) msg = '素晴らしい！合格レベルに達しています。';
+  else if (pct >= 70) msg = 'もう少しです！苦手な問題を公式集で復習しましょう。';
+  else msg = '基礎からしっかり復習しましょう。公式集を活用してください。';
+  document.getElementById('resultMsg').textContent = msg;
+
+  document.getElementById('screen-quiz').classList.remove('active');
+  document.getElementById('screen-result').classList.add('active');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>一等無人航空機 直前対策講座</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Hiragino Kaku Gothic ProN','Meiryo','Yu Gothic',sans-serif;background:#0f172a;color:#e2e8f0;line-height:1.8;-webkit-text-size-adjust:100%}
+header{background:linear-gradient(135deg,#7f1d1d,#0f172a);padding:18px;border-bottom:2px solid #ef4444;position:sticky;top:0;z-index:20}
+header h1{font-size:1.1rem;color:#fff}
+header .sub{font-size:.72rem;color:#fca5a5;margin-top:3px}
+.wrap{max-width:760px;margin:0 auto;padding:16px 14px 70px}
+.toc{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:14px 16px;margin-bottom:18px}
+.toc h2{font-size:.82rem;color:#94a3b8;margin-bottom:10px}
+.toc a{display:block;color:#60a5fa;font-size:.88rem;padding:6px 0;text-decoration:none;border-bottom:1px solid #1e293b}
+.toc a:active{color:#93c5fd}
+section{margin-bottom:14px}
+details{background:#1e293b;border:1px solid #334155;border-radius:12px;margin-bottom:12px;overflow:hidden}
+details[open]{border-color:#2563eb}
+summary{padding:15px 16px;font-size:.98rem;font-weight:700;color:#93c5fd;cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:'＋';margin-left:auto;color:#475569;font-weight:400}
+details[open] summary::after{content:'－'}
+details[open] summary{border-bottom:1px solid #334155;background:#1d2b45}
+.body{padding:14px 16px}
+.body h3{font-size:.92rem;color:#60a5fa;margin:14px 0 7px}
+.body h3:first-child{margin-top:0}
+.body p{font-size:.88rem;margin-bottom:10px}
+.body ul{margin:0 0 10px 4px;list-style:none}
+.body li{font-size:.87rem;margin-bottom:7px;padding-left:18px;position:relative}
+.body li::before{content:'▸';position:absolute;left:0;color:#2563eb}
+b,strong{color:#fbbf24}
+.formula{background:#0f172a;border:1px dashed #2563eb;border-radius:8px;padding:11px 14px;font-family:monospace;color:#7dd3fc;font-size:.86rem;margin:8px 0;text-align:center;word-break:break-word}
+.warn{background:#2a0e0e;border-left:3px solid #ef4444;border-radius:0 8px 8px 0;padding:10px 13px;margin:10px 0;font-size:.85rem;color:#fca5a5}
+.tip{background:#0c1a2e;border-left:3px solid #2563eb;border-radius:0 8px 8px 0;padding:10px 13px;margin:10px 0;font-size:.85rem;color:#93c5fd}
+.key{background:#064e3b;border:1px solid #22c55e;border-radius:8px;padding:9px 13px;margin:8px 0;font-size:.86rem;color:#86efac}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.82rem}
+th,td{border:1px solid #334155;padding:7px 9px;text-align:left}
+th{background:#1d2b45;color:#93c5fd}
+td b{color:#fbbf24}
+.plan td:first-child{white-space:nowrap;color:#60a5fa;font-weight:700}
+.badge{display:inline-block;background:#7f1d1d;color:#fecaca;font-size:.7rem;padding:2px 9px;border-radius:20px;margin-left:6px}
+.step{display:flex;gap:9px;margin-bottom:9px;align-items:flex-start}
+.stepn{background:#2563eb;color:#fff;border-radius:50%;width:21px;height:21px;display:flex;align-items:center;justify-content:center;font-size:.7rem;flex-shrink:0;margin-top:3px}
+.stepb{font-size:.86rem}
+.top{position:fixed;right:14px;bottom:16px;background:#2563eb;color:#fff;border:none;border-radius:50%;width:46px;height:46px;font-size:1.1rem;cursor:pointer;box-shadow:0 4px 12px #0008;z-index:30}
+a.anchor{position:relative;top:-70px;display:block;visibility:hidden}
+</style>
+</head>
+<body>
+<header>
+  <h1>🎯 一等無人航空機 直前対策講座</h1>
+  <div class="sub">3回目で必ず合格する・出るところだけ集中講座</div>
+</header>
+
+<div class="wrap">
+  <div class="toc">
+    <h2>📖 目次（タップで移動）</h2>
+    <a href="#plan">① 残り日数の学習プラン</a>
+    <a href="#calc">② 計算問題 完全攻略（最優先）</a>
+    <a href="#num">③ 暗記数値（一番出る）</a>
+    <a href="#risk">⭐ リスク管理 完全攻略（重点）</a>
+    <a href="#weather">④ 気象</a>
+    <a href="#rule">⑤ 規則の要点</a>
+    <a href="#system">⑥ システムの要点</a>
+    <a href="#pilot">⑦ 操縦・運航の要点</a>
+    <a href="#trap">⑧ ひっかけTOP10</a>
+    <a href="#day">⑨ 当日の戦略</a>
+  </div>
+
+  <section><a id="plan" class="anchor"></a>
+  <details open><summary>① 残り日数の学習プラン</summary><div class="body">
+    <p>合格ライン＝<b>正答率90%（70問中63問）</b>。計算を全部取れば知識8割でも届きます。</p>
+    <table class="plan">
+      <tr><th>日</th><th>やること</th></tr>
+      <tr><td>残り4日</td><td>この講座を1周＋アプリ本番モード1回（弱点把握）</td></tr>
+      <tr><td>残り3日</td><td>計算5型を完璧に＋弱点モード</td></tr>
+      <tr><td>残り2日</td><td>リスク管理＋暗記数値＋ひっかけ</td></tr>
+      <tr><td>前日</td><td>本番モード2回＋この講座を再読</td></tr>
+      <tr><td>当日</td><td>朝に暗記数値だけ確認して本番！</td></tr>
+    </table>
+    <div class="key">🔑 戦略：①計算を満点に固める ②リスク管理を理解する ③暗記数値を頭に入れる。この3つで合格圏です。</div>
+  </div></details>
+  </section>
+
+  <section><a id="calc" class="anchor"></a>
+  <details open><summary>② 計算問題 完全攻略 <span class="badge">最優先</span></summary><div class="body">
+    <p>計算は<b>公式に当てはめるだけ</b>。型は5つだけ。これを取れれば一気に合格が近づきます。</p>
+
+    <h3>① 仕事率（マルチローター）</h3>
+    <div class="formula">答え = 元の仕事率 ×（搭載後重量×rpm）÷（搭載前重量×rpm）</div>
+    <ul><li>搭載後重量＝元の重量＋ペイロード</li><li>「重量×rpm」を前後で計算 → 割って比率 → 元の仕事率にかける</li></ul>
+    <div class="tip">例：5W・0.9kg・6500rpm →+0.3kg・7800rpm<br>前0.9×6500=5850／後1.2×7800=9360<br>9360÷5850=1.6 → 5×1.6=<b>8W</b></div>
+
+    <h3>② 旋回半径</h3>
+    <div class="formula">r = V² ÷ (g × tanφ)　g=9.8、tan20°=0.36</div>
+    <ul><li>分母は必ず 9.8×0.36=<b>3.528</b>（これを覚えておくと速い）</li><li>速度を2乗して3.528で割るだけ</li></ul>
+    <div class="tip">例：V=70 → 70²=4900 → 4900÷3.528≒<b>1389m</b></div>
+
+    <h3>③ 滑空距離</h3>
+    <div class="formula">d = 高さ ÷ tanγ　＝　高さ × 揚抗比</div>
+    <div class="tip">例：1000m・tan15°=0.268 → 1000÷0.268≒3730m<br>例：500m・揚抗比15 → 500×15=7500m</div>
+
+    <h3>④ フレネルゾーン（2.4GHz）</h3>
+    <div class="formula">λ=0.125（固定）→ R=√(0.125×距離÷4) → ×0.6</div>
+    <ul><li>2.4GHzなら波長は<b>必ず0.125m</b></li><li>60%の値を聞かれたら最後に×0.6</li></ul>
+    <div class="tip">例：距離1000m → √(0.125×250)=5.59m → ×0.6≒<b>3.3m</b></div>
+
+    <h3>⑤ 高度と速度</h3>
+    <div class="formula">新速度 = 元速度 × √(元の空気密度 ÷ 新しい空気密度)</div>
+    <ul><li>高度UP→空気密度DOWN→速度を上げる必要</li><li>揚力 L∝ρV² が一定だから</li></ul>
+    <div class="tip">例：500m(1.17)20m/s→3000m(0.91)<br>√(1.17÷0.91)=1.134 → 20×1.134≒<b>22.6m/s</b></div>
+
+    <div class="key">🔑 この5式を紙に書き写し、アプリの計算分野を繰り返せば計算は満点が狙えます。</div>
+  </div></details>
+  </section>
+
+  <section><a id="num" class="anchor"></a>
+  <details><summary>③ 暗記数値（一番出る）</summary><div class="body">
+    <table>
+      <tr><th>数値</th><th>意味</th></tr>
+      <tr><td><b>100g</b>以上</td><td>無人航空機（未満＝模型航空機）</td></tr>
+      <tr><td><b>150m</b>以上</td><td>飛行禁止高度（直下の地表からの差）</td></tr>
+      <tr><td><b>30m</b>未満</td><td>第三者・物件との距離規制</td></tr>
+      <tr><td><b>25kg</b></td><td>大型機の境界（登録記号25mm以上）</td></tr>
+      <tr><td><b>300m</b></td><td>重要施設の周辺（飛行禁止法）</td></tr>
+      <tr><td><b>200m</b>以上</td><td>航空交通管制区</td></tr>
+      <tr><td><b>250m</b>以上</td><td>模型航空機の届出が必要な高度</td></tr>
+      <tr><td><b>3年</b></td><td>登録・技能証明の有効期間</td></tr>
+      <tr><td>第一種<b>1年</b>/第二種<b>3年</b></td><td>機体認証</td></tr>
+      <tr><td><b>16歳</b></td><td>技能証明の最低年齢</td></tr>
+      <tr><td><b>2年/100万円</b></td><td>最も重い罰則（事故時に措置せず）</td></tr>
+      <tr><td><b>15点</b></td><td>行政処分で技能証明取消</td></tr>
+      <tr><td>カテゴリーII<b>10</b>/III<b>20</b>開庁日前</td><td>飛行申請の提出期限</td></tr>
+    </table>
+  </div></details>
+  </section>
+
+  <section><a id="risk" class="anchor"></a>
+  <details open><summary>⭐ リスク管理 完全攻略 <span class="badge">重点</span></summary><div class="body">
+    <p>苦手な人が多い分野ですが、<b>言葉の意味さえ押さえれば得点源</b>になります。順番に理解しましょう。</p>
+
+    <h3>1. ハザードとリスク（必ず出る定義）</h3>
+    <ul>
+      <li><b>ハザード</b>＝事故につながる可能性のある「<b>危険要素</b>」（潜在的なものも含む）</li>
+      <li><b>リスク</b>＝安全に影響する「<b>事象が発生する可能性</b>」</li>
+    </ul>
+    <div class="formula">リスク ＝ 発生確率（頻度）× 結果の重大性（被害の大きさ）</div>
+    <div class="tip">例：「機材不具合」＝ハザード。それによる「墜落」＝リスク。</div>
+
+    <h3>2. リスクを下げる2つの方法</h3>
+    <p>リスク軽減は次の<b>2方向</b>で考えます（どちらか/両方）。</p>
+    <ul>
+      <li>① <b>発生確率を下げる</b>：信頼性の高い機材を使う等</li>
+      <li>② <b>被害を軽減する</b>：パラシュートで落下時の衝撃を減らす等</li>
+    </ul>
+    <div class="warn">⚠️ ひっかけ：「リスクをゼロにする」は誤り。正しくは「<b>許容可能な程度まで低減</b>する」。</div>
+
+    <h3>3. 安全マージンと危険半径</h3>
+    <ul>
+      <li>飛行領域に<b>危険半径</b>を加えた範囲を無人地帯にする</li>
+      <li>危険半径 ＝ <b>高度と同じ数値か30mのいずれか長い方</b></li>
+      <li>逸脱防止：<b>ジオフェンス機能</b>で飛行禁止空域を設定</li>
+      <li>操縦と安全管理を分けるため<b>安全管理者（運航管理者）</b>の配置が望ましい</li>
+    </ul>
+
+    <h3>4. カテゴリーIIIのリスク評価〔一等の核心〕</h3>
+    <p>第三者上空＝最もリスクが高いので、国の<b>許可・承認</b>が必要。リスク評価の結果に基づき<b>飛行マニュアル</b>を作成・遵守します。</p>
+    <ul>
+      <li>地上リスク＝<b>人との衝突</b>リスク</li>
+      <li>空中リスク＝<b>航空機との衝突</b>リスク</li>
+      <li>この2つを評価するのが基本</li>
+    </ul>
+
+    <h3>5. SORA／SAIL（リスク評価ガイドライン）</h3>
+    <ul>
+      <li>リスク評価ガイドラインは<b>JARUSのSORA</b>を参考に作成</li>
+      <li>地上リスククラスと空中リスククラスから <b>SAIL</b>（安全性と保証のレベル）を決定</li>
+      <li>残留する空中リスク＝<b>ARC-a〜ARC-d</b></li>
+      <li><b>戦略的対策</b>＝飛行<b>前</b>に遭遇確率を下げる（時間帯・境界の限定）</li>
+      <li><b>戦術的対策</b>＝飛行<b>中</b>に衝突を回避する</li>
+    </ul>
+    <div class="tip">覚え方：戦<b>略</b>＝前もって（事前）、戦<b>術</b>＝その場で（飛行中）。</div>
+
+    <h3>6. セマンティックモデル（空間の考え方）</h3>
+    <ul>
+      <li><b>想定飛行空間</b>：通常飛ぶ範囲（標準運航手順）</li>
+      <li><b>想定外飛行空間</b>：そこを外れた時に備える空間（異常対応手順）</li>
+      <li>2つ合わせて＝<b>オペレーション空間</b>（外れたら緊急時対応）</li>
+      <li><b>地上リスク緩衝地域</b>＝安全マージン</li>
+      <li><b>隣接エリア</b>＝オペレーション空間の外側。制御不能で侵入すると高リスク</li>
+    </ul>
+
+    <h3>7. ロバスト性</h3>
+    <ul>
+      <li><b>安全性の水準</b>（どれだけ安全になるか）と<b>保証の水準</b>（確実に実施される証明）の両方で評価</li>
+      <li>低・中・高の3水準。<b>低い方に合わせて評価</b>する</li>
+    </ul>
+    <div class="warn">⚠️ ひっかけ：中レベルの措置でも保証が低レベルなら、全体は<b>低レベル</b>と評価。</div>
+
+    <h3>8. リスク評価の6ステップ（順番）</h3>
+    <div class="step"><div class="stepn">1</div><div class="stepb">運航計画（CONOPS）の説明</div></div>
+    <div class="step"><div class="stepn">2</div><div class="stepb">地上リスクの把握</div></div>
+    <div class="step"><div class="stepn">3</div><div class="stepb">空中リスクの把握</div></div>
+    <div class="step"><div class="stepn">4</div><div class="stepb">安全目標（SAIL→OSO）の確認</div></div>
+    <div class="step"><div class="stepn">5</div><div class="stepb">隣接エリアの考慮</div></div>
+    <div class="step"><div class="stepn">6</div><div class="stepb">評価結果への対応（飛行マニュアル作成）</div></div>
+
+    <h3>9. 機体選定によるリスク低減</h3>
+    <ul>
+      <li><b>冗長性</b>：必要最低限より多いプロペラ・モーター（壊れても飛べる）</li>
+      <li><b>パラシュート</b>：落下時の衝撃エネルギーを軽減</li>
+    </ul>
+
+    <div class="key">🔑 リスク管理の合言葉：「ハザード（危険要素）を見つけ → リスク（確率×被害）を評価 → 確率を下げるか被害を減らして → 許容範囲まで低減」。この流れさえ言えれば多くの問題が解けます。</div>
+  </div></details>
+  </section>
+
+  <section><a id="weather" class="anchor"></a>
+  <details><summary>④ 気象（リスク管理の一部）</summary><div class="body">
+    <h3>気圧と風</h3>
+    <ul>
+      <li>等圧線の間隔が<b>狭いほど風が強い</b></li>
+      <li><b>高気圧</b>：時計回りに吹き出し・下降気流・晴れ</li>
+      <li><b>低気圧</b>：反時計回りに吹き込み・上昇気流・悪天</li>
+      <li>風速＝単に言えば<b>前10分間の平均</b></li>
+    </ul>
+    <h3>前線</h3>
+    <ul>
+      <li><b>寒冷前線</b>：積乱雲・突風・雷・短時間の強い雨。通過後に<b>気温低下</b></li>
+      <li><b>温暖前線</b>：弱い雨が絶え間なく。通過後は南寄りの風に</li>
+      <li><b>停滞前線</b>：梅雨前線・秋雨前線（長雨）</li>
+      <li><b>閉塞前線</b>：寒冷前線が温暖前線に追いついた</li>
+    </ul>
+    <h3>注意すべき現象</h3>
+    <ul>
+      <li><b>ダウンバースト</b>：積乱雲の強烈な下降流が地表で水平に広がる（数百m〜10km）。マイクロバーストは直径4km以下だが強烈</li>
+      <li><b>海陸風</b>：日中は海→陸、夜間は陸→海。切替時は朝凪・夕凪（無風）</li>
+      <li><b>ビル風</b>：周辺より風速が速く継続</li>
+      <li><b>冬型</b>＝西高東低（日本海側に雪）</li>
+    </ul>
+    <div class="warn">⚠️ 降雨・降雪・霧・雷鳴の時は飛行の延期・中止が望ましい。低温時はバッテリーの飛行時間が半減することも。</div>
+  </div></details>
+  </section>
+
+  <section><a id="rule" class="anchor"></a>
+  <details><summary>⑤ 規則の要点</summary><div class="body">
+    <h3>カテゴリー分類</h3>
+    <ul>
+      <li><b>カテゴリーI</b>：特定飛行に該当しない（手続き不要）</li>
+      <li><b>カテゴリーII</b>：立入管理措置あり（レベル3）。10開庁日前申請</li>
+      <li><b>カテゴリーIII</b>：立入管理措置なし＝第三者上空（レベル4）。20開庁日前申請</li>
+      <li>カテゴリーIII＝<b>一等＋第一種機体認証＋許可承認</b>の3点セット</li>
+      <li>レベル3.5＝機上カメラで補助者を代替（保険・限定解除が必要）</li>
+    </ul>
+    <h3>特定飛行（規制対象）</h3>
+    <ul>
+      <li>空域：空港周辺／緊急用務空域／150m以上／人口集中地区(DID)</li>
+      <li>方法：夜間／目視外／30m未満／催し上空／危険物輸送／物件投下</li>
+      <li><b>緊急用務空域</b>：他の許可があっても飛べない。100g未満も禁止</li>
+      <li>DID＝5年毎の国勢調査。現在は<b>令和2年</b>調査</li>
+    </ul>
+    <h3>進路権・航空機</h3>
+    <ul>
+      <li>航空機が<b>進路権</b>を持つ→無人機が回避（降下）</li>
+      <li>IFR＝計器飛行（旅客機）／VFR＝有視界飛行（小型機）</li>
+    </ul>
+    <h3>目視の定義</h3>
+    <ul>
+      <li>「目視」に含む＝<b>眼鏡・コンタクト</b></li>
+      <li>含まない＝双眼鏡・モニター(FPV)・補助者</li>
+    </ul>
+  </div></details>
+  </section>
+
+  <section><a id="system" class="anchor"></a>
+  <details><summary>⑥ システムの要点</summary><div class="body">
+    <h3>操縦用語（マルチローター）</h3>
+    <ul>
+      <li>スロットル＝上下／エルロン＝左右／エレベーター＝前後／ラダー＝機首旋回</li>
+      <li>前後左右移動＝<b>指示側を下げ・反対側を上げる</b></li>
+      <li>水平回転＝指示方向のローター回転数が下がりトルクバランスが崩れる</li>
+    </ul>
+    <h3>センサ・電波</h3>
+    <ul>
+      <li><b>IMU</b>＝3軸ジャイロ＋3方向加速度センサ</li>
+      <li><b>GNSS</b>＝最低4衛星。高度方向の誤差が大。RTK/DGPSで数cm〜数m</li>
+      <li><b>2.4GHz</b>＝直進性高く障害物に弱い</li>
+      <li>減衰＝距離の2乗に反比例（2倍で1/4）</li>
+      <li>地磁気は鉄・電流の影響→キャリブレーション</li>
+    </ul>
+    <h3>バッテリー（リポ）</h3>
+    <ul>
+      <li>長期保管＝<b>充電60%</b>。満充電・完全放電はNG</li>
+      <li>膨張＝可燃性ガス→早めに交換</li>
+      <li>低温で飛行時間が半減。複数セルはバランス充電</li>
+    </ul>
+    <h3>機体の特徴</h3>
+    <ul>
+      <li>飛行機＝ホバリング不可・長距離・失速速度あり・滑空可</li>
+      <li>大型機＝慣性大→増減速に時間と距離。緊急着陸地点も広く必要</li>
+    </ul>
+  </div></details>
+  </section>
+
+  <section><a id="pilot" class="anchor"></a>
+  <details><summary>⑦ 操縦・運航の要点</summary><div class="body">
+    <ul>
+      <li><b>CRM</b>＝技量だけでなく全リソース（人・機材・情報）を活用</li>
+      <li><b>TEM</b>＝スレット（エラーを誘発する要因）を早期に把握・管理</li>
+      <li>5つのCRMスキル＝状況認識・意思決定・ワークロード管理・チームワーク・コミュニケーション</li>
+      <li><b>地面効果</b>＝低高度で揚力が増す（離陸直後〜1m）</li>
+      <li><b>ボルテックスRS</b>＝垂直降下で揚力喪失→水平移動で防止</li>
+      <li>アルコール＝<b>濃度に関わらず</b>保有状態では飛行禁止</li>
+      <li>手動操縦＝細かい操作可だが再現性に不向き／自動＝ウェイポイントで再現性高い</li>
+      <li>フェールセーフ＝電波・電源減少時に自動帰還／自動着陸</li>
+      <li>保険＝強制保険なし（全て任意）。加入推奨</li>
+      <li>ガソリン運搬＝22リットル以下の専用容器</li>
+    </ul>
+  </div></details>
+  </section>
+
+  <section><a id="trap" class="anchor"></a>
+  <details open><summary>⑧ ひっかけ TOP10</summary><div class="body">
+    <ul>
+      <li>① 飛行禁止は「150m」以上（100mはダミー）</li>
+      <li>② カテゴリーIIIは一等＋第一種＋許可承認の<b>3点</b></li>
+      <li>③ 緊急用務空域は他の許可があっても飛べない・100g未満も禁止</li>
+      <li>④ ボルテックスは「<b>垂直降下</b>」時。対策は水平移動</li>
+      <li>⑤ マルチ移動は指示側を「<b>下げ</b>」反対を「上げる」（逆に注意）</li>
+      <li>⑥ リスクは「ゼロ」でなく「<b>許容範囲まで低減</b>」</li>
+      <li>⑦ 戦略的＝事前／戦術的＝飛行中</li>
+      <li>⑧ ロバスト性は「<b>低い方</b>」に合わせる</li>
+      <li>⑨ 目視に双眼鏡・FPV・補助者は<b>含まない</b></li>
+      <li>⑩ 機体認証は第一種「1年」・第二種「3年」（逆に注意）</li>
+    </ul>
+  </div></details>
+  </section>
+
+  <section><a id="day" class="anchor"></a>
+  <details open><summary>⑨ 当日の戦略</summary><div class="body">
+    <ul>
+      <li>前夜は<b>早寝</b>（睡眠不足は判断力低下）</li>
+      <li><b>計算問題から先に</b>解いて確実に得点＆落ち着く</li>
+      <li>75分で70問＝1問1分。迷ったら<b>飛ばして後回し</b></li>
+      <li>分からない時は基本数値（150m・30m・3年）に立ち返る</li>
+      <li>3択は消去法も有効。「ゼロにする」「必ず」など極端な表現は誤りが多い</li>
+    </ul>
+    <div class="key">🔑 あなたはここまで本気で準備してきました。落ち着いていけば必ず合格できます。自信を持って！</div>
+  </div></details>
+  </section>
+</div>
+
+<button class="top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+</body>
+</html>
