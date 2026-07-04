@@ -104,6 +104,11 @@ header .sub{font-size:.7rem;color:#475569;margin-top:2px}
 .formula-item p{font-size:.79rem;color:#64748b;line-height:1.65}
 .formula-item .example{background:#0c1a2e;border-radius:6px;padding:8px 11px;font-size:.78rem;color:#7dd3fc;margin-top:7px;line-height:1.7}
 
+.catstat-item{margin-bottom:9px}
+.catstat-top{display:flex;justify-content:space-between;font-size:.76rem;color:#94a3b8;margin-bottom:3px}
+.catstat-bar{height:8px;background:#0f172a;border-radius:4px;overflow:hidden}
+.catstat-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#f59e0b,#22c55e)}
+
 .review-list{display:flex;flex-direction:column;gap:11px}
 .review-item{background:#1e293b;border-radius:10px;padding:13px 14px;border:1px solid #7f1d1d}
 .review-item .rq{font-size:.84rem;color:#e2e8f0;margin-bottom:7px;line-height:1.6;white-space:pre-line}
@@ -152,6 +157,9 @@ header .sub{font-size:.7rem;color:#475569;margin-top:2px}
       <p>これまで間違えた問題だけを繰り返し練習。正解すると弱点リストから外れます。</p>
       <div class="mock-spec"><span id="weakCount" style="background:#7f1d1d66;color:#fecaca">0問</span></div>
     </div>
+
+    <p class="section-title">📊 分野別成績</p>
+    <div id="catStats" style="background:#1e293b;border:1px solid #334155;border-radius:12px;padding:14px 16px"></div>
 
     <p class="section-title">📚 分野別練習（解説つき）</p>
     <div class="cat-grid" id="catGrid"></div>
@@ -477,6 +485,24 @@ function saveWrongSet(s){try{localStorage.setItem('droneWrong',JSON.stringify([.
 function markWrong(id){const s=getWrongSet();s.add(id);saveWrongSet(s)}
 function markCorrect(id){const s=getWrongSet();if(s.delete(id))saveWrongSet(s)}
 function updateWeakCard(){const n=getWrongSet().size;const el=document.getElementById('weakCount');if(el)el.textContent=n+'問'}
+
+// 分野別成績（localStorageに永続化）
+function getCatStats(){try{return JSON.parse(localStorage.getItem('droneCatStats')||'{}')}catch(e){return {}}}
+function recordCatStat(cat,ok){const s=getCatStats();s[cat]=s[cat]||{t:0,c:0};s[cat].t++;if(ok)s[cat].c++;try{localStorage.setItem('droneCatStats',JSON.stringify(s))}catch(e){}}
+function buildCatStats(){
+  const el=document.getElementById('catStats');if(!el)return;
+  const s=getCatStats();
+  const cats=Object.keys(CAT_META).filter(c=>c!=='全問ランダム'&&s[c]&&s[c].t>0);
+  if(cats.length===0){el.innerHTML='<p style="font-size:.78rem;color:#64748b;margin:0">問題を解くと、分野ごとの正答率がここにグラフで表示されます。</p>';return}
+  el.innerHTML=cats.map(c=>{
+    const st=s[c],pct=Math.round(st.c/st.t*100);
+    return `<div class="catstat-item"><div class="catstat-top"><span>${CAT_META[c].icon} ${c}</span><span>${pct}%（${st.c}/${st.t}）</span></div><div class="catstat-bar"><div class="catstat-fill" style="width:${pct}%"></div></div></div>`;
+  }).join('');
+}
+
+// 教則の参考章（解説の逆引き用）
+const CHAPTER_MAP={'規則':'教則 第3章（無人航空機に関する規則）','機体システム':'教則 第4章（無人航空機のシステム）','操縦・運航':'教則 第5章（操縦者及び運航体制）','気象・リスク':'教則 第6章（運航上のリスク管理）','仕事率計算':'教則 第4章 4.3（飛行原理と飛行性能）','旋回半径計算':'教則 第4章 4.3（飛行原理と飛行性能）','滑空距離計算':'教則 第4章 4.3（飛行原理と飛行性能）','フレネルゾーン':'教則 第4章 4.5（機体以外の要素技術）','高度と速度':'教則 第4章 4.3（飛行原理と飛行性能）','推力パワー計算':'教則 第4章 4.3（飛行原理と飛行性能）'};
+const TAG_CHAPTER={'🎯 制度・法規':'教則 第3章（無人航空機に関する規則）','🎯 特定飛行':'教則 第3章（無人航空機に関する規則）','🎯 カテゴリー':'教則 第3章（無人航空機に関する規則）','🎯 機体・原理':'教則 第4章（無人航空機のシステム）','🎯 センサ・電池':'教則 第4章（無人航空機のシステム）','🎯 緊急・電波':'教則 第2章・第4章'};
 function startWeak(){
   const s=getWrongSet();const pool=Q.filter(q=>s.has(q.id));
   if(pool.length===0){alert('弱点問題はまだありません。\n練習や模擬試験で問題を解くと、間違えた問題がここに溜まります。');return}
@@ -576,6 +602,7 @@ function selectPractice(i){
   stats.total++;
   if(i===q.answer){btns[dispSel].classList.add('correct');correct++;stats.correct++;markCorrect(q.id)}
   else{btns[dispSel].classList.add('wrong');btns[dispCor].classList.add('reveal');wrongAns.push({q,yourIdx:i});markWrong(q.id)}
+  recordCatStat(q.cat,i===q.answer);
   updateStat();showExplanation(q);
   document.getElementById('nextBtn').style.display='inline-block';
 }
@@ -592,6 +619,8 @@ function showExplanation(q){
     h+='</div></div>';
   });
   h+=`<div class="answer-highlight">正解：${q.ans}</div>`;
+  const ref=CHAPTER_MAP[q.cat]||TAG_CHAPTER[q.tag]||'';
+  if(ref)h+=`<div style="font-size:.72rem;color:#64748b;margin-top:8px">📖 参考：${ref}</div>`;
   el.innerHTML=h;el.classList.add('show');
 }
 function toggleHint(){document.getElementById('hintPanel').classList.toggle('show')}
@@ -605,7 +634,7 @@ function quitQuiz(){
 function submitMock(){
   if(timerId){clearInterval(timerId);timerId=null}
   correct=0;wrongAns=[];
-  curQ.forEach((q,i)=>{if(mockAnswers[i]===q.answer){correct++;markCorrect(q.id)}else{wrongAns.push({q,yourIdx:mockAnswers[i]});markWrong(q.id)}});
+  curQ.forEach((q,i)=>{const ok=mockAnswers[i]===q.answer;recordCatStat(q.cat,ok);if(ok){correct++;markCorrect(q.id)}else{wrongAns.push({q,yourIdx:mockAnswers[i]});markWrong(q.id)}});
   showResult(true);
 }
 function showResult(mock){
@@ -665,11 +694,11 @@ function showTab(name){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('screen-'+name).classList.add('active');
-  if(name==='home')updateWeakCard();
+  if(name==='home'){updateWeakCard();buildCatStats()}
   const map={home:0,cheat:1,formulas:2,review:3};
   if(map[name]!==undefined)document.querySelectorAll('.tab')[map[name]]?.classList.add('active');
 }
-buildHome();buildFormulas();buildCheat();updateWeakCard();
+buildHome();buildFormulas();buildCheat();updateWeakCard();buildCatStats();
 </script>
 </body>
 </html>

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>実地試験シミュレーター(一等・二等マルチローター)</title>
+<style>
+  :root{--bg:#0f172a;--card:#1e293b;--acc:#38bdf8;--warn:#f59e0b;--ok:#22c55e;--ng:#ef4444;--txt:#f1f5f9;--sub:#94a3b8;}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  body{margin:0;font-family:"Hiragino Sans","Yu Gothic",system-ui,sans-serif;background:var(--bg);color:var(--txt);}
+  header{padding:16px;text-align:center;background:linear-gradient(135deg,#0891b2,#1d4ed8);}
+  header h1{margin:0;font-size:1.08rem;}
+  header p{margin:4px 0 0;font-size:.72rem;opacity:.85;}
+  .tabs{display:flex;gap:5px;padding:10px 8px;background:#0b1220;position:sticky;top:0;z-index:5;}
+  .tabs button{flex:1;border:1px solid #334155;background:var(--card);color:var(--txt);padding:10px 2px;border-radius:12px;font-size:.72rem;}
+  .tabs button.active{background:var(--acc);color:#03202f;border-color:var(--acc);font-weight:bold;}
+  main{padding:12px;max-width:640px;margin:0 auto;padding-bottom:40px;}
+  .stat{font-size:.8rem;color:var(--sub);margin:4px 0 12px;text-align:center;}
+  .q{background:var(--card);border-radius:14px;padding:16px;margin-bottom:12px;}
+  .q .lead{font-size:.75rem;color:var(--sub);margin-bottom:8px;}
+  .q .scenario{font-size:1rem;line-height:1.6;font-weight:bold;}
+  .choices{display:grid;gap:8px;margin-top:14px;}
+  .choices button{border:1px solid #334155;background:#0b1220;color:var(--txt);padding:12px;border-radius:10px;font-size:.92rem;text-align:left;}
+  .choices button.correct{background:#14532d;border-color:var(--ok);}
+  .choices button.wrong{background:#450a0a;border-color:var(--ng);}
+  .expl{display:none;margin-top:12px;padding:10px;border-radius:10px;background:#0b1220;font-size:.85rem;line-height:1.6;color:var(--sub);}
+  .expl.show{display:block;}
+  .expl b{color:var(--warn);}
+  .next{width:100%;margin-top:12px;border:none;border-radius:12px;padding:14px;font-size:1rem;font-weight:bold;background:var(--acc);color:#03202f;display:none;}
+  .next.show{display:block;}
+  /* 科目ガイド */
+  .clsSel{display:flex;gap:8px;margin-bottom:14px;}
+  .clsSel button{flex:1;border:1px solid #334155;background:var(--card);color:var(--txt);padding:12px;border-radius:12px;font-size:.95rem;font-weight:bold;}
+  .clsSel button.on1{background:#1d4ed8;border-color:#60a5fa;}
+  .clsSel button.on2{background:#15803d;border-color:#4ade80;}
+  .intro{background:#0b1220;border:1px solid #334155;border-radius:12px;padding:12px 14px;font-size:.83rem;line-height:1.7;color:var(--sub);margin-bottom:12px;}
+  .subj{background:var(--card);border-radius:12px;padding:13px 15px;margin-bottom:10px;border-left:4px solid var(--acc);}
+  .subj h3{margin:0 0 5px;font-size:.95rem;}
+  .subj .time{float:right;font-size:.72rem;color:#03202f;background:var(--warn);border-radius:8px;padding:2px 8px;font-weight:bold;}
+  .subj p{margin:0;font-size:.82rem;color:var(--sub);line-height:1.65;}
+  h2.sec{font-size:.85rem;color:var(--sub);font-weight:normal;border-left:4px solid var(--warn);padding-left:8px;margin:20px 4px 10px;}
+  /* 口述フラッシュカード */
+  .flash{background:var(--card);border-radius:14px;padding:20px;text-align:center;min-height:230px;display:flex;flex-direction:column;justify-content:center;}
+  .flash .fq{font-size:1.05rem;font-weight:bold;line-height:1.6;}
+  .flash .fa{display:none;margin-top:14px;font-size:.95rem;line-height:1.8;color:#86efac;text-align:left;background:#0b1220;border-radius:10px;padding:12px;}
+  .flash .memo{display:none;margin-top:8px;font-size:.78rem;color:var(--sub);text-align:left;line-height:1.6;}
+  .flash.open .fa,.flash.open .memo{display:block;}
+  .flash .tap{margin-top:14px;font-size:.75rem;color:var(--sub);}
+  .flash.open .tap{display:none;}
+  .row{display:flex;gap:8px;justify-content:center;margin-top:12px;}
+  .row button{border:none;border-radius:12px;padding:12px 20px;font-size:.9rem;font-weight:bold;background:#334155;color:var(--txt);}
+  .row .main{background:var(--acc);color:#03202f;}
+  .note{font-size:.72rem;color:var(--sub);text-align:center;margin-top:16px;line-height:1.6;}
+</style>
+</head>
+<body>
+<header>
+  <h1>🛩 実地試験シミュレーター</h1>
+  <p>一等・二等マルチローター|2026年6月5日施行の新基準対応|全問三肢択一</p>
+</header>
+
+<div class="tabs">
+  <button id="tab0" class="active">📋 科目ガイド</button>
+  <button id="tab1">⚖️ 減点クイズ</button>
+  <button id="tab2">🔢 数値ドリル</button>
+  <button id="tab3">🗣 口述対策</button>
+</div>
+
+<main>
+  <div class="stat" id="stat"></div>
+  <div id="area"></div>
+  <div class="note">出典:国土交通省 実地試験実施基準+一等/二等実地試験実施細則(マルチローター)<br>令和7年12月5日改正・令和8年6月5日施行版|成績はこの端末に保存されます</div>
+</main>
+
+<script>
+/* ========== 減点クイズ(試験中にこうなったら?) ========== */
+const DEDUCT = [
+ {s:"受験者が概ね5m/s以上の危険な速度で機体を飛行させた。", c:["5点減点","不合格(試験中止)","減点なし"], a:1, e:"<b>不合格</b>(危険な飛行)。速度超過は一発中止。"},
+ {s:"減点区画にその飛行区画で初めて進入したが、通知後、概ね2秒以内に飛行経路へ復帰した。", c:["減点なし","1点減点","5点減点"], a:0, e:"<b>減点なし</b>。初回進入+2秒以内復帰は免除(2026/6/5施行で明文化)。"},
+ {s:"減点区画に初回進入し、通知されたが復帰まで4秒かかった。", c:["減点なし","5点減点","不合格(試験中止)"], a:1, e:"<b>5点減点</b>(指示と異なる飛行:概ね2秒以内に復帰しなかった)。"},
+ {s:"同じ飛行区画で2回目の減点区画進入(機体半分以上)をした。", c:["減点なし","5点減点","不合格(試験中止)"], a:1, e:"<b>5点減点</b>(飛行経路逸脱)。免除されるのは区画ごとの初回のみ。"},
+ {s:"不合格区画に機体の半分以上が進入した。", c:["5点減点","10点減点","不合格(試験中止)"], a:2, e:"<b>不合格</b>(飛行空域逸脱)。試験は中止。"},
+ {s:"ホバリング中、直径2mの円から機体の半分が逸脱した。", c:["1点減点","5点減点","不合格(試験中止)"], a:1, e:"<b>5点減点</b>(飛行経路逸脱)。25kg限定変更のときだけ円は直径5m。"},
+ {s:"着陸時、機体を滑らせながら接地させた。", c:["1点減点","5点減点","減点なし"], a:0, e:"<b>1点減点</b>(ふらつき)。強い衝撃を伴えば5点(離着陸不良)。"},
+ {s:"突風で一瞬ふらついたが、受験者が即座に立て直し、試験員は機体を制御できていると判断した。", c:["減点なし","1点減点","5点減点"], a:0, e:"<b>減点なし</b>(注7:外的要因+速やかな適切操作は対象外)。"},
+ {s:"合理的な理由なく、飛行中に操縦装置を片手で保持していた。", c:["1点減点","5点減点","不合格(試験中止)"], a:2, e:"<b>不合格</b>(危険な飛行)。両手保持は絶対。"},
+ {s:"8の字飛行で、設定された円の中心を含まないコースで周回した。", c:["1点減点","5点減点","不合格(試験中止)"], a:2, e:"<b>不合格</b>(「墜落・損傷・制御不能」の細目に含まれる)。意外な落とし穴。"},
+ {s:"一時的に機首が試験員の指示と異なる方向を向いた状態で飛行させた。", c:["1点減点","5点減点","減点なし"], a:0, e:"<b>1点減点</b>(機首方向不良)。次の移動地点まで継続すると5点。"},
+ {s:"次の移動地点まで継続的に機首が指示と異なる方向を向いたまま飛行させた。", c:["1点減点","5点減点","不合格(試験中止)"], a:1, e:"<b>5点減点</b>(指示と異なる飛行・注3)。8の字/円周では四分円にわたる継続で該当。"},
+ {s:"一等のピルエットホバリングで、一回転に14秒しかかからなかった。", c:["減点なし","5点減点","不合格(試験中止)"], a:1, e:"<b>5点減点</b>。16秒未満または26秒以上はNG(新基準で数値明文化)。"},
+ {s:"一等のピルエットホバリングで、一回転が22秒だった。", c:["減点なし","1点減点","5点減点"], a:0, e:"<b>減点なし</b>。16〜26秒の範囲内(目安は20秒程度)。"},
+ {s:"試験科目の制限時間を超過した。", c:["5点減点","10点減点","不合格(試験中止)"], a:2, e:"<b>不合格</b>。時間は離陸指示〜着陸まで。"},
+ {s:"危険を感じた試験員が受験者に代わって操縦した。", c:["5点減点","10点減点","不合格(試験中止)"], a:2, e:"<b>不合格</b>(操作介入)。"},
+ {s:"目視内飛行の限定変更で、指示がないのに目視外飛行中に機体を視認した。", c:["1点減点","5点減点","不合格(試験中止)"], a:2, e:"<b>不合格</b>(不正行為)。背を向けたら見ない。"},
+ {s:"接地時に機体へ強い衝撃を与えた(損傷なし)。", c:["1点減点","5点減点","不合格(試験中止)"], a:1, e:"<b>5点減点</b>(離着陸不良)。"},
+ {s:"着陸時に機体が転倒し、プロペラが割れた。", c:["5点減点","10点減点","不合格(試験中止)"], a:2, e:"<b>不合格</b>。損傷したら「墜落・損傷・制御不能」に該当(注5)。"},
+ {s:"目視内飛行なのに、合理的理由なくカメラ画像ばかり注視していた。", c:["1点減点","5点減点","不合格(試験中止)"], a:1, e:"<b>5点減点</b>(監視不足)。逆に目視外でカメラを見ないのも5点。"},
+ {s:"離陸前に気象と空域を確認したが、確認した旨を試験員に伝えなかった。", c:["減点なし","1点減点","5点減点"], a:2, e:"<b>5点減点</b>(安全確認不足・注6:伝えなければ確認していないとみなす)。"},
+ {s:"飛行前点検で、必要な点検項目を1つ飛ばした。", c:["5点減点","10点減点","不合格(試験中止)"], a:1, e:"<b>10点減点</b>(飛行前の点検漏れ)。「5点では済まない」のがポイント。"},
+ {s:"飛行後点検で、必要な点検項目を1つ飛ばした。", c:["1点減点","5点減点","10点減点"], a:1, e:"<b>5点減点</b>。飛行前の点検漏れは10点、飛行後は5点と重さが違う。"},
+ {s:"飛行記録(飛行日誌)の飛行時間の計算を間違えた。", c:["1点減点","5点減点","10点減点"], a:2, e:"<b>10点減点</b>(飛行記録の記載漏れ又は誤り)。記録系で最も重い。"},
+ {s:"机上試験で1問誤答した。", c:["1点減点","5点減点","10点減点"], a:1, e:"<b>5点減点</b>/1問。未回答も同じく5点(新基準で明文化)。"},
+ {s:"机上試験で1問だけ制限時間内に答えられなかった。", c:["減点なし","1点減点","5点減点"], a:2, e:"<b>5点減点</b>(未回答=誤答扱い。2026/6/5施行の新設)。"},
+ {s:"試験員の指示を受ける前に機体を動かし始めた。", c:["1点減点","5点減点","不合格(試験中止)"], a:1, e:"<b>5点減点</b>(指示と異なる飛行)。フライングに注意。"},
+ {s:"合理的な理由なく機体を急停止させた。", c:["1点減点","5点減点","減点なし"], a:0, e:"<b>1点減点</b>(不円滑)。"},
+ {s:"高度変化の科目で、一定の割合でなく急に高度を変えた。", c:["1点減点","5点減点","減点なし"], a:0, e:"<b>1点減点</b>(不円滑)。"},
+ {s:"口述試験で「事故に該当する3つ」のうち1つが抜けた。", c:["1点減点","5点減点","10点減点"], a:1, e:"<b>5点減点</b>(事故・重大インシデントの説明の抜け・誤り)。"},
+ {s:"機体をパイロンに軽く接触させた(損傷なし)。", c:["5点減点","10点減点","不合格(試験中止)"], a:2, e:"<b>不合格</b>。パイロン・旗・壁・ネット等への衝突は損傷の有無を問わず中止。"},
+ {s:"受験者からアルコールの匂いがして、正常な飛行ができないおそれがあると試験員が判断した。", c:["5点減点","10点減点","不合格(試験中止)"], a:2, e:"<b>不合格</b>(航空法等の違反)。試験前に必ず確認。"},
+ {s:"待機中の他の受講生が、操作のコツを声に出して受験者に伝えた。", c:["減点なし","5点減点","不合格(試験中止)"], a:2, e:"<b>不合格</b>(不正行為:他の者からの助言・補助)。見学者への注意喚起は運営側の仕事。"},
+ {s:"試験員が指示した高度と明らかに異なる高度で飛び続けた。", c:["1点減点","5点減点","不合格(試験中止)"], a:1, e:"<b>5点減点</b>(指示と異なる飛行)。"},
+ {s:"経路・高度は保ったが、機体が大きくふらつきながら飛行した。", c:["1点減点","5点減点","減点なし"], a:0, e:"<b>1点減点</b>(ふらつき)。ただし積み重なると致命傷:一等は5点減点4回でギリギリ。"}
+];
+
+/* ========== 数値・規定ドリル ========== */
+const NUM = [
+ {q:"一等の合格ライン(各試験科目終了時の持ち点)として正しいものを選びなさい。", c:["70点以上","75点以上","80点以上"], a:2, e:"一等80点・二等70点。100点からの減点式。"},
+ {q:"二等の合格ラインとして正しいものを選びなさい。", c:["70点以上","75点以上","80点以上"], a:0, e:"二等は70点以上。"},
+ {q:"一等・基本の机上試験の出題数と制限時間として正しいものを選びなさい。", c:["4問・5分","5問・10分","5問・15分"], a:1, e:"一等5問10分/二等4問5分。"},
+ {q:"作動前点検+作動点検の制限時間(合計)として正しいものを選びなさい。", c:["10分","12分","15分"], a:1, e:"3-2〜3-3を通じて12分。時間切れ=点検漏れ扱い(新基準)。"},
+ {q:"飛行後点検+飛行後の記録の制限時間(合計)として正しいものを選びなさい。", c:["5分","8分","10分"], a:0, e:"5-1〜5-2を通じて5分。"},
+ {q:"一等・基本のスクエア飛行の高度変化として正しいものを選びなさい。", c:["1.5m⇔3.5m","2.5m⇔3.5m","5m⇔10m"], a:0, e:"基本は1.5⇔3.5m。目視外は2.5⇔3.5m、25kg版は5⇔10m。"},
+ {q:"ピルエットホバリングの一回転の目安と許容範囲として正しいものを選びなさい。", c:["10秒程度(8〜14秒)","20秒程度(16〜26秒)","30秒程度(26〜36秒)"], a:1, e:"20秒程度。16秒未満/26秒以上で5点減点。"},
+ {q:"8の字飛行の円直径として正しいものを選びなさい。", c:["約3m","約5m","約10m"], a:1, e:"8の字は約5m。円周飛行(25kg)は約10m。"},
+ {q:"ホバリング・着陸の「定められた区画」の直径(通常科目)として正しいものを選びなさい。", c:["1m","2m","5m"], a:1, e:"直径2m。25kg限定変更のみ直径5m。"},
+ {q:"夜間科目(昼間飛行の限定変更)の試験場の照度条件として正しいものを選びなさい。", c:["150ルクス以下","150ルクス以上","300ルクス以下"], a:0, e:"夜間は150ルクス以下。通常科目は日出〜日没または150ルクス以上。"},
+ {q:"実技試験を中止して再試験できる気象条件として正しいものを選びなさい。", c:["3m/s以上の風","5m/s以上の突風・降雨","10m/s以上の突風"], a:1, e:"基準3-8-3。受験者に起因しない中止は再度実施可。"},
+ {q:"受験者補助員に必要な飛行実績として正しいものを選びなさい。", c:["直近1年で3月以上かつ30時間以上","直近2年で6月以上かつ50時間以上","直近3年で12月以上かつ100時間以上"], a:1, e:"細則I-10。当該機体種類についての実績。"},
+ {q:"減点区画に初回進入したとき、減点を免除される復帰時間として正しいものを選びなさい。", c:["概ね2秒以内","概ね5秒以内","概ね10秒以内"], a:0, e:"概ね2秒以内(新基準で明文化)。"},
+ {q:"「危険な速度」とされる速度として正しいものを選びなさい。", c:["概ね3m/s以上","概ね5m/s以上","概ね8m/s以上"], a:1, e:"概ね5m/s以上で不合格(試験中止)。"},
+ {q:"新しい実地試験基準の施行日として正しいものを選びなさい。", c:["2025年12月5日","2026年4月1日","2026年6月5日"], a:2, e:"令和7年12月5日改正・令和8年(2026年)6月5日施行。"},
+ {q:"学科試験が教則第4版準拠になった日として正しいものを選びなさい。", c:["2025年2月1日","2025年4月17日","2026年6月5日"], a:1, e:"令和7年4月17日から。第4版発行は令和7年2月1日。"},
+ {q:"一等・基本の実技での位置安定機能(GNSS/ビジョン)の扱いとして正しいものを選びなさい。", c:["全科目ON","全科目OFF","科目による"], a:1, e:"一等基本は全てOFF。二等は正常時ON・異常事態のみOFF。"},
+ {q:"技能証明の有効期間として正しいものを選びなさい。", c:["2年","3年","5年"], a:1, e:"3年。更新講習で更新。"},
+ {q:"登録が必要になる機体重量として正しいものを選びなさい。", c:["100g以上","200g以上","250g以上"], a:0, e:"100g以上(2022年6月〜)。"},
+ {q:"一等の学科試験の問題数と時間として正しいものを選びなさい。", c:["50問・30分","70問・75分","100問・120分"], a:1, e:"一等70問75分/二等50問30分(CBT・三肢択一)。"},
+ {q:"実地試験の受験前提として正しいものを選びなさい。", c:["身体検査の合格","学科試験の合格","講習の修了"], a:1, e:"基準1-11。学科合格が確認できるまで実地は開始されない。"},
+ {q:"同一日に基本と限定変更を実施する場合の順序として正しいものを選びなさい。", c:["どちらが先でもよい","限定変更→基本","基本→限定変更"], a:2, e:"基準4-2。基本が不合格なら限定変更も不合格。"},
+ {q:"機体を係留した状態での実技試験の取り扱いとして正しいものを選びなさい。", c:["風速5m/s超なら可","試験員が認めれば可","禁止"], a:2, e:"基準3-9(新設)。係留状態での実技試験は不可。"},
+ {q:"保護具(ヘルメット・保護メガネ等)の着用が必要な範囲として正しいものを選びなさい。", c:["受験者のみ","受験者と試験員のみ","受験者・試験員・補助員の全員"], a:2, e:"細則I-12(新設)。実技+機体作動を伴う口述で全員着用。"},
+ {q:"飛行前点検の口述で減点細目に複数該当した場合の扱いとして正しいものを選びなさい。", c:["全部を合算する","最も減点数が高いもののみ適用する","試験員の裁量で決める"], a:1, e:"細則II-1-5。飛行後も点検系・記録系それぞれ同様。"},
+ {q:"一等の目視外(目視内飛行の限定変更)スクエア飛行の位置安定機能として正しいものを選びなさい。", c:["OFF","ON","受験者が選択"], a:1, e:"目視外スクエアはON(カメラのみで操縦)。異常事態科目はOFF。"},
+ {q:"二等の目視外・異常事態科目の着陸方法として正しいものを選びなさい。", c:["目視外のまま緊急着陸する","目視内に戻って着陸する","自動RTHで着陸する"], a:1, e:"二等は「機体を目視できる状態に戻り目視内で着陸」。一等は目視外のまま緊急着陸地点へ。ここが一等/二等の差。"},
+ {q:"修了審査で使う机上・口述(事故等)の問題の扱いとして正しいものを選びなさい。", c:["講習機関が自作する","国または指定試験機関から提供されたものを使う","教則から講師が選ぶ"], a:1, e:"細則VII章(準用)。勝手に作れない。"}
+];
+
+/* ========== 科目ガイド ========== */
+const GUIDE={
+'一等':{cls:'on1',intro:'<b>想定:</b>立入管理措置を講じない飛行(カテゴリーIII)。基本の実技はすべて<b>位置安定機能OFF(ATTIモード)</b>。100点からの減点式で<b>80点以上</b>で合格。5点減点は4回までしか許されない。',
+subjects:[
+ {n:'① 机上試験',d:'模擬飛行計画への設問5問(法令遵守・安全確保措置・機体の仕様と限界・自動飛行/フェールセーフ設定)。誤答・未回答は1問5点減点。',t:'10分'},
+ {n:'② 口述試験(飛行前点検)',d:'飛行空域・気象・書類・体調の確認(3分)→作動前点検→作動点検(計12分)。日常点検記録の様式に記入。点検漏れは10点減点。',t:'3分+12分'},
+ {n:'③ 実技:高度変化を伴うスクエア飛行',d:'位置安定OFF。1.5mで離陸→5秒ホバリング→機首は常に進行方向。B-C間とE-D間で1.5m⇔3.5mの高度変化。',t:'6分'},
+ {n:'④ 実技:ピルエットホバリング',d:'位置安定OFF。3.5mで5秒ホバリング→その場で一回転。20秒程度(16秒未満・26秒以上は5点減点)。90°を約5秒のリズムで。',t:'3分'},
+ {n:'⑤ 実技:緊急着陸を伴う8の字飛行',d:'位置安定OFF。1.5mで8の字(円直径約5m)を1周以上→「緊急事態発生」の宣言でその場ホバリング→指示後、高度を維持したまま最短経路で指定着陸地点へ。',t:'5分'},
+ {n:'⑥ 口述試験(飛行後点検・記録)',d:'飛行後点検+飛行日誌への記録。飛行時間の計算ミスは10点減点。',t:'計5分'},
+ {n:'⑦ 口述試験(事故・重大インシデント)',d:'事故または重大インシデントに該当する3つを即答+発生時の処置1問。抜け・誤りは5点減点。',t:'各3分'}],
+gentei:[
+ {n:'夜間(昼間飛行の限定変更)',d:'150ルクス以下の試験場。高度変化スクエア(6分)+緊急着陸8の字(5分)。機体の姿勢が分かる灯火が必要。'},
+ {n:'目視外(目視内飛行の限定変更)',d:'機体に背を向け、カメラ画像のみで操縦。スクエアは位置安定ON・2.5⇔3.5m(9分)、異常事態はOFF(5分)。指示なく機体を見たら不合格。着陸も目視外のまま。'},
+ {n:'25kg(最大離陸重量25kg未満の限定変更)',d:'25kg以上の機体で実施。スクエア5⇔10m(8分)+ピルエット5m(3分)+緊急着陸を伴う円周飛行・円直径約10m・逆回転あり(8分)。離着陸円は直径5m。'}]},
+'二等':{cls:'on2',intro:'<b>想定:</b>立入管理措置を講じた飛行(カテゴリーII)。正常時の科目は<b>位置安定ON</b>、異常事態のみ<b>OFF</b>。100点からの減点式で<b>70点以上</b>で合格。',
+subjects:[
+ {n:'① 机上試験',d:'模擬飛行計画への設問4問。誤答・未回答は1問5点減点。',t:'5分'},
+ {n:'② 口述試験(飛行前点検)',d:'一等と同じ構成(飛行空域確認3分→作動前点検+作動点検12分)。声出し確認が鉄則。',t:'3分+12分'},
+ {n:'③ 実技:スクエア飛行',d:'位置安定ON。3.5m・機首は常に進行方向。',t:'8分'},
+ {n:'④ 実技:8の字飛行',d:'位置安定ON。1.5mで連続2周(円直径約5m)。円の中心を含まない周回は不合格。',t:'8分'},
+ {n:'⑤ 実技:異常事態における飛行',d:'位置安定OFF。3.5m・機首は常に前方のまま側方移動で直線1往復以上→緊急事態宣言→ホバリング→高度維持で最短経路の緊急着陸。',t:'6分'},
+ {n:'⑥ 口述試験(飛行後点検・記録)',d:'一等と同じ。飛行時間の計算に注意。',t:'計5分'},
+ {n:'⑦ 口述試験(事故・重大インシデント)',d:'一等と同じ(該当する3つ+処置1問)。',t:'各3分'}],
+gentei:[
+ {n:'夜間',d:'150ルクス以下。スクエアON(9分)+異常事態OFF(5分)。灯火要件は一等と同じ。'},
+ {n:'目視外',d:'スクエアはONでカメラ画像のみ(9分)。異常事態は目視外で10秒ホバリング→機体が見える状態に戻って目視内で着陸(5分)。'},
+ {n:'25kg',d:'25kg以上の機体。スクエアON・5m(8分)+円周飛行 順・逆2周ずつ(8分)+異常事態OFF(5分)。'}]}
+};
+
+/* ========== 口述対策フラッシュカード ========== */
+const ORAL=[
+ {q:'「事故」に該当する3つは?',a:'① 人の死傷<br>② 物件の損壊<br>③ 航空機との衝突又は接触',m:'口述試験で「3つを口頭で」問われる定番。'},
+ {q:'「重大インシデント」に該当する事態は?',a:'① 航空機との衝突・接触のおそれ<br>② 人の負傷<br>③ 機体の制御不能<br>④ 機体の発火・発煙 など',m:'事故には至らないが危なかった事態。これも国への報告対象。'},
+ {q:'事故等が発生したときの処置の順序は?',a:'① 直ちに飛行を中止<br>② 負傷者の救護<br>③ 危険防止のための措置<br>④ 国土交通大臣への報告',m:'救護が報告より先。口述試験で処置の説明が1問出る。'},
+ {q:'「飛行空域及びその他の確認」で確認すること(例)は?',a:'① 飛行空域と周辺の状況<br>② 航空法等の違反がないか<br>③ 許可書・承認書・技能証明書等の携帯<br>④ 操縦者の体調<br>⑤ 気象状況',m:'制限時間3分。1つずつ声に出して確認。'},
+ {q:'作動前点検で見る項目(例)は?',a:'① 各機器の取付(ネジ・コネクタの脱落や緩み)<br>② 機体(プロペラ・フレーム・機体識別票)と操縦装置の外観・損傷・ゆがみ',m:'結果は日常点検記録の様式に記入する。'},
+ {q:'作動点検で見る項目(例)は?',a:'① 電源系統<br>② 通信系統(GNSS含む)<br>③ バッテリー残量<br>④ リモートID機能<br>⑤ 推進系統(モーター)<br>⑥ ホバリングでの自動制御・操縦系統',m:'作動前+作動点検で計12分。リモートID非搭載機でも「正常に作動」と点呼する。'},
+ {q:'飛行後点検で見る項目(例)は?',a:'① 各機器の取付<br>② 機体の外観・損傷・ゆがみ<br>③ 各機器の異常な発熱<br>④ ゴミ等の付着',m:'飛行後点検+記録で計5分。飛行時間の計算ミスは10点減点。'},
+ {q:'安全確認で絶対に忘れてはいけないことは?',a:'確認したことを試験員に<b>声に出して伝える</b>こと',m:'伝えなければ「確認していない」とみなされ5点減点(細則の注6)。'}
+];
+
+/* ========== 共通処理 ========== */
+const $ = id => document.getElementById(id);
+let mode = 0, cls = '一等';
+let order = [], idx = 0;
+const store = JSON.parse(localStorage.getItem('jitsugiSim')||'{"d":[0,0],"n":[0,0]}');
+function save(){ localStorage.setItem('jitsugiSim', JSON.stringify(store)); }
+function shuffle(n){ const a=[...Array(n).keys()]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+
+function setMode(m){
+  mode = m;
+  [0,1,2,3].forEach(i=>$('tab'+i).classList.toggle('active', i===m));
+  idx = 0;
+  if(m===0) showGuide();
+  else if(m===1){ order = shuffle(DEDUCT.length); showQuiz(DEDUCT,'d','試験中の場面','この場合の結果として正しいものを選びなさい。'); }
+  else if(m===2){ order = shuffle(NUM.length); showQuiz(NUM,'n','',''); }
+  else { order = shuffle(ORAL.length); showFlash(); }
+}
+[0,1,2,3].forEach(i=>$('tab'+i).onclick=()=>setMode(i));
+
+function statTxt(){
+  if(mode===1) return `⚖️ 減点クイズ:通算 ${store.d[0]}問中 ${store.d[1]}問正解` + rate(store.d);
+  if(mode===2) return `🔢 数値ドリル:通算 ${store.n[0]}問中 ${store.n[1]}問正解` + rate(store.n);
+  return '';
+}
+function rate(x){ return x[0] ? `(${Math.round(x[1]/x[0]*100)}%)` : ''; }
+
+function showGuide(){
+  $('stat').textContent='';
+  const g = GUIDE[cls];
+  let h = `<div class="clsSel">
+    <button id="c1" class="${cls==='一等'?'on1':''}">🥇 一等</button>
+    <button id="c2" class="${cls==='二等'?'on2':''}">🥈 二等</button>
+  </div>
+  <div class="intro">${g.intro}</div>
+  <h2 class="sec">基本の試験の流れ</h2>`;
+  g.subjects.forEach(s=>{ h += `<div class="subj"><span class="time">${s.t}</span><h3>${s.n}</h3><p>${s.d}</p></div>`; });
+  h += `<h2 class="sec">限定変更(追加で取れる資格)</h2>`;
+  g.gentei.forEach(s=>{ h += `<div class="subj" style="border-left-color:#a78bfa"><h3>${s.n}</h3><p>${s.d}</p></div>`; });
+  $('area').innerHTML = h;
+  $('c1').onclick=()=>{cls='一等';showGuide();};
+  $('c2').onclick=()=>{cls='二等';showGuide();};
+  window.scrollTo(0,0);
+}
+
+function showQuiz(data, key, leadLabel, prompt){
+  const item = data[order[idx % order.length]];
+  const text = item.s || item.q;
+  $('stat').textContent = statTxt();
+  $('area').innerHTML = `
+    <div class="q">
+      ${leadLabel ? `<div class="lead">【${leadLabel}】</div>` : ''}
+      <div class="scenario">${text}</div>
+      ${prompt ? `<div class="lead" style="margin-top:8px;">${prompt}</div>` : ''}
+      <div class="choices" id="ch"></div>
+      <div class="expl" id="ex">${item.e}</div>
+      <button class="next" id="nx">次の問題 ▶</button>
+    </div>`;
+  item.c.forEach((lb,i)=>{
+    const b=document.createElement('button'); b.textContent=lb;
+    b.onclick=()=>{
+      store[key][0]++; if(i===item.a){b.classList.add('correct');store[key][1]++;}
+      else{b.classList.add('wrong'); [...$('ch').children][item.a].classList.add('correct');}
+      save(); $('ex').classList.add('show'); $('nx').classList.add('show');
+      [...$('ch').children].forEach(x=>x.disabled=true);
+      $('stat').textContent = statTxt();
+    };
+    $('ch').appendChild(b);
+  });
+  $('nx').onclick=()=>{ idx++; showQuiz(data, key, leadLabel, prompt); };
+}
+
+function showFlash(){
+  const item = ORAL[order[idx % order.length]];
+  $('stat').textContent = `🗣 口述対策カード ${ (idx % ORAL.length) + 1 } / ${ORAL.length}`;
+  $('area').innerHTML = `
+    <div class="flash" id="fc">
+      <div class="fq">${item.q}</div>
+      <div class="tap">▼ タップして答えを表示</div>
+      <div class="fa">${item.a}</div>
+      <div class="memo">💡 ${item.m}</div>
+    </div>
+    <div class="row">
+      <button class="main" id="nf">次のカード ▶</button>
+    </div>`;
+  $('fc').onclick=()=>$('fc').classList.add('open');
+  $('nf').onclick=()=>{ idx++; showFlash(); };
+}
+
+setMode(0);
+</script>
+</body>
+</html>

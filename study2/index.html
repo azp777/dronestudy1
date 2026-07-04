@@ -104,6 +104,11 @@ header .sub{font-size:.7rem;color:#475569;margin-top:2px}
 .formula-item p{font-size:.79rem;color:#64748b;line-height:1.65}
 .formula-item .example{background:#0c1a2e;border-radius:6px;padding:8px 11px;font-size:.78rem;color:#7dd3fc;margin-top:7px;line-height:1.7}
 
+.catstat-item{margin-bottom:9px}
+.catstat-top{display:flex;justify-content:space-between;font-size:.76rem;color:#94a3b8;margin-bottom:3px}
+.catstat-bar{height:8px;background:#0f172a;border-radius:4px;overflow:hidden}
+.catstat-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#f59e0b,#22c55e)}
+
 .review-list{display:flex;flex-direction:column;gap:11px}
 .review-item{background:#1e293b;border-radius:10px;padding:13px 14px;border:1px solid #7f1d1d}
 .review-item .rq{font-size:.84rem;color:#e2e8f0;margin-bottom:7px;line-height:1.6;white-space:pre-line}
@@ -156,6 +161,9 @@ header h1{color:#4ade80!important}
       <p>これまで間違えた問題だけを繰り返し練習。正解すると弱点リストから外れます。</p>
       <div class="mock-spec"><span id="weakCount" style="background:#7f1d1d66;color:#fecaca">0問</span></div>
     </div>
+
+    <p class="section-title">📊 分野別成績</p>
+    <div id="catStats" style="background:#1e293b;border:1px solid #334155;border-radius:12px;padding:14px 16px"></div>
 
     <p class="section-title">📚 分野別練習（解説つき）</p>
     <div class="cat-grid" id="catGrid"></div>
@@ -225,6 +233,46 @@ header h1{color:#4ade80!important}
 
 <script>
 const Q = [
+{id:'n2a1',cat:'規則',tag:'⚖️ 規則',text:'機体の登録記号の取り扱いとして正しいものを選びなさい。',choices:['機体の見やすい箇所に表示しなければならない','機体内部に保管すればよい','申請書類に記載すれば機体への表示は不要'],answer:0,hint:'登録記号は「見える」ことが大事です。',steps:[{t:'ポイント',b:'登録記号は機体の<strong>見やすい箇所に表示</strong>する義務がある。あわせてリモートIDの搭載(発信)も原則必要。'}],ans:'機体の見やすい箇所に表示しなければならない'},
+{id:'n2a2',cat:'規則',tag:'⚖️ 規則',text:'重量100g未満の機体の取り扱いとして正しいものを選びなさい。',choices:['「模型航空機」として扱われ、無人航空機の規制は基本的に適用されない','無人航空機としてすべての規制が適用される','屋外での飛行が一切禁止されている'],answer:0,hint:'100gが無人航空機の境界です。',steps:[{t:'ポイント',b:'100g未満は<strong>模型航空機</strong>。ただし空港周辺・150m以上など一部の規制は適用されるので注意。'}],ans:'「模型航空機」として扱われ、無人航空機の規制は基本的に適用されない'},
+{id:'n2a3',cat:'規則',tag:'⚖️ 規則',text:'技能証明書の取り扱いとして正しいものを選びなさい。',choices:['飛行の際に携帯しなければならない','自宅に大切に保管しておけばよい','スクールに預けておくことになっている'],answer:0,hint:'運転免許証と同じ発想です。',steps:[{t:'ポイント',b:'技能証明書は飛行時に<strong>携帯義務</strong>がある。許可・承認書等も同様に携帯する。'}],ans:'飛行の際に携帯しなければならない'},
+{id:'n2a4',cat:'規則',tag:'⚖️ 規則',text:'アルコールと飛行の関係として正しいものを選びなさい。',choices:['体内にアルコールを保有する状態では飛行させてはならない','少量であれば飛行させてよい','操縦補助者がいれば飲酒後でも飛行できる'],answer:0,hint:'「少量ならOK」はありません。',steps:[{t:'ポイント',b:'アルコール又は薬物の影響下での飛行は<strong>禁止</strong>(航空法)。違反は罰則の対象で、実地試験でも即不合格事由。'}],ans:'体内にアルコールを保有する状態では飛行させてはならない'},
+{id:'n2a5',cat:'規則',tag:'⚖️ 規則',text:'第三者の人や物件から30m未満の距離で飛行させる場合の扱いとして正しいものを選びなさい。',choices:['特定飛行に該当し、承認等の手続きが必要','距離に関する規制は存在しない','10m未満に近づかなければ自由に飛行できる'],answer:0,hint:'「30m」という数字を覚えましょう。',steps:[{t:'ポイント',b:'人・物件から<strong>30m未満</strong>の飛行は特定飛行(飛行の方法)。承認等が必要になる。'}],ans:'特定飛行に該当し、承認等の手続きが必要'},
+{id:'n2a6',cat:'規則',tag:'⚖️ 規則',text:'「夜間飛行」の夜間の定義として正しいものを選びなさい。',choices:['日没から日出まで','21時から翌朝6時まで','街灯が点灯している時間帯'],answer:0,hint:'時計の時刻ではなく太陽が基準です。',steps:[{t:'ポイント',b:'夜間=<strong>日没から日出まで</strong>(国立天文台の暦による)。季節・場所で変わる。'}],ans:'日没から日出まで'},
+{id:'n2a7',cat:'規則',tag:'⚖️ 規則',text:'飛行場所が人口集中地区(DID)かどうかを確認する方法として最も適切なものを選びなさい。',choices:['国土地理院の地図等で事前に確認する','現地で人の多さを見て判断する','人口集中地区は都心部だけなので地方では確認不要'],answer:0,hint:'見た目では判断できません。',steps:[{t:'ポイント',b:'DIDは<strong>国土地理院の地図(地理院地図)やDIPS</strong>で確認。田畑に見える場所でもDID指定のことがある。'}],ans:'国土地理院の地図等で事前に確認する'},
+{id:'n2a8',cat:'規則',tag:'⚖️ 規則',text:'特定飛行を行う場合の飛行計画の取り扱いとして正しいものを選びなさい。',choices:['あらかじめDIPSで通報する必要がある','飛行が終わってから報告すればよい','電話で警察署に伝えれば足りる'],answer:0,hint:'「事前に」「DIPSで」がキーワード。',steps:[{t:'ポイント',b:'特定飛行では<strong>飛行計画の事前通報</strong>が義務(DIPS2.0)。飛行日誌の記載・事故等の報告義務もセットで覚える。'}],ans:'あらかじめDIPSで通報する必要がある'},
+{id:'n2a9',cat:'規則',tag:'⚖️ 規則',text:'飛行中に人に接触する事故が発生した場合、最初にとるべき行動として正しいものを選びなさい。',choices:['直ちに飛行を中止し、負傷者を救護する','まず国土交通省に電話で報告する','機体を回収して現場を離れる'],answer:0,hint:'人命が最優先です。',steps:[{t:'ポイント',b:'順序は<strong>①飛行中止 ②負傷者の救護 ③危険防止措置 ④国土交通大臣への報告</strong>。救護より報告を優先しない。'}],ans:'直ちに飛行を中止し、負傷者を救護する'},
+{id:'n2a10',cat:'規則',tag:'⚖️ 規則',text:'小型無人機等飛行禁止法の対象施設として正しいものを選びなさい。',choices:['国会議事堂や原子力事業所などの重要施設の周辺','すべての鉄道駅の周辺','人口集中地区の全域'],answer:0,hint:'「国の重要施設」を守る法律です。',steps:[{t:'ポイント',b:'対象は国会議事堂・首相官邸・皇居・原子力事業所・防衛関係施設・空港など。<strong>航空法とは別の法律</strong>で、違反には罰則。'}],ans:'国会議事堂や原子力事業所などの重要施設の周辺'},
+{id:'n2a11',cat:'規則',tag:'⚖️ 規則',text:'他人の土地の上空を飛行させることについて正しいものを選びなさい。',choices:['土地の所有権が上空に及ぶ範囲があるため、無断飛行はトラブルの原因になる','空は誰のものでもないため完全に自由','高度10m以上であれば法的に問題ない'],answer:0,hint:'民法の考え方です。',steps:[{t:'ポイント',b:'民法上、土地所有権は<strong>その上下に及ぶ</strong>。航空法とは別に、所有者の同意やトラブル回避の配慮が必要。'}],ans:'土地の所有権が上空に及ぶ範囲があるため、無断飛行はトラブルの原因になる'},
+{id:'n2a12',cat:'規則',tag:'⚖️ 規則',text:'海外製ドローンを日本で使用する場合の電波法上の注意として正しいものを選びなさい。',choices:['技適マーク(技術基準適合証明等)の有無を確認する','海外製はすべて使用禁止されている','バッテリー容量だけ確認すればよい'],answer:0,hint:'「技適」がキーワード。',steps:[{t:'ポイント',b:'日本で電波を発する機器には<strong>技適マーク</strong>が必要。技適のない機体・送信機の使用は電波法違反になり得る。'}],ans:'技適マーク(技術基準適合証明等)の有無を確認する'},
+{id:'n2a13',cat:'規則',tag:'⚖️ 規則',text:'第三者賠償責任保険について正しいものを選びなさい。',choices:['万一の事故に備えて加入が強く推奨される','すべての機体に法律で加入が義務付けられている','スクールを卒業すれば保険は不要になる'],answer:0,hint:'「義務」か「推奨」かを区別。',steps:[{t:'ポイント',b:'保険加入は原則<strong>推奨</strong>(義務ではない)。ただしレベル3.5飛行では保険加入が要件になるなど、必要な場面がある。'}],ans:'万一の事故に備えて加入が強く推奨される'},
+{id:'n2a14',cat:'規則',tag:'⚖️ 規則',text:'公園でドローンを飛行させることについて正しいものを選びなさい。',choices:['航空法に加えて自治体の条例等で禁止されている場合がある','航空法さえ守れば全国どこの公園でも飛行できる','公園は私有地ではないので制限は一切ない'],answer:0,hint:'東京都立公園はほぼ全面禁止です。',steps:[{t:'ポイント',b:'公園・河川敷などは<strong>条例や管理者のルール</strong>で禁止されていることが多い。航空法クリア=飛ばせる、ではない。'}],ans:'航空法に加えて自治体の条例等で禁止されている場合がある'},
+{id:'n2b1',cat:'機体システム',tag:'🛸 システム',text:'リチウムポリマーバッテリーの保管方法として正しいものを選びなさい。',choices:['50〜60%程度の残量で保管する','常に満充電の状態で保管する','完全に使い切ってから保管する'],answer:0,hint:'満充電も空も劣化の原因。',steps:[{t:'ポイント',b:'長期保管は<strong>50〜60%</strong>目安。満充電・過放電での保管は劣化や膨張の原因。'}],ans:'50〜60%程度の残量で保管する'},
+{id:'n2b2',cat:'機体システム',tag:'🛸 システム',text:'膨張したバッテリーの取り扱いとして正しいものを選びなさい。',choices:['使用を中止し、安全な方法で廃棄する','押して元の形に戻せば使用できる','冷蔵庫で冷やせば回復する'],answer:0,hint:'膨張=内部で異常が起きています。',steps:[{t:'ポイント',b:'膨張は内部でガスが発生した状態。<strong>使用禁止</strong>。塩水などで放電処理し、自治体ルールに従って廃棄。'}],ans:'使用を中止し、安全な方法で廃棄する'},
+{id:'n2b3',cat:'機体システム',tag:'🛸 システム',text:'プロペラの点検について正しいものを選びなさい。',choices:['ひび・欠け・変形がないか飛行前に毎回確認する','年に1回の点検で十分','小さなひびであれば性能に影響しない'],answer:0,hint:'高速回転する部品です。',steps:[{t:'ポイント',b:'プロペラは高速回転するため<strong>小さな損傷でも破断の危険</strong>。飛行前点検で毎回確認し、損傷があれば交換。'}],ans:'ひび・欠け・変形がないか飛行前に毎回確認する'},
+{id:'n2b4',cat:'機体システム',tag:'🛸 システム',text:'GNSS(GPS等)による位置測定の仕組みとして正しいものを選びなさい。',choices:['複数の衛星からの電波を受信して位置を測定している','地上の基地局とだけ通信して位置を得ている','カメラの画像だけで位置を測定している'],answer:0,hint:'衛星測位システムです。',steps:[{t:'ポイント',b:'GNSSは<strong>最低4機の衛星</strong>からの電波で位置を計算。建物の谷間や屋内では精度が落ちる・使えない。'}],ans:'複数の衛星からの電波を受信して位置を測定している'},
+{id:'n2b5',cat:'機体システム',tag:'🛸 システム',text:'コンパス(地磁気センサ)のキャリブレーションについて正しいものを選びなさい。',choices:['鉄塔や車など磁気の影響がある場所を避けて行う','どこで行っても結果は変わらない','飛行中に行うのが最も正確'],answer:0,hint:'磁気センサは周囲の「鉄」に弱い。',steps:[{t:'ポイント',b:'キャリブレーションは<strong>磁気の影響のない開けた場所</strong>で。鉄筋・車・マンホールの近くはNG。'}],ans:'鉄塔や車など磁気の影響がある場所を避けて行う'},
+{id:'n2b6',cat:'機体システム',tag:'🛸 システム',text:'RTH(リターントゥホーム)の設定として正しいものを選びなさい。',choices:['帰還高度を周囲の障害物より高く設定しておく','帰還高度は低いほど安全である','設定は購入時のままで確認不要'],answer:0,hint:'帰り道に木や建物があったら?',steps:[{t:'ポイント',b:'RTHの帰還高度が障害物より低いと<strong>帰還中に衝突</strong>する。飛行環境ごとに設定を確認するのが基本。'}],ans:'帰還高度を周囲の障害物より高く設定しておく'},
+{id:'n2b7',cat:'機体システム',tag:'🛸 システム',text:'2.4GHz帯の電波を使うドローンの注意点として正しいものを選びなさい。',choices:['Wi-Fi等と同じ帯域のため、電波が混雑する場所では通信が不安定になることがある','他の機器と干渉することは絶対にない','障害物を回り込む性質が強いので都市部に最適'],answer:0,hint:'Wi-Fiと同じ周波数帯です。',steps:[{t:'ポイント',b:'2.4GHz帯はWi-Fi・Bluetoothと共用で<strong>混信しやすい</strong>。直進性が高く障害物にも弱い。イベント会場や住宅密集地では注意。'}],ans:'Wi-Fi等と同じ帯域のため、電波が混雑する場所では通信が不安定になることがある'},
+{id:'n2b8',cat:'機体システム',tag:'🛸 システム',text:'ジオフェンス機能の説明として正しいものを選びなさい。',choices:['設定した範囲の外に機体が出ないよう制限する機能','機体の盗難を防止する物理的な鍵','風速を自動で測定する機能'],answer:0,hint:'geo(地理)+fence(柵)。',steps:[{t:'ポイント',b:'ジオフェンス=<strong>飛行範囲を仮想的な柵で制限</strong>する機能。飛行禁止区域への誤進入防止に有効。'}],ans:'設定した範囲の外に機体が出ないよう制限する機能'},
+{id:'n2b9',cat:'機体システム',tag:'🛸 システム',text:'ペイロード(荷物等)の搭載について正しいものを選びなさい。',choices:['最大離陸重量を超えないようにし、重心の位置にも注意する','最大離陸重量を多少超えても飛行に影響はない','重心の位置は飛行に関係しない'],answer:0,hint:'重量と重心の両方が大事。',steps:[{t:'ポイント',b:'<strong>最大離陸重量の超過は禁止</strong>。重心がずれると姿勢制御が不安定になり、バッテリー消費も増える。'}],ans:'最大離陸重量を超えないようにし、重心の位置にも注意する'},
+{id:'n2b10',cat:'機体システム',tag:'🛸 システム',text:'送信機(プロポ)の操作モードについて正しいものを選びなさい。',choices:['操作前に自分の設定(モード1/モード2など)を確認する','どのモードも操作方法は同じである','飛行中に切り替えて試すのがよい'],answer:0,hint:'モード1と2ではスティックの役割が違います。',steps:[{t:'ポイント',b:'モード1/2では<strong>スロットルとエレベーターの位置が逆</strong>。借りた機体・試験機では特に事前確認が必須。'}],ans:'操作前に自分の設定(モード1/モード2など)を確認する'},
+{id:'n2c1',cat:'操縦・運航',tag:'🚁 操縦・運航',text:'離陸前の確認として正しいものを選びなさい。',choices:['機体・気象・空域・操縦者の体調を確認してから離陸する','電源を入れたらすぐに離陸してよい','気象は着陸のときに確認すれば十分'],answer:0,hint:'実地試験の口述試験もこの流れです。',steps:[{t:'ポイント',b:'飛行前確認=<strong>空域・気象・機体・操縦者(体調)・書類</strong>。確認したら声に出して指差し確認する習慣を。'}],ans:'機体・気象・空域・操縦者の体調を確認してから離陸する'},
+{id:'n2c2',cat:'操縦・運航',tag:'🚁 操縦・運航',text:'ホームポイント(帰還地点)について正しいものを選びなさい。',choices:['離陸地点で正しく更新されたことを確認してから飛行する','一度設定すれば場所が変わっても更新は不要','確認しなくても常に正しい位置に設定される'],answer:0,hint:'前回の飛行場所に帰ってしまう事故があります。',steps:[{t:'ポイント',b:'ホームポイントの<strong>更新忘れ</strong>があると、電波喪失時に前の場所へ帰ろうとして墜落・紛失の原因になる。'}],ans:'離陸地点で正しく更新されたことを確認してから飛行する'},
+{id:'n2c3',cat:'操縦・運航',tag:'🚁 操縦・運航',text:'操縦補助者の役割として正しいものを選びなさい。',choices:['周囲の安全監視や第三者への注意喚起など、操縦者を補助する','操縦者に代わって操縦するため技能証明が必ず必要','特に決まった役割はない'],answer:0,hint:'目視外飛行などで重要な存在です。',steps:[{t:'ポイント',b:'補助者は<strong>安全監視・注意喚起・操縦者への情報提供</strong>を担う。役割と合図は飛行前に打ち合わせる。'}],ans:'周囲の安全監視や第三者への注意喚起など、操縦者を補助する'},
+{id:'n2c4',cat:'操縦・運航',tag:'🚁 操縦・運航',text:'飛行中のバッテリー残量管理として正しいものを選びなさい。',choices:['残量に余裕をもって帰還・着陸させる','残量警告が出てから着陸を考え始めればよい','残量ゼロまで飛行しても自動で安全に着陸する'],answer:0,hint:'風向きによっては帰りに時間がかかります。',steps:[{t:'ポイント',b:'帰りは向かい風で電力を多く使うことがある。<strong>余裕をもった帰還判断</strong>(例:残30%で帰還開始)を運用ルール化する。'}],ans:'残量に余裕をもって帰還・着陸させる'},
+{id:'n2c5',cat:'操縦・運航',tag:'🚁 操縦・運航',text:'FPVゴーグルを装着して画面のみを見て操縦する飛行の扱いとして正しいものを選びなさい。',choices:['目視外飛行に該当する','ゴーグルを使えば目視内飛行として扱われる','補助者がいれば目視内飛行になる'],answer:0,hint:'「自分の目で直接見ているか」が基準。',steps:[{t:'ポイント',b:'目視内=<strong>操縦者自身の肉眼</strong>で常時監視できる状態。カメラ画像・ゴーグル越しは目視外飛行に該当する。'}],ans:'目視外飛行に該当する'},
+{id:'n2c6',cat:'操縦・運航',tag:'🚁 操縦・運航',text:'飛行後に行うべきこととして正しいものを選びなさい。',choices:['機体の損傷・発熱などを点検し、飛行日誌に記録する','すぐに片付ければ点検は不要','記録は事故が起きたときだけ書けばよい'],answer:0,hint:'特定飛行では日誌が義務です。',steps:[{t:'ポイント',b:'飛行後点検(損傷・発熱・汚れ)+<strong>飛行日誌への記録</strong>。特定飛行では法定義務で、実地試験の口述でも問われる。'}],ans:'機体の損傷・発熱などを点検し、飛行日誌に記録する'},
+{id:'n2c7',cat:'操縦・運航',tag:'🚁 操縦・運航',text:'飛行中に機体の制御が不安定になった場合の対応として正しいものを選びなさい。',choices:['あらかじめ決めた手順(ホバリング・RTH等)で安全確保を試み、周囲に注意を促す','直ちに送信機の電源を切る','機体の真下に走り寄って手で受け止める'],answer:0,hint:'電源断は制御放棄になります。',steps:[{t:'ポイント',b:'まず<strong>落ち着いて操作を止め(ホバリング)</strong>、状況判断→RTHや緊急着陸。周囲への声かけも重要。電源断・接近は危険。'}],ans:'あらかじめ決めた手順(ホバリング・RTH等)で安全確保を試み、周囲に注意を促す'},
+{id:'n2c8',cat:'操縦・運航',tag:'🚁 操縦・運航',text:'複数人で運航する場合の準備として正しいものを選びなさい。',choices:['役割分担と合図(コールアウト)を事前に決めておく','指示系統は決めずその場の判断に任せる','操縦者以外は現場にいない方がよい'],answer:0,hint:'CRM(チーム運航)の考え方です。',steps:[{t:'ポイント',b:'<strong>役割・指示系統・合図を事前に共有</strong>するのがCRMの基本。「安全確認よし」等の声出しを全員の共通言語にする。'}],ans:'役割分担と合図(コールアウト)を事前に決めておく'},
+{id:'n2d1',cat:'気象・リスク',tag:'🌤️ リスク・気象',text:'風と飛行判断の関係として正しいものを選びなさい。',choices:['機体の性能限界と運用基準を確認し、基準を超える風では飛行しない','風が強いほど機体は安定する','風速は目で見て正確に分かるので計測は不要'],answer:0,hint:'実地試験では5m/sが基準です。',steps:[{t:'ポイント',b:'風速計で計測し、<strong>機体の性能限界・運用基準(例:5m/s)以内</strong>で飛行する。上空は地上より風が強いことにも注意。'}],ans:'機体の性能限界と運用基準を確認し、基準を超える風では飛行しない'},
+{id:'n2d2',cat:'気象・リスク',tag:'🌤️ リスク・気象',text:'海陸風について正しいものを選びなさい。',choices:['日中は海から陸へ(海風)、夜間は陸から海へ(陸風)吹く','日中は陸から海へ吹き、夜間は海から陸へ吹く','海岸付近では風はほとんど吹かない'],answer:0,hint:'昼は陸の方が温まりやすい→上昇気流。',steps:[{t:'ポイント',b:'日中:陸が温まり上昇気流→<strong>海風(海→陸)</strong>。夜間:陸が冷える→<strong>陸風(陸→海)</strong>。海岸での空撮で重要。'}],ans:'日中は海から陸へ(海風)、夜間は陸から海へ(陸風)吹く'},
+{id:'n2d3',cat:'気象・リスク',tag:'🌤️ リスク・気象',text:'積乱雲が接近してきた場合の対応として正しいものを選びなさい。',choices:['急な突風・雷・強い雨のおそれがあるため、直ちに飛行を中止する','小さく見えれば飛行を続けてよい','雨が降り始めてから着陸すればよい'],answer:0,hint:'夏の急な雷雨の正体です。',steps:[{t:'ポイント',b:'積乱雲は<strong>突風(ガストフロント)・雷・激しい雨</strong>をもたらす。接近が見えたら早めに中止・撤収が鉄則。'}],ans:'急な突風・雷・強い雨のおそれがあるため、直ちに飛行を中止する'},
+{id:'n2d4',cat:'気象・リスク',tag:'🌤️ リスク・気象',text:'霧が発生している場合の飛行について正しいものを選びなさい。',choices:['視程が悪化し機体を目視できなくなるおそれがあるため、飛行を控える','霧の中でも機体の音が聞こえれば目視内飛行にあたる','機体が濡れなければ問題なく飛行できる'],answer:0,hint:'目視「内」の条件を思い出しましょう。',steps:[{t:'ポイント',b:'霧・もや=<strong>視程の悪化</strong>。機体を常時目視できなければ目視内飛行の条件を満たせない。湿気による機体への影響もある。'}],ans:'視程が悪化し機体を目視できなくなるおそれがあるため、飛行を控える'},
+{id:'n2d5',cat:'気象・リスク',tag:'🌤️ リスク・気象',text:'低温環境での飛行について正しいものを選びなさい。',choices:['バッテリー性能が低下し、飛行時間が短くなることに注意する','低温ほどバッテリーは長持ちする','気温は飛行性能に影響しない'],answer:0,hint:'冬の飛行時間は体感で分かるほど短くなります。',steps:[{t:'ポイント',b:'リポバッテリーは<strong>低温で電圧降下・容量低下</strong>。予熱・保温し、飛行時間を短めに計画する。'}],ans:'バッテリー性能が低下し、飛行時間が短くなることに注意する'},
+{id:'n2d6',cat:'気象・リスク',tag:'🌤️ リスク・気象',text:'「ハザード」と「リスク」の関係として正しいものを選びなさい。',choices:['ハザードは危険の要因、リスクはその危険が起きる可能性と影響の大きさの組み合わせ','ハザードとリスクは全く同じ意味','リスクは対策すれば完全にゼロにできる'],answer:0,hint:'リスク評価の出発点になる定義です。',steps:[{t:'ポイント',b:'<strong>ハザード=潜在的な危険源</strong>(例:強風・障害物)、<strong>リスク=発生可能性×重大性</strong>。リスクはゼロにはできず、許容レベルまで低減する。'}],ans:'ハザードは危険の要因、リスクはその危険が起きる可能性と影響の大きさの組み合わせ'},
+{id:'n2d7',cat:'気象・リスク',tag:'🌤️ リスク・気象',text:'山谷風について正しいものを選びなさい。',choices:['日中は谷から山へ(谷風)、夜間は山から谷へ(山風)吹く','昼夜で風向きは変わらない','山岳部では風はほとんど吹かない'],answer:0,hint:'海陸風の山バージョンです。',steps:[{t:'ポイント',b:'日中:斜面が温まり<strong>谷風(谷→山)</strong>、夜間:斜面が冷えて<strong>山風(山→谷)</strong>。山間部の点検飛行などで重要。'}],ans:'日中は谷から山へ(谷風)、夜間は山から谷へ(山風)吹く'},
+{id:'n2d8',cat:'気象・リスク',tag:'🌤️ リスク・気象',text:'リスクを低減する方法として正しいものを選びなさい。',choices:['飛行経路・時間帯の変更や立入管理措置などで低減できる','一度立てた計画は変更しない方がよい','保険に加入すればリスクそのものが消える'],answer:0,hint:'保険は「影響」への備えであって予防ではありません。',steps:[{t:'ポイント',b:'リスク低減策=<strong>経路変更・時間帯変更・立入管理措置・補助者配置・機能点検</strong>など。保険は事後の備えで、発生可能性は下げない。'}],ans:'飛行経路・時間帯の変更や立入管理措置などで低減できる'},
 {id:'r1',cat:'規則',tag:'⚖️ 規則',text:'航空法における「無人航空機」の定義として正しいものを選びなさい。',choices:['構造上人が乗ることができず、遠隔操作または自動操縦で飛行でき、重量100g以上のもの','遠隔操作のみで飛行し、重量に制限はないもの','構造上人が乗れないもので重量200g以上のもの'],answer:0,hint:'①構造②操縦方式③重量の3要件です。',steps:[{t:'3要件',b:'①構造上人が乗れない ②遠隔操作または自動操縦で飛行できる ③<strong>重量100g以上</strong>'},{t:'補足',b:'100g未満は「模型航空機」。重量は本体＋バッテリーの合計。'}],ans:'構造上人が乗ることができず、遠隔操作または自動操縦で飛行でき、重量100g以上のもの'},
 {id:'r2',cat:'規則',tag:'⚖️ 規則',text:'無人航空機の登録の有効期間として正しいものを選びなさい。',choices:['3年','1年','5年'],answer:0,hint:'登録・技能証明の有効期間を覚えましょう。',steps:[{t:'有効期間',b:'登録の有効期間は<strong>3年</strong>。3年毎に更新が必要。'},{t:'関連',b:'技能証明も一等・二等とも3年。第一種機体認証は1年、第二種は3年。'}],ans:'3年'},
 {id:'r3',cat:'規則',tag:'⚖️ 規則',text:'特定飛行の規制対象となる空域として誤っているものを選びなさい。',choices:['地表または水面から100m以上の高さの空域','空港等の周辺の上空の空域','人口集中地区（DID）の上空'],answer:0,hint:'高度の基準値は150mです。',steps:[{t:'規制対象',b:'①空港等周辺 ②緊急用務空域 ③<strong>150m以上</strong> ④人口集中地区'},{t:'誤り',b:'「100m以上」ではなく<strong>150m以上</strong>。'}],ans:'地表または水面から100m以上の高さの空域'},
@@ -446,6 +494,24 @@ function saveWrongSet(s){try{localStorage.setItem('droneWrong2',JSON.stringify([
 function markWrong(id){const s=getWrongSet();s.add(id);saveWrongSet(s)}
 function markCorrect(id){const s=getWrongSet();if(s.delete(id))saveWrongSet(s)}
 function updateWeakCard(){const n=getWrongSet().size;const el=document.getElementById('weakCount');if(el)el.textContent=n+'問'}
+
+// 分野別成績（localStorageに永続化）
+function getCatStats(){try{return JSON.parse(localStorage.getItem('droneCatStats2')||'{}')}catch(e){return {}}}
+function recordCatStat(cat,ok){const s=getCatStats();s[cat]=s[cat]||{t:0,c:0};s[cat].t++;if(ok)s[cat].c++;try{localStorage.setItem('droneCatStats2',JSON.stringify(s))}catch(e){}}
+function buildCatStats(){
+  const el=document.getElementById('catStats');if(!el)return;
+  const s=getCatStats();
+  const cats=Object.keys(CAT_META).filter(c=>c!=='全問ランダム'&&s[c]&&s[c].t>0);
+  if(cats.length===0){el.innerHTML='<p style="font-size:.78rem;color:#64748b;margin:0">問題を解くと、分野ごとの正答率がここにグラフで表示されます。</p>';return}
+  el.innerHTML=cats.map(c=>{
+    const st=s[c],pct=Math.round(st.c/st.t*100);
+    return `<div class="catstat-item"><div class="catstat-top"><span>${CAT_META[c].icon} ${c}</span><span>${pct}%（${st.c}/${st.t}）</span></div><div class="catstat-bar"><div class="catstat-fill" style="width:${pct}%"></div></div></div>`;
+  }).join('');
+}
+
+// 教則の参考章（解説の逆引き用）
+const CHAPTER_MAP={'規則':'教則 第3章（無人航空機に関する規則）','機体システム':'教則 第4章（無人航空機のシステム）','操縦・運航':'教則 第5章（操縦者及び運航体制）','気象・リスク':'教則 第6章（運航上のリスク管理）','仕事率計算':'教則 第4章 4.3（飛行原理と飛行性能）','旋回半径計算':'教則 第4章 4.3（飛行原理と飛行性能）','滑空距離計算':'教則 第4章 4.3（飛行原理と飛行性能）','フレネルゾーン':'教則 第4章 4.5（機体以外の要素技術）','高度と速度':'教則 第4章 4.3（飛行原理と飛行性能）','推力パワー計算':'教則 第4章 4.3（飛行原理と飛行性能）'};
+const TAG_CHAPTER={'🎯 制度・法規':'教則 第3章（無人航空機に関する規則）','🎯 特定飛行':'教則 第3章（無人航空機に関する規則）','🎯 カテゴリー':'教則 第3章（無人航空機に関する規則）','🎯 機体・原理':'教則 第4章（無人航空機のシステム）','🎯 センサ・電池':'教則 第4章（無人航空機のシステム）','🎯 緊急・電波':'教則 第2章・第4章'};
 function startWeak(){
   const s=getWrongSet();const pool=Q.filter(q=>s.has(q.id));
   if(pool.length===0){alert('弱点問題はまだありません。\n練習や模擬試験で問題を解くと、間違えた問題がここに溜まります。');return}
@@ -545,6 +611,7 @@ function selectPractice(i){
   stats.total++;
   if(i===q.answer){btns[dispSel].classList.add('correct');correct++;stats.correct++;markCorrect(q.id)}
   else{btns[dispSel].classList.add('wrong');btns[dispCor].classList.add('reveal');wrongAns.push({q,yourIdx:i});markWrong(q.id)}
+  recordCatStat(q.cat,i===q.answer);
   updateStat();showExplanation(q);
   document.getElementById('nextBtn').style.display='inline-block';
 }
@@ -561,6 +628,8 @@ function showExplanation(q){
     h+='</div></div>';
   });
   h+=`<div class="answer-highlight">正解：${q.ans}</div>`;
+  const ref=CHAPTER_MAP[q.cat]||TAG_CHAPTER[q.tag]||'';
+  if(ref)h+=`<div style="font-size:.72rem;color:#64748b;margin-top:8px">📖 参考：${ref}</div>`;
   el.innerHTML=h;el.classList.add('show');
 }
 function toggleHint(){document.getElementById('hintPanel').classList.toggle('show')}
@@ -574,7 +643,7 @@ function quitQuiz(){
 function submitMock(){
   if(timerId){clearInterval(timerId);timerId=null}
   correct=0;wrongAns=[];
-  curQ.forEach((q,i)=>{if(mockAnswers[i]===q.answer){correct++;markCorrect(q.id)}else{wrongAns.push({q,yourIdx:mockAnswers[i]});markWrong(q.id)}});
+  curQ.forEach((q,i)=>{const ok=mockAnswers[i]===q.answer;recordCatStat(q.cat,ok);if(ok){correct++;markCorrect(q.id)}else{wrongAns.push({q,yourIdx:mockAnswers[i]});markWrong(q.id)}});
   showResult(true);
 }
 function showResult(mock){
@@ -634,11 +703,11 @@ function showTab(name){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('screen-'+name).classList.add('active');
-  if(name==='home')updateWeakCard();
+  if(name==='home'){updateWeakCard();buildCatStats()}
   const map={home:0,cheat:1,review:2};
   if(map[name]!==undefined)document.querySelectorAll('.tab')[map[name]]?.classList.add('active');
 }
-buildHome();buildCheat();updateWeakCard();
+buildHome();buildCheat();updateWeakCard();buildCatStats();
 </script>
 </body>
 </html>
