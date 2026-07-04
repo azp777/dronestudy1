@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>飛行日誌 - Flight Logbook</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+  :root{--bg:#0f172a;--card:#1e293b;--acc:#38bdf8;--warn:#f59e0b;--ok:#22c55e;--ng:#ef4444;--txt:#f1f5f9;--sub:#94a3b8;--line:#334155;}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  body{margin:0;font-family:"Hiragino Sans","Yu Gothic",system-ui,sans-serif;background:var(--bg);color:var(--txt);}
+  header{padding:14px;text-align:center;background:linear-gradient(135deg,#0f766e,#1d4ed8);}
+  header h1{margin:0;font-size:1.1rem;}
+  header p{margin:4px 0 0;font-size:.7rem;opacity:.85;}
+  .tabs{display:flex;gap:4px;padding:8px;background:#0b1220;position:sticky;top:0;z-index:500;overflow-x:auto;}
+  .tabs button{flex:1 0 auto;border:1px solid var(--line);background:var(--card);color:var(--txt);padding:9px 8px;border-radius:11px;font-size:.72rem;white-space:nowrap;}
+  .tabs button.active{background:var(--acc);color:#03202f;border-color:var(--acc);font-weight:bold;}
+  main{padding:12px;max-width:640px;margin:0 auto;padding-bottom:50px;}
+  .box{background:var(--card);border-radius:14px;padding:14px;margin-bottom:12px;}
+  .box h3{margin:0 0 10px;font-size:.92rem;color:var(--acc);}
+  label{display:block;font-size:.74rem;color:var(--sub);margin:9px 0 3px;}
+  input,select,textarea{width:100%;background:#0b1220;border:1px solid var(--line);border-radius:9px;padding:10px;color:var(--txt);font-size:.95rem;outline:none;}
+  input:focus,select:focus,textarea:focus{border-color:var(--acc);}
+  textarea{min-height:56px;resize:vertical;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;}
+  .chip{border:1px solid var(--line);background:#0b1220;color:var(--sub);border-radius:16px;padding:6px 11px;font-size:.76rem;}
+  .chip.on{background:#1d4ed8;color:#fff;border-color:#60a5fa;}
+  .btn{border:none;border-radius:11px;padding:12px 16px;font-size:.9rem;font-weight:bold;background:#334155;color:var(--txt);}
+  .btn.p{background:var(--acc);color:#03202f;}
+  .btn.g{background:var(--ok);color:#04270f;}
+  .btn.r{background:var(--ng);color:#fff;}
+  .btn.w{background:var(--warn);color:#3b2503;}
+  .btn.sm{padding:7px 11px;font-size:.76rem;border-radius:8px;font-weight:normal;}
+  .row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
+  .row .btn{flex:1;}
+  .timerbox{display:flex;gap:8px;align-items:center;}
+  .timerbox .btn{flex:1;}
+  .flying{animation:pulse 1.2s infinite;}
+  @keyframes pulse{50%{opacity:.55;}}
+  .rec{background:var(--card);border-radius:12px;padding:11px 13px;margin-bottom:9px;border-left:4px solid var(--acc);font-size:.82rem;}
+  .rec .t1{font-weight:bold;font-size:.9rem;}
+  .rec .t2{color:var(--sub);margin-top:3px;line-height:1.55;}
+  .rec .ops{margin-top:7px;display:flex;gap:6px;}
+  .totalbar{background:#0b1220;border:1px solid var(--line);border-radius:11px;padding:10px 13px;font-size:.8rem;color:var(--sub);margin-bottom:10px;line-height:1.7;}
+  .totalbar b{color:var(--warn);font-size:1rem;}
+  .insp-item{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #22314a;}
+  .insp-item .nm{flex:1;font-size:.8rem;line-height:1.4;}
+  .insp-item .nm small{display:block;color:var(--sub);font-size:.68rem;}
+  .tgl{display:flex;gap:4px;}
+  .tgl button{border:1px solid var(--line);background:#0b1220;color:var(--sub);border-radius:8px;padding:6px 10px;font-size:.74rem;}
+  .tgl button.ok{background:#14532d;color:#bbf7d0;border-color:var(--ok);}
+  .tgl button.ng{background:#450a0a;color:#fecaca;border-color:var(--ng);}
+  #map{height:62vh;border-radius:14px;}
+  .maplegend{background:var(--card);border-radius:12px;padding:11px 13px;font-size:.75rem;color:var(--sub);line-height:1.7;margin-top:10px;}
+  .warnbox{background:#451a03;border:1px solid var(--warn);border-radius:11px;padding:10px 13px;font-size:.76rem;line-height:1.65;color:#fde68a;margin-bottom:10px;}
+  .empty{text-align:center;color:var(--sub);padding:26px 0;font-size:.85rem;}
+  .note{font-size:.7rem;color:var(--sub);text-align:center;margin-top:14px;line-height:1.7;}
+  .seg{display:flex;gap:6px;margin-bottom:10px;}
+  .seg button{flex:1;border:1px solid var(--line);background:var(--card);color:var(--sub);padding:8px;border-radius:10px;font-size:.78rem;}
+  .seg button.on{background:#334155;color:var(--txt);font-weight:bold;}
+  dialog{background:var(--card);color:var(--txt);border:1px solid var(--line);border-radius:14px;max-width:560px;width:92%;padding:16px;}
+  dialog::backdrop{background:rgba(0,0,0,.6);}
+</style>
+</head>
+<body>
+<header>
+  <h1>🛩 飛行日誌</h1>
+  <p>航空法・飛行日誌取扱要領(様式1〜3)準拠|データはこの端末にのみ保存</p>
+</header>
+
+<div class="tabs">
+  <button id="tab0" class="active">✈️ 飛行記録</button>
+  <button id="tab1">✅ 日常点検</button>
+  <button id="tab2">🔧 点検整備</button>
+  <button id="tab3">🗺 エリア確認</button>
+  <button id="tab4">⚙️ 機体・設定</button>
+</div>
+
+<main id="main"></main>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+/* ================= データ ================= */
+const DEFAULT_DATA = {
+  aircraft: [
+    {id:'a1', name:'DJI Air 3S', maker:'DJI', model:'Air 3S', serial:'', reg:'', kind:'回転翼航空機(マルチローター)', offsetMin:0},
+    {id:'a2', name:'DJI Mini 4 Pro', maker:'DJI', model:'Mini 4 Pro', serial:'', reg:'', kind:'回転翼航空機(マルチローター)', offsetMin:0},
+    {id:'a3', name:'DJI Neo', maker:'DJI', model:'Neo', serial:'', reg:'', kind:'回転翼航空機(マルチローター)', offsetMin:0}
+  ],
+  flights: [], inspections: [], maint: [],
+  settings: {pilot:'', cert:''},
+  places: []
+};
+let DB = load();
+function load(){
+  try{ const d = JSON.parse(localStorage.getItem('flightLogbook')); if(d && d.aircraft) return d; }catch(e){}
+  return JSON.parse(JSON.stringify(DEFAULT_DATA));
+}
+function save(){ localStorage.setItem('flightLogbook', JSON.stringify(DB)); }
+const $ = id => document.getElementById(id);
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+const today = () => new Date().toISOString().slice(0,10);
+const nowHM = () => { const d=new Date(); return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0'); };
+function esc(s){ return String(s??'').replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function ac(id){ return DB.aircraft.find(a=>a.id===id); }
+function acLabel(a){ return a.name + (a.reg ? '('+a.reg+')' : '(登録記号 未設定)'); }
+function totalMin(acId){
+  const a = ac(acId); if(!a) return 0;
+  return (a.offsetMin||0) + DB.flights.filter(f=>f.acId===acId).reduce((s,f)=>s+(f.dur||0),0);
+}
+function hm(min){ return Math.floor(min/60)+':'+String(min%60).padStart(2,'0'); }
+function calcDur(t1,t2){
+  if(!t1||!t2) return 0;
+  const [h1,m1]=t1.split(':').map(Number),[h2,m2]=t2.split(':').map(Number);
+  let d=(h2*60+m2)-(h1*60+m1); if(d<0)d+=1440; return Math.max(1,d);
+}
+function addPlace(p){ if(p && !DB.places.includes(p)){ DB.places.unshift(p); DB.places=DB.places.slice(0,20); } }
+function placeList(){ return '<datalist id="pl">'+DB.places.map(p=>`<option value="${esc(p)}">`).join('')+'</datalist>'; }
+function geoBtn(inputId){ return `<button type="button" class="btn sm" onclick="fillGeo('${inputId}')">📍現在地</button>`; }
+function fillGeo(inputId){
+  if(!navigator.geolocation){ alert('この端末では位置情報を取得できません'); return; }
+  navigator.geolocation.getCurrentPosition(pos=>{
+    const v = pos.coords.latitude.toFixed(5)+','+pos.coords.longitude.toFixed(5);
+    $(inputId).value = v;
+  }, ()=>alert('位置情報を取得できませんでした(位置情報の許可を確認)'), {enableHighAccuracy:true, timeout:8000});
+}
+
+/* ================= 特定飛行チップ ================= */
+const TOKUTEI = ['該当なし','DID上空','夜間','目視外','人・物件30m未満','空港等周辺','150m以上','催し場所上空','危険物輸送','物件投下'];
+const PURPOSE = ['空撮','報道取材','警備','農林水産','測量','環境調査','設備メンテナンス','インフラ点検・保守','資材管理','輸送・宅配','自然観察','事故・災害対応','趣味','研究開発','練習・訓練','その他'];
+let chipsSel = ['該当なし'];
+function chipHtml(){
+  return TOKUTEI.map(t=>`<span class="chip ${chipsSel.includes(t)?'on':''}" onclick="tglChip('${t}')">${t}</span>`).join('');
+}
+function tglChip(t){
+  if(t==='該当なし'){ chipsSel=['該当なし']; }
+  else{
+    chipsSel = chipsSel.filter(x=>x!=='該当なし');
+    if(chipsSel.includes(t)) chipsSel=chipsSel.filter(x=>x!==t); else chipsSel.push(t);
+    if(chipsSel.length===0) chipsSel=['該当なし'];
+  }
+  $('chips').innerHTML = chipHtml();
+}
+
+/* ================= タブ ================= */
+let mode = 0, mapObj = null;
+function setMode(m){
+  mode = m;
+  [0,1,2,3,4].forEach(i=>$('tab'+i).classList.toggle('active', i===m));
+  if(m===0) viewFlight();
+  else if(m===1) viewInspection();
+  else if(m===2) viewMaint();
+  else if(m===3) viewMap();
+  else viewSettings();
+  window.scrollTo(0,0);
+}
+[0,1,2,3,4].forEach(i=>$('tab'+i).onclick=()=>setMode(i));
+
+function acOptions(sel){
+  return DB.aircraft.map(a=>`<option value="${a.id}" ${a.id===sel?'selected':''}>${esc(acLabel(a))}</option>`).join('');
+}
+
+/* ================= ✈️ 飛行記録 ================= */
+let flying = null; // {acId, date, offTime}
+function viewFlight(){
+  const lastAc = localStorage.getItem('lastAc') || (DB.aircraft[0]&&DB.aircraft[0].id);
+  $('main').innerHTML = `
+  ${placeList()}
+  <div class="box">
+    <h3>新しい飛行を記録(様式1)</h3>
+    <label>機体</label><select id="f_ac" onchange="localStorage.setItem('lastAc',this.value);updTotal();renderFlightList()">${acOptions(lastAc)}</select>
+    <div class="totalbar" id="f_total"></div>
+    <div class="grid2">
+      <div><label>飛行年月日</label><input type="date" id="f_date" value="${today()}"></div>
+      <div><label>飛行させた者の氏名</label><input id="f_pilot" value="${esc(DB.settings.pilot)}" placeholder="氏名"></div>
+    </div>
+    <label>技能証明書番号(お持ちの場合)</label><input id="f_cert" value="${esc(DB.settings.cert)}" placeholder="例: 二等無人航空機操縦士 第◯◯号">
+    <label>飛行の目的</label><select id="f_purpose">${PURPOSE.map(p=>`<option>${p}</option>`).join('')}</select>
+    <label>特定飛行の別(該当をタップ)</label><div class="chips" id="chips">${chipHtml()}</div>
+    <label>経路・経由地など(任意)</label><input id="f_route" placeholder="例: A地点→B公園上空→A地点" list="pl">
+    <label>離陸場所</label>
+    <div class="timerbox"><input id="f_from" placeholder="地名 または 緯度,経度" list="pl">${geoBtn('f_from')}</div>
+    <label>着陸場所</label>
+    <div class="timerbox"><input id="f_to" placeholder="地名 または 緯度,経度(同じ場合は同上)" list="pl">${geoBtn('f_to')}<button type="button" class="btn sm" onclick="$('f_to').value=$('f_from').value">同上</button></div>
+    <div class="grid2">
+      <div><label>離陸時刻</label><input type="time" id="f_off"></div>
+      <div><label>着陸時刻</label><input type="time" id="f_on"></div>
+    </div>
+    <div class="row">
+      <button class="btn g" id="btnTakeoff" onclick="doTakeoff()">🛫 離陸(時刻を記録)</button>
+      <button class="btn w" id="btnLand" onclick="doLand()">🛬 着陸(時刻を記録)</button>
+    </div>
+    <label>飛行の安全に影響のあった事項</label><input id="f_safety" value="なし">
+    <details style="margin-top:9px"><summary style="font-size:.78rem;color:var(--sub)">不具合があった場合はこちらに記入(様式1 記事欄)</summary>
+      <div class="grid2">
+        <div><label>不具合発生年月日</label><input type="date" id="f_sqDate"></div>
+        <div><label>処置年月日</label><input type="date" id="f_axDate"></div>
+      </div>
+      <label>不具合事項</label><input id="f_squawk" placeholder="例: モーター異音">
+      <label>処置その他</label><input id="f_action" placeholder="例: プロペラ交換で解消">
+      <label>確認者</label><input id="f_confirm" placeholder="氏名">
+    </details>
+    <div class="row"><button class="btn p" onclick="saveFlight()">💾 保存する</button></div>
+  </div>
+  <div class="box">
+    <h3>飛行記録の一覧</h3>
+    <div class="row" style="margin:0 0 10px">
+      <button class="btn sm" onclick="exportCSV('flights')">📥 CSV書き出し(Excel用)</button>
+      <button class="btn sm" onclick="printForm(1)">🖨 印刷/PDF(様式1)</button>
+    </div>
+    <div id="f_list"></div>
+  </div>`;
+  updTotal(); renderFlightList(); restoreFlying();
+}
+function updTotal(){
+  const id = $('f_ac').value; const t = totalMin(id);
+  $('f_total').innerHTML = `この機体の総飛行時間: <b>${hm(t)}</b>(${t}分)・記録 ${DB.flights.filter(f=>f.acId===id).length}件`;
+}
+function doTakeoff(){
+  $('f_off').value = nowHM();
+  if(!$('f_date').value) $('f_date').value = today();
+  flying = {acId:$('f_ac').value, off:$('f_off').value};
+  localStorage.setItem('flyingState', JSON.stringify(flying));
+  $('btnTakeoff').classList.add('flying'); $('btnTakeoff').textContent = '🛫 飛行中… ('+$('f_off').value+'離陸)';
+}
+function doLand(){
+  $('f_on').value = nowHM();
+  flying = null; localStorage.removeItem('flyingState');
+  $('btnTakeoff').classList.remove('flying'); $('btnTakeoff').textContent = '🛫 離陸(時刻を記録)';
+}
+function restoreFlying(){
+  try{ const f = JSON.parse(localStorage.getItem('flyingState')); if(f && f.off){ $('f_off').value=f.off; $('btnTakeoff').classList.add('flying'); $('btnTakeoff').textContent='🛫 飛行中… ('+f.off+'離陸)'; } }catch(e){}
+}
+function saveFlight(){
+  const acId = $('f_ac').value;
+  if(!acId){ alert('機体を選択してください'); return; }
+  if(!$('f_pilot').value){ alert('飛行させた者の氏名を入力してください'); return; }
+  if(!$('f_off').value || !$('f_on').value){ alert('離陸時刻・着陸時刻を入力してください(離陸/着陸ボタンで自動記録できます)'); return; }
+  if(!$('f_from').value){ alert('離陸場所を入力してください(📍現在地ボタンも使えます)'); return; }
+  DB.settings.pilot = $('f_pilot').value; DB.settings.cert = $('f_cert').value;
+  const dur = calcDur($('f_off').value, $('f_on').value);
+  const rec = {
+    id: uid(), acId, date: $('f_date').value, pilot: $('f_pilot').value, cert: $('f_cert').value,
+    purpose: $('f_purpose').value, tokutei: chipsSel.join('・'), route: $('f_route').value,
+    from: $('f_from').value, to: $('f_to').value || $('f_from').value,
+    off: $('f_off').value, on: $('f_on').value, dur,
+    safety: $('f_safety').value || 'なし',
+    sqDate: $('f_sqDate').value, squawk: $('f_squawk').value, axDate: $('f_axDate').value, action: $('f_action').value, confirm: $('f_confirm').value
+  };
+  rec.totalAfter = totalMin(acId) + dur;
+  addPlace(rec.from); addPlace(rec.to);
+  DB.flights.push(rec); save();
+  localStorage.removeItem('flyingState');
+  alert('保存しました。\n飛行時間: '+dur+'分 / 総飛行時間: '+hm(rec.totalAfter));
+  chipsSel=['該当なし']; viewFlight();
+}
+function renderFlightList(){
+  const acId = $('f_ac').value;
+  const list = DB.flights.filter(f=>f.acId===acId).sort((a,b)=>(b.date+b.off).localeCompare(a.date+a.off));
+  $('f_list').innerHTML = list.length===0 ? '<div class="empty">この機体の飛行記録はまだありません</div>' :
+    list.map(f=>`<div class="rec">
+      <div class="t1">${f.date} ${f.off}〜${f.on}(${f.dur}分)</div>
+      <div class="t2">${esc(f.purpose)}|${esc(f.tokutei)}<br>${esc(f.from)} → ${esc(f.to)}<br>操縦者: ${esc(f.pilot)}${f.safety&&f.safety!=='なし'?'<br>⚠ '+esc(f.safety):''}${f.squawk?'<br>🔧 不具合: '+esc(f.squawk):''}</div>
+      <div class="ops"><button class="btn sm r" onclick="delFlight('${f.id}')">削除</button></div>
+    </div>`).join('');
+}
+function delFlight(id){ if(!confirm('この飛行記録を削除しますか?')) return; DB.flights=DB.flights.filter(f=>f.id!==id); save(); viewFlight(); }
+
+/* ================= ✅ 日常点検(様式2) ================= */
+const INSP_ITEMS = [
+  ['機体全般','機器の取り付け状態(ネジ、コネクタ、ケーブル等)'],
+  ['プロペラ','外観、損傷、ゆがみ'],
+  ['フレーム','外観、損傷、ゆがみ'],
+  ['通信系統','機体と操縦装置の通信品質の健全性'],
+  ['推進系統','モーター又は発動機の健全性'],
+  ['電源系統','機体及び操縦装置の電源の健全性'],
+  ['自動制御系統','飛行制御装置の健全性'],
+  ['操縦装置','外観、スティックの健全性、スイッチの健全性'],
+  ['バッテリー・燃料','バッテリーの充電状況、残燃料表示機能の健全性']
+];
+let inspState = INSP_ITEMS.map(()=> '');
+function viewInspection(){
+  const lastAc = localStorage.getItem('lastAc') || (DB.aircraft[0]&&DB.aircraft[0].id);
+  inspState = INSP_ITEMS.map(()=> '');
+  $('main').innerHTML = `
+  ${placeList()}
+  <div class="box">
+    <h3>日常点検を記録(様式2)</h3>
+    <label>機体</label><select id="i_ac">${acOptions(lastAc)}</select>
+    <div class="grid2">
+      <div><label>実施年月日</label><input type="date" id="i_date" value="${today()}"></div>
+      <div><label>実施者</label><input id="i_by" value="${esc(DB.settings.pilot)}"></div>
+    </div>
+    <label>実施場所</label>
+    <div class="timerbox"><input id="i_place" placeholder="地名 または 緯度,経度" list="pl">${geoBtn('i_place')}</div>
+    <label style="margin-top:12px">点検項目(タップで判定)</label>
+    <div class="row" style="margin:4px 0 6px"><button class="btn sm g" onclick="allNormal()">✅ すべて正常にする</button></div>
+    <div id="i_items">${inspHtml()}</div>
+    <label>特記事項(飛行後点検の結果もここに)</label><textarea id="i_note" placeholder="例: 飛行後点検 異常なし"></textarea>
+    <div class="row"><button class="btn p" onclick="saveInsp()">💾 保存する</button></div>
+  </div>
+  <div class="box">
+    <h3>日常点検の一覧</h3>
+    <div class="row" style="margin:0 0 10px">
+      <button class="btn sm" onclick="exportCSV('inspections')">📥 CSV書き出し</button>
+      <button class="btn sm" onclick="printForm(2)">🖨 印刷/PDF(様式2)</button>
+    </div>
+    <div id="i_list">${renderInspList(lastAc)}</div>
+  </div>`;
+  $('i_ac').onchange = e => { $('i_list').innerHTML = renderInspList(e.target.value); };
+}
+function inspHtml(){
+  return INSP_ITEMS.map((it,i)=>`
+    <div class="insp-item">
+      <div class="nm">${it[0]}<small>${it[1]}</small></div>
+      <div class="tgl">
+        <button id="ok${i}" class="${inspState[i]==='正常'?'ok':''}" onclick="setInsp(${i},'正常')">正常</button>
+        <button id="ng${i}" class="${inspState[i]==='異常'?'ng':''}" onclick="setInsp(${i},'異常')">異常</button>
+      </div>
+    </div>`).join('');
+}
+function setInsp(i,v){ inspState[i]=v; $('i_items').innerHTML = inspHtml(); }
+function allNormal(){ inspState = INSP_ITEMS.map(()=>'正常'); $('i_items').innerHTML = inspHtml(); }
+function saveInsp(){
+  if(inspState.some(v=>v==='')){ alert('未判定の点検項目があります(すべて正常/異常を選択してください)'); return; }
+  if(!$('i_by').value){ alert('実施者を入力してください'); return; }
+  if(!$('i_place').value){ alert('実施場所を入力してください'); return; }
+  const rec = { id:uid(), acId:$('i_ac').value, date:$('i_date').value, by:$('i_by').value, place:$('i_place').value,
+    results: INSP_ITEMS.map((it,i)=>({item:it[0], result:inspState[i]})), note: $('i_note').value };
+  addPlace(rec.place);
+  DB.inspections.push(rec); save();
+  const ngs = rec.results.filter(r=>r.result==='異常');
+  alert('保存しました。' + (ngs.length? '\n⚠ 異常項目あり: '+ngs.map(r=>r.item).join('、')+'\n→ 整備したら「点検整備」タブにも記録してください' : ''));
+  viewInspection();
+}
+function renderInspList(acId){
+  const list = DB.inspections.filter(r=>r.acId===acId).sort((a,b)=>b.date.localeCompare(a.date));
+  return list.length===0 ? '<div class="empty">この機体の日常点検記録はまだありません</div>' :
+    list.map(r=>{
+      const ngs = r.results.filter(x=>x.result==='異常');
+      return `<div class="rec" style="border-left-color:${ngs.length?'var(--ng)':'var(--ok)'}">
+        <div class="t1">${r.date} ${ngs.length? '⚠ 異常 '+ngs.length+'件' : '✅ 全項目正常'}</div>
+        <div class="t2">${esc(r.place)}|実施者: ${esc(r.by)}${ngs.length?'<br>異常: '+ngs.map(x=>esc(x.item)).join('、'):''}${r.note?'<br>'+esc(r.note):''}</div>
+        <div class="ops"><button class="btn sm r" onclick="delInsp('${r.id}')">削除</button></div>
+      </div>`;
+    }).join('');
+}
+function delInsp(id){ if(!confirm('この点検記録を削除しますか?')) return; DB.inspections=DB.inspections.filter(r=>r.id!==id); save(); viewInspection(); }
+
+/* ================= 🔧 点検整備(様式3) ================= */
+const MAINT_REASON = ['定期点検','不具合対応','部品交換','機器の取付・取外','改造','製造者の指示','その他'];
+function viewMaint(){
+  const lastAc = localStorage.getItem('lastAc') || (DB.aircraft[0]&&DB.aircraft[0].id);
+  $('main').innerHTML = `
+  ${placeList()}
+  <div class="box">
+    <h3>点検整備を記録(様式3)</h3>
+    <label>機体</label><select id="m_ac" onchange="$('m_total').value=hm(totalMin(this.value))">${acOptions(lastAc)}</select>
+    <div class="grid2">
+      <div><label>実施年月日</label><input type="date" id="m_date" value="${today()}"></div>
+      <div><label>総飛行時間(自動)</label><input id="m_total" value="${hm(totalMin(lastAc))}"></div>
+    </div>
+    <label>点検・修理・改造・整備の内容(交換部品名も)</label><textarea id="m_detail" placeholder="例: プロペラ4枚交換(純正部品)、ファームウェア更新 v1.2.3"></textarea>
+    <label>実施理由</label><select id="m_reason">${MAINT_REASON.map(r=>`<option>${r}</option>`).join('')}</select>
+    <div class="grid2">
+      <div><label>実施場所</label><input id="m_place" placeholder="例: 自宅、◯◯サービス" list="pl"></div>
+      <div><label>実施者</label><input id="m_by" value="${esc(DB.settings.pilot)}"></div>
+    </div>
+    <label>備考(次回の点検整備の予定時期など)</label><input id="m_note" placeholder="例: 次回定期点検 2026/12予定">
+    <div class="row"><button class="btn p" onclick="saveMaint()">💾 保存する</button></div>
+  </div>
+  <div class="box">
+    <h3>点検整備の一覧</h3>
+    <div class="row" style="margin:0 0 10px">
+      <button class="btn sm" onclick="exportCSV('maint')">📥 CSV書き出し</button>
+      <button class="btn sm" onclick="printForm(3)">🖨 印刷/PDF(様式3)</button>
+    </div>
+    <div id="m_list">${renderMaintList(lastAc)}</div>
+  </div>`;
+  $('m_ac').addEventListener('change', e=>{ $('m_list').innerHTML = renderMaintList(e.target.value); });
+}
+function saveMaint(){
+  if(!$('m_detail').value){ alert('実施内容を入力してください'); return; }
+  if(!$('m_by').value){ alert('実施者を入力してください'); return; }
+  const rec = { id:uid(), acId:$('m_ac').value, date:$('m_date').value, total:$('m_total').value,
+    detail:$('m_detail').value, reason:$('m_reason').value, place:$('m_place').value, by:$('m_by').value, note:$('m_note').value };
+  addPlace(rec.place);
+  DB.maint.push(rec); save(); alert('保存しました'); viewMaint();
+}
+function renderMaintList(acId){
+  const list = DB.maint.filter(r=>r.acId===acId).sort((a,b)=>b.date.localeCompare(a.date));
+  return list.length===0 ? '<div class="empty">この機体の点検整備記録はまだありません</div>' :
+    list.map(r=>`<div class="rec" style="border-left-color:var(--warn)">
+      <div class="t1">${r.date}|総飛行時間 ${esc(r.total)}</div>
+      <div class="t2">${esc(r.detail)}<br>理由: ${esc(r.reason)}|${esc(r.place)}|実施者: ${esc(r.by)}${r.note?'<br>備考: '+esc(r.note):''}</div>
+      <div class="ops"><button class="btn sm r" onclick="delMaint('${r.id}')">削除</button></div>
+    </div>`).join('');
+}
+function delMaint(id){ if(!confirm('この整備記録を削除しますか?')) return; DB.maint=DB.maint.filter(r=>r.id!==id); save(); viewMaint(); }
+
+/* ================= 🗺 エリア確認 ================= */
+function viewMap(){
+  $('main').innerHTML = `
+  <div class="warnbox">⚠ この地図で確認できるのは<b>人口集中地区(DID)</b>(オレンジ〜赤の着色)のみです。空港等周辺・緊急用務空域・小型無人機等飛行禁止法の対象施設などは表示されません。飛行前に必ず<b>DIPS等で最新情報</b>を確認してください。</div>
+  <div id="map"></div>
+  <div class="row">
+    <button class="btn p" onclick="locate()">📍 現在地を表示</button>
+  </div>
+  <div class="maplegend">
+    🟥 着色エリア = 人口集中地区(DID)= 特定飛行(許可が必要)<br>
+    出典: 地理院タイル(標準地図・人口集中地区 令和2年)<br>
+    🔗 <a href="https://maps.gsi.go.jp/#10/35.556250/139.731674/&base=std&ls=std%7Cdid2020&blend=0&disp=11&vs=c1g1j0h0k0l0u0t0z0r0s0m0f1&d=m" target="_blank" style="color:var(--acc)">地理院地図のフル版を開く</a><br>
+    🔗 <a href="https://www.ossportal.dips.mlit.go.jp/portal/top/" target="_blank" style="color:var(--acc)">DIPS 2.0(飛行許可申請・空域情報)</a>
+  </div>`;
+  setTimeout(()=>{
+    mapObj = L.map('map').setView([35.556250,139.731674], 10);
+    L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png',
+      {attribution:'<a href="https://maps.gsi.go.jp/development/ichiran.html">地理院タイル</a>', maxZoom:18}).addTo(mapObj);
+    L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/did2020/{z}/{x}/{y}.png',
+      {opacity:0.55, maxNativeZoom:14, maxZoom:18}).addTo(mapObj);
+    locate(false);
+  }, 60);
+}
+function locate(alertOn=true){
+  if(!navigator.geolocation){ if(alertOn)alert('位置情報を取得できません'); return; }
+  navigator.geolocation.getCurrentPosition(pos=>{
+    const {latitude:la, longitude:lo} = pos.coords;
+    if(mapObj){ mapObj.setView([la,lo], 13); L.marker([la,lo]).addTo(mapObj).bindPopup('現在地').openPopup(); }
+  }, ()=>{ if(alertOn)alert('位置情報を取得できませんでした'); }, {enableHighAccuracy:true, timeout:8000});
+}
+
+/* ================= ⚙️ 機体・設定 ================= */
+function viewSettings(){
+  $('main').innerHTML = `
+  <div class="box">
+    <h3>操縦者の既定値</h3>
+    <label>氏名</label><input id="s_pilot" value="${esc(DB.settings.pilot)}">
+    <label>技能証明書番号</label><input id="s_cert" value="${esc(DB.settings.cert)}">
+    <div class="row"><button class="btn p" onclick="DB.settings.pilot=$('s_pilot').value;DB.settings.cert=$('s_cert').value;save();alert('保存しました')">💾 保存</button></div>
+  </div>
+  <div class="box">
+    <h3>機体マスタ(様式1〜3の機体情報)</h3>
+    <p style="font-size:.75rem;color:var(--sub);margin:0 0 8px">登録記号(JU〜)と製造番号を入れておくと、日誌と出力に自動反映されます。「引き継ぎ時間」には今までの総飛行時間(分)を入れると以後の記録に合算されます。</p>
+    <div id="s_list"></div>
+    <div class="row"><button class="btn g" onclick="editAc(null)">➕ 機体を追加</button></div>
+  </div>
+  <div class="box">
+    <h3>データのバックアップ</h3>
+    <p style="font-size:.75rem;color:var(--sub);margin:0 0 8px">⚠ 記録はこの端末の中だけに保存されています。飛行日誌は法定書類なので、<b>定期的にバックアップを書き出して</b>クラウドやPCに保管してください。機種変更時は書き出したファイルを新しい端末で読み込みます。</p>
+    <div class="row">
+      <button class="btn p" onclick="backup()">📤 バックアップ書き出し</button>
+      <button class="btn w" onclick="$('restoreFile').click()">📥 読み込み(復元)</button>
+    </div>
+    <input type="file" id="restoreFile" accept=".json" style="display:none" onchange="restore(this)">
+  </div>
+  <div class="note">飛行日誌取扱要領(国空無機第236963号)様式1〜3の記載事項に準拠<br>特定飛行では飛行日誌の携行・記載が義務(航空法第132条の89、罰則:10万円以下の罰金)</div>
+  <dialog id="acDlg"></dialog>`;
+  renderAcList();
+}
+function renderAcList(){
+  $('s_list').innerHTML = DB.aircraft.map(a=>`
+    <div class="rec">
+      <div class="t1">${esc(a.name)}</div>
+      <div class="t2">登録記号: ${esc(a.reg)||'<span style="color:var(--ng)">未設定</span>'}|製造番号: ${esc(a.serial)||'未設定'}<br>
+      ${esc(a.kind)}|製造者: ${esc(a.maker)}<br>総飛行時間: <b style="color:var(--warn)">${hm(totalMin(a.id))}</b>(引き継ぎ ${a.offsetMin||0}分 + 記録分)</div>
+      <div class="ops">
+        <button class="btn sm" onclick="editAc('${a.id}')">✏️ 編集</button>
+        <button class="btn sm r" onclick="delAc('${a.id}')">削除</button>
+      </div>
+    </div>`).join('');
+}
+function editAc(id){
+  const a = id ? ac(id) : {id:null, name:'', maker:'', model:'', serial:'', reg:'', kind:'回転翼航空機(マルチローター)', offsetMin:0};
+  const d = $('acDlg');
+  d.innerHTML = `
+    <h3 style="margin:0 0 8px;color:var(--acc)">${id?'機体を編集':'機体を追加'}</h3>
+    <label>機体名(表示用)</label><input id="a_name" value="${esc(a.name)}" placeholder="例: DJI Air 3S">
+    <label>登録記号</label><input id="a_reg" value="${esc(a.reg)}" placeholder="例: JU1234567890AB">
+    <div class="grid2">
+      <div><label>製造者</label><input id="a_maker" value="${esc(a.maker)}"></div>
+      <div><label>型式</label><input id="a_model" value="${esc(a.model)}"></div>
+    </div>
+    <label>製造番号(シリアル)</label><input id="a_serial" value="${esc(a.serial)}">
+    <label>種類</label><select id="a_kind">
+      ${['回転翼航空機(マルチローター)','回転翼航空機(ヘリコプター)','飛行機','その他'].map(k=>`<option ${k===a.kind?'selected':''}>${k}</option>`).join('')}
+    </select>
+    <label>引き継ぎ総飛行時間(分)※既存アプリからの移行用</label><input type="number" id="a_offset" value="${a.offsetMin||0}" min="0">
+    <div class="row">
+      <button class="btn p" onclick="saveAc('${id||''}')">💾 保存</button>
+      <button class="btn" onclick="$('acDlg').close()">キャンセル</button>
+    </div>`;
+  d.showModal();
+}
+function saveAc(id){
+  const rec = { id: id || uid(), name:$('a_name').value, reg:$('a_reg').value.toUpperCase(), maker:$('a_maker').value,
+    model:$('a_model').value, serial:$('a_serial').value, kind:$('a_kind').value, offsetMin: parseInt($('a_offset').value)||0 };
+  if(!rec.name){ alert('機体名を入力してください'); return; }
+  if(id){ const i = DB.aircraft.findIndex(x=>x.id===id); DB.aircraft[i]=rec; } else DB.aircraft.push(rec);
+  save(); $('acDlg').close(); renderAcList();
+}
+function delAc(id){
+  const n = DB.flights.filter(f=>f.acId===id).length;
+  if(!confirm('この機体を削除しますか?' + (n? '\n⚠ この機体の飛行記録'+n+'件も削除されます!' : ''))) return;
+  DB.aircraft = DB.aircraft.filter(a=>a.id!==id);
+  DB.flights = DB.flights.filter(f=>f.acId!==id);
+  DB.inspections = DB.inspections.filter(r=>r.acId!==id);
+  DB.maint = DB.maint.filter(r=>r.acId!==id);
+  save(); renderAcList();
+}
+function backup(){
+  const blob = new Blob([JSON.stringify(DB,null,1)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = '飛行日誌バックアップ_' + today() + '.json';
+  a.click();
+}
+function restore(input){
+  const f = input.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = () => {
+    try{
+      const d = JSON.parse(r.result);
+      if(!d.aircraft || !d.flights) throw 0;
+      if(!confirm('現在のデータをこのバックアップで置き換えます。よろしいですか?')) return;
+      DB = d; save(); alert('復元しました'); viewSettings();
+    }catch(e){ alert('ファイルを読み込めませんでした(飛行日誌のバックアップファイルを選んでください)'); }
+  };
+  r.readAsText(f);
+}
+
+/* ================= 出力(CSV・印刷) ================= */
+function csvEsc(v){ v=String(v??''); return '"'+v.replace(/"/g,'""')+'"'; }
+function dl(name, text){
+  const blob = new Blob(['﻿'+text], {type:'text/csv'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; a.click();
+}
+function acHead(a){ return [a?a.reg:'', a?a.kind:'', a?a.model:'', a?a.maker:'', a?a.serial:'']; }
+function exportCSV(kind){
+  if(kind==='flights'){
+    const rows = [['登録記号','種類','型式','製造者','製造番号','飛行年月日','飛行させた者の氏名','技能証明書番号','飛行の目的','特定飛行の別','経路','離陸場所','離陸時刻','着陸場所','着陸時刻','飛行時間(分)','総飛行時間(分)','総飛行時間(時:分)','飛行の安全に影響のあった事項','不具合発生年月日','不具合事項','処置年月日','処置その他','確認者']];
+    DB.flights.slice().sort((a,b)=>(a.date+a.off).localeCompare(b.date+b.off)).forEach(f=>{
+      const a=ac(f.acId);
+      rows.push([...acHead(a), f.date, f.pilot, f.cert, f.purpose, f.tokutei, f.route, f.from, f.off, f.to, f.on, f.dur, f.totalAfter, hm(f.totalAfter||0), f.safety, f.sqDate, f.squawk, f.axDate, f.action, f.confirm]);
+    });
+    dl('飛行記録_様式1_'+today()+'.csv', rows.map(r=>r.map(csvEsc).join(',')).join('\r\n'));
+  } else if(kind==='inspections'){
+    const rows = [['登録記号','実施年月日','実施場所','実施者',...INSP_ITEMS.map(i=>i[0]),'特記事項']];
+    DB.inspections.slice().sort((a,b)=>a.date.localeCompare(b.date)).forEach(r=>{
+      const a=ac(r.acId);
+      rows.push([a?a.reg:'', r.date, r.place, r.by, ...r.results.map(x=>x.result), r.note]);
+    });
+    dl('日常点検記録_様式2_'+today()+'.csv', rows.map(r=>r.map(csvEsc).join(',')).join('\r\n'));
+  } else {
+    const rows = [['登録記号','実施年月日','総飛行時間','点検・修理・改造及び整備の内容','実施理由','実施場所','実施者','備考']];
+    DB.maint.slice().sort((a,b)=>a.date.localeCompare(b.date)).forEach(r=>{
+      const a=ac(r.acId);
+      rows.push([a?a.reg:'', r.date, r.total, r.detail, r.reason, r.place, r.by, r.note]);
+    });
+    dl('点検整備記録_様式3_'+today()+'.csv', rows.map(r=>r.map(csvEsc).join(',')).join('\r\n'));
+  }
+}
+function printForm(no){
+  const acId = no===1 ? $('f_ac').value : no===2 ? $('i_ac').value : $('m_ac').value;
+  const a = ac(acId);
+  const head = `<p class="hd">無人航空機の登録記号 REGISTRATION ID OF UAS: <b>${esc(a?a.reg:'')}</b>
+   | 種類: ${esc(a?a.kind:'')} | 型式: ${esc(a?a.model:'')} | 製造者: ${esc(a?a.maker:'')} | 製造番号: ${esc(a?a.serial:'')}</p>`;
+  let title='', body='';
+  if(no===1){
+    title='無人航空機の飛行記録(様式1)JOURNEY LOG OF UAS';
+    const list = DB.flights.filter(f=>f.acId===acId).sort((x,y)=>(x.date+x.off).localeCompare(y.date+y.off));
+    body = `<table><tr><th>飛行年月日</th><th>飛行させた者の氏名</th><th>飛行概要</th><th>離陸場所</th><th>着陸場所</th><th>離陸時刻</th><th>着陸時刻</th><th>飛行時間</th><th>総飛行時間</th><th>飛行の安全に影響のあった事項</th><th>記事(不具合・処置・確認者)</th></tr>` +
+      list.map(f=>`<tr><td>${f.date}</td><td>${esc(f.pilot)}${f.cert?'<br><small>'+esc(f.cert)+'</small>':''}</td><td>${esc(f.purpose)}/${esc(f.tokutei)}${f.route?'<br>'+esc(f.route):''}</td><td>${esc(f.from)}</td><td>${esc(f.to)}</td><td>${f.off}</td><td>${f.on}</td><td>${f.dur}分</td><td>${hm(f.totalAfter||0)}</td><td>${esc(f.safety)}</td><td>${f.squawk? esc(f.sqDate)+' '+esc(f.squawk)+' / 処置:'+esc(f.axDate)+' '+esc(f.action)+' / 確認:'+esc(f.confirm) : ''}</td></tr>`).join('') + '</table>';
+  } else if(no===2){
+    title='無人航空機の日常点検記録(様式2)DAILY INSPECTION RECORD OF UAS';
+    const list = DB.inspections.filter(r=>r.acId===acId).sort((x,y)=>x.date.localeCompare(y.date));
+    body = `<table><tr><th>実施年月日</th><th>実施場所</th><th>実施者</th>${INSP_ITEMS.map(i=>`<th>${i[0]}</th>`).join('')}<th>特記事項</th></tr>` +
+      list.map(r=>`<tr><td>${r.date}</td><td>${esc(r.place)}</td><td>${esc(r.by)}</td>${r.results.map(x=>`<td>${x.result}</td>`).join('')}<td>${esc(r.note)}</td></tr>`).join('') + '</table>';
+  } else {
+    title='無人航空機の点検整備記録(様式3)INSPECTION AND MAINTENANCE RECORD OF UAS';
+    const list = DB.maint.filter(r=>r.acId===acId).sort((x,y)=>x.date.localeCompare(y.date));
+    body = `<table><tr><th>実施年月日</th><th>総飛行時間</th><th>点検、修理、改造及び整備の内容</th><th>実施理由</th><th>実施場所</th><th>実施者</th><th>備考</th></tr>` +
+      list.map(r=>`<tr><td>${r.date}</td><td>${esc(r.total)}</td><td>${esc(r.detail)}</td><td>${esc(r.reason)}</td><td>${esc(r.place)}</td><td>${esc(r.by)}</td><td>${esc(r.note)}</td></tr>`).join('') + '</table>';
+  }
+  const w = window.open('', '_blank');
+  w.document.write(`<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><title>${title}</title>
+  <style>body{font-family:"Hiragino Mincho ProN","Yu Mincho",serif;margin:14mm;color:#000}
+  h1{font-size:14pt;text-align:center;margin:0 0 8px} .hd{font-size:9pt;border:1px solid #000;padding:5px 8px}
+  table{border-collapse:collapse;width:100%;font-size:8pt;margin-top:6px} th,td{border:1px solid #000;padding:3px 5px;vertical-align:top}
+  th{background:#eee} @page{size:A4 landscape;margin:10mm}</style></head>
+  <body><h1>${title}</h1>${head}${body}
+  <p style="font-size:8pt">出力日: ${today()}|飛行日誌取扱要領 様式準拠(電磁的記録)</p>
+  <script>window.onload=()=>window.print()<\/script></body></html>`);
+  w.document.close();
+}
+
+setMode(0);
+</script>
+</body>
+</html>
