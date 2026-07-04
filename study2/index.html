@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>一等無人航空機 学科試験対策</title>
+<title>二等無人航空機 学科試験対策</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{font-family:'Hiragino Kaku Gothic ProN','Meiryo','Yu Gothic',sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;-webkit-text-size-adjust:100%}
@@ -110,12 +110,17 @@ header .sub{font-size:.7rem;color:#475569;margin-top:2px}
 .review-item .ya{font-size:.77rem;color:#fca5a5;margin-bottom:3px}
 .review-item .ca{font-size:.77rem;color:#86efac}
 .review-item .rtag{font-size:.66rem;color:#60a5fa;margin-bottom:6px}
+
+/* 二等テーマ(グリーン) */
+header{border-bottom-color:#16a34a!important}
+header h1{color:#4ade80!important}
+.section-title{color:#4ade80!important}
 </style>
 </head>
 <body>
 <header>
   <div>
-    <h1>一等無人航空機 学科対策</h1>
+    <h1>二等無人航空機 学科対策</h1>
     <div class="sub">教則 令和7年2月第4版準拠 ・ 三肢択一</div>
   </div>
   <span class="badge">v3.0</span>
@@ -141,8 +146,8 @@ header .sub{font-size:.7rem;color:#475569;margin-top:2px}
     <div class="mock-card" onclick="startMock()">
       <div class="icon">📝</div>
       <h3>本番モード（模擬試験）</h3>
-      <p>一等学科試験と同じ条件で挑戦。CBT本番の感覚をつかみましょう。</p>
-      <div class="mock-spec"><span>70問</span><span>75分</span><span>三肢択一</span><span>合格90%</span></div>
+      <p>二等学科試験と同じ条件で挑戦。CBT本番の感覚をつかみましょう。</p>
+      <div class="mock-spec"><span>50問</span><span>30分</span><span>三肢択一</span><span>合格80%</span></div>
     </div>
 
     <p class="section-title">🔥 弱点克服</p>
@@ -162,7 +167,7 @@ header .sub{font-size:.7rem;color:#475569;margin-top:2px}
       <button class="btn btn-secondary" style="padding:6px 11px;font-size:.76rem" onclick="quitQuiz()">← 中断</button>
       <div class="q-progress-bar"><div class="q-progress-fill" id="progressFill"></div></div>
       <span class="q-count" id="qCount">1/1</span>
-      <span class="timer" id="timer" style="display:none">75:00</span>
+      <span class="timer" id="timer" style="display:none">30:00</span>
     </div>
     <div class="q-card">
       <span class="q-tag" id="qCatTag"></span>
@@ -203,7 +208,7 @@ header .sub{font-size:.7rem;color:#475569;margin-top:2px}
     </div>
   </div>
 
-  <div id="screen-formulas" class="screen"><div class="formula-list" id="formulaList"></div></div>
+  <div id="screen-formulas" class="screen"><p style="font-size:.78rem;color:#64748b;margin-bottom:12px">※本格的な計算問題は主に一等で出題されます。二等は考え方だけ押さえておけば十分です。</p><div class="formula-list" id="formulaList"></div></div>
 
   <div id="screen-cheat" class="screen">
     <p style="font-size:.78rem;color:#64748b;margin-bottom:12px">間違えやすいポイント・暗記すべき数値をまとめました。試験直前の見直しに。</p>
@@ -262,24 +267,6 @@ const Q = [
 {id:'s16',cat:'機体システム',tag:'🛸 システム',text:'リチウムポリマーバッテリーが膨らんでいる場合の対応を選びなさい。',choices:['可燃性ガス発生の可能性があるため早めに交換する','そのまま使い続ける','冷蔵庫で冷やして使う'],answer:0,hint:'膨張＝内部で何が起きているか。',steps:[{t:'対応',b:'膨張は<strong>可燃性ガス</strong>発生の可能性→<strong>早めに交換</strong>。'}],ans:'可燃性ガス発生の可能性があるため早めに交換する'},
 {id:'s17',cat:'機体システム',tag:'🛸 システム',text:'冬季のリチウムポリマーバッテリーの特性として正しいものを選びなさい。',choices:['気温低下で放電能力が下がり飛行時間が半減することがある','気温が低いほど飛行時間が延びる','気温の影響を受けない'],answer:0,hint:'低温時の挙動です。',steps:[{t:'低温時',b:'放電能力が極端に低下し<strong>飛行時間が半減</strong>することがある。'}],ans:'気温低下で放電能力が下がり飛行時間が半減することがある'},
 
-{id:'c_p1',cat:'仕事率計算',tag:'⚙️ 計算',text:'仕事率5W、回転角速度6500rpm、機体重量0.9kgの回転翼にペイロード0.3kgを搭載し、7800rpmに上げた場合の仕事率は？（空気密度は無関係）',given:'5W・0.9kg・6500rpm → +0.3kg・7800rpm',choices:['7W','8W','9W'],answer:1,hint:'(搭載後重量×rpm)÷(搭載前重量×rpm)を元の仕事率にかけます。',steps:[{t:'公式',b:'仕事率比=(搭載後重量×rpm)÷(搭載前重量×rpm)'},{t:'搭載前',b:'',c:'0.9×6500=5850'},{t:'搭載後',b:'1.2kg',c:'1.2×7800=9360'},{t:'比率',b:'',c:'9360÷5850=1.6'},{t:'答え',b:'',c:'5×1.6=8W'}],ans:'8W'},
-{id:'c_p2',cat:'仕事率計算',tag:'⚙️ 計算',text:'仕事率4W、7200rpm、0.8kgの回転翼にペイロード0.3kgを搭載し9600rpmに上げた場合の仕事率は？',given:'4W・0.8kg・7200rpm → +0.3kg・9600rpm',choices:['6W','7W','7.32W'],answer:2,hint:'搭載前0.8×7200、搭載後1.1×9600',steps:[{t:'搭載前',b:'',c:'0.8×7200=5760'},{t:'搭載後',b:'1.1kg',c:'1.1×9600=10560'},{t:'比率',b:'',c:'10560÷5760≒1.833'},{t:'答え',b:'',c:'4×1.833≒7.32W'}],ans:'7.32W'},
-{id:'c_p3',cat:'仕事率計算',tag:'⚙️ 計算',text:'仕事率3W、5000rpm、1.5kgの回転翼にペイロード0.5kgを搭載し8000rpmに上げた場合の仕事率は？',given:'3W・1.5kg・5000rpm → +0.5kg・8000rpm',choices:['5W','6.39W','8W'],answer:1,hint:'搭載前1.5×5000、搭載後2.0×8000',steps:[{t:'搭載前',b:'',c:'1.5×5000=7500'},{t:'搭載後',b:'2.0kg',c:'2.0×8000=16000'},{t:'比率',b:'',c:'16000÷7500≒2.133'},{t:'答え',b:'',c:'3×2.133≒6.39W'}],ans:'6.39W'},
-{id:'c_p4',cat:'仕事率計算',tag:'⚙️ 計算',text:'仕事率10W、3100rpm、1.2kgのヘリにペイロード0.8kgを搭載し3900rpmに上げた場合の仕事率は？',given:'10W・1.2kg・3100rpm → +0.8kg・3900rpm',choices:['15W','20W','22W'],answer:1,hint:'搭載前1.2×3100、搭載後2.0×3900',steps:[{t:'搭載前',b:'',c:'1.2×3100=3720'},{t:'搭載後',b:'2.0kg',c:'2.0×3900=7440'},{t:'比率',b:'',c:'7440÷3720=2.0'},{t:'答え',b:'',c:'10×2.0=20W'}],ans:'20W'},
-{id:'c_p5',cat:'仕事率計算',tag:'⚙️ 計算',text:'仕事率6W、4000rpm、1.0kgのマルチローターにペイロード0.5kgを搭載し6000rpmに上げた場合の仕事率は？',given:'6W・1.0kg・4000rpm → +0.5kg・6000rpm',choices:['12W','13.5W','15W'],answer:1,hint:'搭載前1.0×4000、搭載後1.5×6000',steps:[{t:'搭載前',b:'',c:'1.0×4000=4000'},{t:'搭載後',b:'1.5kg',c:'1.5×6000=9000'},{t:'比率',b:'',c:'9000÷4000=2.25'},{t:'答え',b:'',c:'6×2.25=13.5W'}],ans:'13.5W'},
-{id:'c_t1',cat:'旋回半径計算',tag:'✈️ 計算',text:'飛行速度70m/s、バンク角20°で定常旋回した時の旋回半径は？（tan20°=0.36、g=9.8）',given:'V=70　tan20°=0.36　g=9.8',choices:['約1200m','約1389m','約1500m'],answer:1,hint:'r=V²÷(g×tanφ)、70²=4900',steps:[{t:'公式',b:'r=V²÷(g×tanφ)'},{t:'計算',b:'',c:'4900÷(9.8×0.36)=4900÷3.528≒1389m'}],ans:'約1389m'},
-{id:'c_t2',cat:'旋回半径計算',tag:'✈️ 計算',text:'飛行速度23m/s、バンク角20°で定常旋回した時の旋回半径は？（tan20°=0.36、g=9.8）',given:'V=23　tan20°=0.36　g=9.8',choices:['約100m','約150m','約200m'],answer:1,hint:'23²=529',steps:[{t:'計算',b:'',c:'529÷3.528≒150m'}],ans:'約150m'},
-{id:'c_t3',cat:'旋回半径計算',tag:'✈️ 計算',text:'飛行速度30m/s、バンク角20°で定常旋回した時の旋回半径は？（tan20°=0.36、g=9.8）',given:'V=30　tan20°=0.36　g=9.8',choices:['約200m','約255m','約300m'],answer:1,hint:'30²=900',steps:[{t:'計算',b:'',c:'900÷3.528≒255m'}],ans:'約255m'},
-{id:'c_t4',cat:'旋回半径計算',tag:'✈️ 計算',text:'飛行速度50m/s、バンク角20°で定常旋回した時の旋回半径は？（tan20°=0.36、g=9.8）',given:'V=50　tan20°=0.36　g=9.8',choices:['約600m','約714m','約800m'],answer:1,hint:'50²=2500',steps:[{t:'計算',b:'',c:'2500÷3.528≒708≒714m'}],ans:'約714m'},
-{id:'c_t5',cat:'旋回半径計算',tag:'✈️ 計算',text:'飛行速度10m/s、バンク角20°で定常旋回した時の旋回半径は？（tan20°=0.36、g=9.8）',given:'V=10　tan20°=0.36　g=9.8',choices:['約28m','約40m','約55m'],answer:0,hint:'10²=100',steps:[{t:'計算',b:'',c:'100÷3.528≒28m'}],ans:'約28m'},
-{id:'c_g1',cat:'滑空距離計算',tag:'📐 計算',text:'高さ1,000m、滑空角γ=15°（tan15°=0.268）の滑空距離は？',given:'h=1000m　tanγ=0.268',choices:['約2,800m','約3,730m','約4,500m'],answer:1,hint:'d=h÷tanγ',steps:[{t:'公式',b:'d=h÷tanγ（=h×揚抗比）'},{t:'計算',b:'',c:'1000÷0.268≒3730m'}],ans:'約3,730m'},
-{id:'c_g2',cat:'滑空距離計算',tag:'📐 計算',text:'高さ500m、揚抗比15の滑空距離は？',given:'h=500m　揚抗比=15',choices:['5,000m','7,500m','9,000m'],answer:1,hint:'d=h×揚抗比',steps:[{t:'計算',b:'',c:'500×15=7500m'}],ans:'7,500m'},
-{id:'c_f1',cat:'フレネルゾーン',tag:'📡 計算',text:'2.4GHz、距離1,000mのフレネルゾーン半径の60%の値は？（光速3×10⁸）',given:'f=2.4GHz　D=1000m',choices:['約2.5m','約3.3m','約4.5m'],answer:1,hint:'λ=0.125、R=√(0.125×D/4)、×0.6',steps:[{t:'波長',b:'',c:'λ=3×10⁸÷2.4×10⁹=0.125m'},{t:'半径R',b:'',c:'√(0.125×250)=√31.25≒5.59m'},{t:'60%',b:'',c:'5.59×0.6≒3.3m'}],ans:'約3.3m'},
-{id:'c_f2',cat:'フレネルゾーン',tag:'📡 計算',text:'2.4GHz、距離2,000mのフレネルゾーン半径の60%の値は？',given:'f=2.4GHz　D=2000m',choices:['約4.0m','約4.7m','約5.5m'],answer:1,hint:'λ=0.125、R=√(0.125×500)',steps:[{t:'R',b:'',c:'√(0.125×500)=√62.5≒7.90m'},{t:'60%',b:'',c:'7.90×0.6≒4.7m'}],ans:'約4.7m'},
-{id:'c_f3',cat:'フレネルゾーン',tag:'📡 計算',text:'2.4GHz、距離2,800mのフレネルゾーン半径の60%の値は？',given:'f=2.4GHz　D=2800m',choices:['約4.5m','約5.6m','約6.5m'],answer:1,hint:'R=√(0.125×700)',steps:[{t:'R',b:'',c:'√(0.125×700)=√87.5≒9.35m'},{t:'60%',b:'',c:'9.35×0.6≒5.6m'}],ans:'約5.6m'},
-{id:'c_f4',cat:'フレネルゾーン',tag:'📡 計算',text:'2.4GHz、距離8,600mのフレネルゾーン半径の60%の値は？',given:'f=2.4GHz　D=8600m',choices:['約8.5m','約9.8m','約11m'],answer:1,hint:'R=√(0.125×2150)',steps:[{t:'R',b:'',c:'√(0.125×2150)=√268.75≒16.39m'},{t:'60%',b:'',c:'16.39×0.6≒9.8m'}],ans:'約9.8m'},
-{id:'c_a1',cat:'高度と速度',tag:'🌡️ 計算',text:'高度500m(空気密度1.17)で20m/sの飛行機が、高度3,000m(空気密度0.91)で水平定常飛行するのに必要な速度は？',given:'ρ₁=1.17 V₁=20　ρ₂=0.91',choices:['約20m/s','約22.6m/s','約25m/s'],answer:1,hint:'V₂=V₁×√(ρ₁÷ρ₂)',steps:[{t:'原理',b:'揚力L∝ρV²=一定'},{t:'ρ比',b:'',c:'1.17÷0.91≒1.286'},{t:'√',b:'',c:'√1.286≒1.134'},{t:'速度',b:'',c:'20×1.134≒22.6m/s'}],ans:'約22.6m/s'},
-{id:'c_x1',cat:'高度と速度',tag:'🌡️ 計算',text:'高度20mを10m/sで飛行する無人航空機が揚力を失い落下した場合の水平到達距離は？（g=9.8、空気抵抗無視）',given:'v=10m/s　h=20m　g=9.8',choices:['約20m','約30m','約45m'],answer:0,hint:'x=v×√(2h/g)',steps:[{t:'公式',b:'x=v×√(2h/g)'},{t:'計算',b:'',c:'10×√(40/9.8)=10×2.02≒20m'}],ans:'約20m'},
 
 {id:'o1',cat:'操縦・運航',tag:'🚁 操縦・運航',text:'マルチローターの離陸直後〜対地高度1m程度で起こりやすい現象を選びなさい。',choices:['地面効果','ボルテックス・リング・ステート','マルチパス'],answer:0,hint:'低高度での吹きおろし気流の現象です。',steps:[{t:'地面効果',b:'吹きおろし気流が<strong>地面付近で滞留</strong>し揚力が増す。離陸直後〜約1m。'}],ans:'地面効果'},
 {id:'o2',cat:'操縦・運航',tag:'🚁 操縦・運航',text:'CRMの説明として正しいものを選びなさい。',choices:['利用可能な全リソース（人・機材・情報）を活用してヒューマンエラーに対処する概念','操縦技術のみを向上させる訓練','機体整備のマニュアル'],answer:0,hint:'技量だけでは防げないエラーへの対処です。',steps:[{t:'CRM',b:'操縦技量だけでなく<strong>全リソースを活用</strong>。TEM（脅威とエラーの管理）を用いる。'},{t:'5スキル',b:'状況認識・意思決定・ワークロード管理・チームワーク・コミュニケーション'}],ans:'利用可能な全リソース（人・機材・情報）を活用してヒューマンエラーに対処する概念'},
@@ -348,7 +335,6 @@ const Q = [
 {id:'e11',cat:'頻出論点',tag:'🎯 頻出論点',text:'飛行機（無人航空機）の運航の特徴として正しいものを選びなさい。',choices:['回転翼機より最小旋回半径が大きく、上空待機はサークルを描く旋回で行う','ホバリングで上空待機できる','追い風で離着陸するのが原則'],answer:0,hint:'飛行機はホバリングできません。',steps:[{t:'飛行機の運航',b:'回転翼より<strong>広い離着陸エリア・最小旋回半径が大きい</strong>。ホバリング不可→上空待機は<strong>サークル旋回</strong>。離着陸は<strong>向かい風</strong>が原則（追い風は失速の危険）。'}],ans:'回転翼機より最小旋回半径が大きく、上空待機はサークルを描く旋回で行う'},
 {id:'e12',cat:'頻出論点',tag:'🎯 頻出論点',text:'ヘリコプターでボルテックス・リング・ステートを予防する方法を選びなさい。',choices:['前進させながら降下する','垂直に素早く降下する','降下を止めてホバリングし続ける'],answer:0,hint:'垂直降下が原因なので、それを避けます。',steps:[{t:'予防',b:'垂直降下・降下を伴う低速前進で発生。<strong>前進させながら降下</strong>すると予防に有効。'},{t:'関連',b:'ヘリは前進しながら上昇すると必要パワーを削減できる（垂直上昇は避ける）。'}],ans:'前進させながら降下する'},
 {id:'e13',cat:'頻出論点',tag:'🎯 頻出論点',text:'オートローテーション機構の説明として正しいものを選びなさい。',choices:['動力が停止しても軟着陸が可能（入るには必要な操作・高度範囲・速度範囲がある）','動力停止時は必ず墜落する','上昇専用の機構である'],answer:0,hint:'エンジン停止時の安全機構です。',steps:[{t:'オートローテーション',b:'動力停止でも<strong>軟着陸が可能</strong>。ただし入るには必要な操作・飛行高度範囲・速度範囲がある。'}],ans:'動力が停止しても軟着陸が可能（入るには必要な操作・高度範囲・速度範囲がある）'},
-{id:'e14',cat:'頻出論点',tag:'🎯 頻出論点',text:'リスク評価の6ステップの最初（Step1）として正しいものを選びなさい。',choices:['運航計画（CONOPS）の説明','地上リスクの把握','隣接エリアの考慮'],answer:0,hint:'まず何を明確にするかです。',steps:[{t:'6ステップ',b:'①<strong>運航計画(CONOPS)</strong>→②地上リスク→③空中リスク→④安全目標(SAIL→OSO)→⑤隣接エリア→⑥評価結果への対応（飛行マニュアル作成）'}],ans:'運航計画（CONOPS）の説明'},
 {id:'e15',cat:'頻出論点',tag:'🎯 頻出論点',text:'「戦略的対策」と「戦術的対策」の違いとして正しいものを選びなさい。',choices:['戦略的＝飛行前に遭遇確率を下げる対策、戦術的＝飛行中に衝突を回避する対策','戦略的＝飛行中、戦術的＝飛行前','両者は同じ意味'],answer:0,hint:'「前もって」か「その場で」かです。',steps:[{t:'区別',b:'<strong>戦略的＝飛行前</strong>（時間帯・境界の限定で遭遇確率を下げる）。<strong>戦術的＝飛行中</strong>（航空機との衝突を回避）。'}],ans:'戦略的＝飛行前に遭遇確率を下げる対策、戦術的＝飛行中に衝突を回避する対策'},
 {id:'e16',cat:'頻出論点',tag:'🎯 頻出論点',text:'緊急時の対応の基本方針として正しいものを選びなさい。',choices:['離陸地点に戻すことを前提とせず、速やかに近くの安全な無人地帯へ不時着させる','必ず離陸地点まで戻す','その場で上昇させて待機する'],answer:0,hint:'戻すことにこだわらないのがポイントです。',steps:[{t:'緊急時',b:'離陸地点に戻すことを前提とせず<strong>速やかに近くの安全な無人地帯へ不時着</strong>。フェールセーフ機能で自動帰還・自動着陸する機体もある。'}],ans:'離陸地点に戻すことを前提とせず、速やかに近くの安全な無人地帯へ不時着させる'},
 {id:'e17',cat:'頻出論点',tag:'🎯 頻出論点',text:'マルチパスによって一時的に操縦不能になった場合の対処を選びなさい。',choices:['送信機をできるだけ高い位置に持ち、アンテナの向きを変えて復帰を試みる','すぐに電源を切る','その場で待つしかない'],answer:0,hint:'電波の受信状態を改善する操作です。',steps:[{t:'マルチパス対処',b:'反射・屈折で複数経路を通り一時的に操縦不能に。<strong>送信機を高く持ちアンテナの向きを変えて</strong>復帰を試みる。'}],ans:'送信機をできるだけ高い位置に持ち、アンテナの向きを変えて復帰を試みる'},
@@ -397,13 +383,6 @@ const Q = [
 {id:'n22',cat:'頻出論点',tag:'🎯 緊急・電波',text:'電波の性質について正しいものを選びなさい。',choices:['波長が短い（周波数が高い）ほど直進性が高くなる','波長が長い（周波数が低い）ほど直進性が高くなる','直進性は波長に関係しない'],answer:0,hint:'2.4GHz（短い波長）は直進性が高いですね。',steps:[{t:'直進性',b:'波長が<strong>短い（周波数が高い）ほど直進性が高い</strong>。波長が長いほど回折しやすく直進性は弱いが減衰しにくい。'}],ans:'波長が短い（周波数が高い）ほど直進性が高くなる'},
 {id:'n23',cat:'頻出論点',tag:'🎯 緊急・電波',text:'マルチパスで一時的に操縦不能になった場合の対処として正しいものを選びなさい。',choices:['送信機をできるだけ高い位置に持ち、アンテナの向きを変えて操縦の復帰を試みる','送信機を再起動する','その場で電源を切って待つ'],answer:0,hint:'受信状態を良くする操作です。',steps:[{t:'対処',b:'<strong>送信機を高く持ち、アンテナの向きを変えて</strong>復帰を試みる。再起動ではない。'}],ans:'送信機をできるだけ高い位置に持ち、アンテナの向きを変えて操縦の復帰を試みる'},
 
-{id:'cp1',cat:'推力パワー計算',tag:'⚡ 計算',text:'回転角速度300rpm・仕事率9Wのヘリコプターの回転角速度を360rpmに上げた場合の仕事率は？（機体重量・空気密度は一定）',given:'P ∝ ω³（回転数だけ変化）',choices:['15.55W','14.44W','13.33W'],answer:0,hint:'回転数だけ変わるときはパワーは「比率の3乗」。',steps:[{t:'公式',b:'<strong>新P = 元P ×（新rpm÷元rpm）³</strong>'},{t:'比率',b:'',c:'360÷300 = 1.2'},{t:'計算',b:'',c:'9 × 1.2³ = 9×1.728 ≒ 15.55W'}],ans:'15.55W'},
-{id:'cp2',cat:'推力パワー計算',tag:'⚡ 計算',text:'消費パワー4W・回転角速度200rpmの回転翼機の回転角速度を300rpmにした場合の消費パワーは？（機体重量・空気密度は一定）',given:'P ∝ ω³',choices:['13.5W','12.5W','14.5W'],answer:0,hint:'(300/200)³をかけます。',steps:[{t:'比率',b:'',c:'300÷200 = 1.5'},{t:'計算',b:'',c:'4 × 1.5³ = 4×3.375 = 13.5W'}],ans:'13.5W'},
-{id:'cp3',cat:'推力パワー計算',tag:'⚡ 計算',text:'消費パワー5W・回転角速度250rpmの回転翼機の回転角速度を350rpmにした場合の消費パワーは？（機体重量・空気密度は一定）',given:'P ∝ ω³',choices:['13.72W','13.82W','13.92W'],answer:0,hint:'(350/250)³をかけます。',steps:[{t:'比率',b:'',c:'350÷250 = 1.4'},{t:'計算',b:'',c:'5 × 1.4³ = 5×2.744 ≒ 13.72W'}],ans:'13.72W'},
-{id:'xd1',cat:'高度と速度',tag:'🌡️ 計算',text:'高度500mを飛行速度30m/sで飛行中に揚力を失い落下した場合の水平到達距離は？（g=9.8、空気抵抗無視）',given:'x = v×√(2h/g)　h=500 v=30',choices:['約303m','約284m','約269m'],answer:0,hint:'x=v×√(2h/g)',steps:[{t:'公式',b:'<strong>x = v × √(2h/g)</strong>'},{t:'計算',b:'',c:'30×√(1000/9.8)=30×10.1 ≒ 303m'}],ans:'約303m'},
-{id:'xd2',cat:'高度と速度',tag:'🌡️ 計算',text:'高度100mを飛行速度25m/sで飛行中に揚力を失い落下した場合の水平到達距離は？（g=9.8、空気抵抗無視）',given:'h=100 v=25',choices:['約113m','約121m','約102m'],answer:0,hint:'x=v×√(2h/g)',steps:[{t:'計算',b:'',c:'25×√(200/9.8)=25×4.52 ≒ 113m'}],ans:'約113m'},
-{id:'xd3',cat:'高度と速度',tag:'🌡️ 計算',text:'高度149mを飛行速度33m/sで飛行中に揚力を失い落下した場合の水平到達距離は？（g=9.8、空気抵抗無視）',given:'h=149 v=33',choices:['約182m','約195m','約207m'],answer:0,hint:'x=v×√(2h/g)',steps:[{t:'計算',b:'',c:'33×√(298/9.8)=33×5.51 ≒ 182m'}],ans:'約182m'},
-{id:'fr1',cat:'フレネルゾーン',tag:'📡 計算',text:'2.4GHz、距離1,600mのフレネルゾーン半径の60%の値は？（光速3×10⁸）',given:'f=2.4GHz　D=1600m',choices:['約4.23m','約4.65m','約5.02m'],answer:0,hint:'λ=0.125、R=√(0.125×400)、×0.6',steps:[{t:'R',b:'',c:'√(0.125×400)=√50≒7.07m'},{t:'60%',b:'',c:'7.07×0.6≒4.23m'}],ans:'約4.23m'},
 
 {id:'en1',cat:'頻出論点',tag:'🎯 制度・法規',text:'2.4GHz帯・5.7GHz帯の無人移動体画像伝送システムのバックアップ回線として使われる周波数帯を選びなさい。',choices:['169MHz帯','920MHz帯','73MHz帯'],answer:0,hint:'バックアップ専用の周波数帯です。',steps:[{t:'169MHz帯',b:'2.4GHz・5.7GHzの画像伝送システムの<strong>バックアップ回線</strong>として使用。'}],ans:'169MHz帯'},
 {id:'en2',cat:'頻出論点',tag:'🎯 機体・原理',text:'磁気キャリブレーションについて正しいものを選びなさい。',choices:['飛行させる場所により地磁気の方向が異なるため、場所が変われば都度行う必要がある','1日の飛行であれば違う場所でも再実施は不要','一度行えば二度と不要'],answer:0,hint:'地磁気は場所ごとに違います。',steps:[{t:'磁気キャリブレーション',b:'その場所の地磁気を検出して方位を取得。<strong>場所により地磁気が異なるので、場所が変われば都度実施</strong>が必要。'}],ans:'飛行させる場所により地磁気の方向が異なるため、場所が変われば都度行う必要がある'},
@@ -420,7 +399,6 @@ const Q = [
 {id:'en13',cat:'頻出論点',tag:'🎯 制度・法規',text:'回転翼航空機（ヘリコプター）の離陸後の上昇について正しいものを選びなさい。',choices:['離陸後は速やかに地面効果外まで上昇し、機体状況の確認は地面効果外で行う','離陸後はゆっくりと地面効果外まで上昇する','地面効果範囲内で機体状況を確認する'],answer:0,hint:'地面効果範囲は不安定なので素早く抜けます。',steps:[{t:'上昇',b:'離陸後は<strong>速やかに地面効果外</strong>まで上昇。機体確認は地面効果外で。'}],ans:'離陸後は速やかに地面効果外まで上昇し、機体状況の確認は地面効果外で行う'},
 {id:'en14',cat:'頻出論点',tag:'🎯 制度・法規',text:'夜間飛行のリスク軽減策として正しいものを選びなさい。',choices:['機体の向きを視認できる灯火を装備し、灯火が認識できる範囲の飛行に限定する','機体を塗色し、塗色が認識できる範囲の飛行に限定する','操縦の妨げになるので補助者の助言は行わない'],answer:0,hint:'夜間は塗色では見えません。何で見せる？',steps:[{t:'夜間飛行',b:'夜間は<strong>灯火</strong>で機体の向きを視認（塗色ではない）。灯火が認識できる範囲に限定。補助者は必要な助言を行う。'}],ans:'機体の向きを視認できる灯火を装備し、灯火が認識できる範囲の飛行に限定する'},
 {id:'en15',cat:'頻出論点',tag:'🎯 制度・法規',text:'目視外飛行で補助者を配置する場合について正しいものを選びなさい。',choices:['補助者にも機体の特性を十分理解させておく必要がある','補助者には機体の特性まで理解させる必要はない','補助者は機体を見る必要はない'],answer:0,hint:'補助者も機体を理解しておくべきです。',steps:[{t:'補助者',b:'双眼鏡等で飛行経路全体を監視し操縦者へ助言。<strong>補助者にも機体特性を理解させる</strong>。'}],ans:'補助者にも機体の特性を十分理解させておく必要がある'},
-{id:'en16',cat:'頻出論点',tag:'🎯 制度・法規',text:'リスク評価の「ロバスト性」の説明として正しいものを選びなさい。',choices:['安全性の水準と保証の水準の双方を勘案し、低い方に準じて評価する','無人航空機の運航に伴うリスク・ハザード・脅威・安全確保措置の一般的な枠組みである','航空機との遭遇確率を表す指標である'],answer:0,hint:'「枠組み」は総合リスクモデルの定義です。',steps:[{t:'ロバスト性',b:'<strong>安全性の水準</strong>（安全性の増加）と<strong>保証の水準</strong>（確実な実施の証明）の双方で評価。低・中・高があり<strong>低い方に準じて</strong>評価。'},{t:'区別',b:'「リスク・ハザード・脅威・安全確保措置の枠組み」は<strong>総合リスクモデル</strong>の定義。'}],ans:'安全性の水準と保証の水準の双方を勘案し、低い方に準じて評価する'},
 {id:'ea1',cat:'頻出論点',tag:'🎯 機体・原理',text:'ピッチ角を調整する操作として正しいものを選びなさい。',choices:['エレベーター','エルロン','ラダー（ヨー）'],answer:0,hint:'ピッチ＝機首の上げ下げ（前後）です。',steps:[{t:'操作と軸',b:'<strong>エレベーター＝ピッチ</strong>（前後/機首上下）／エルロン＝ロール（左右）／ラダー＝ヨー（機首旋回）。'}],ans:'エレベーター'},
 {id:'ea2',cat:'頻出論点',tag:'🎯 機体・原理',text:'GNSSとGPSの関係として正しいものを選びなさい。',choices:['GPSはGNSSの一部であり、GNSSは各国の衛星測位システムの総称である','GNSSはアメリカが単独で運用するシステムである','GNSSは日本が単独で運用するシステムである'],answer:0,hint:'GNSSは総称、GPSはその一つ。',steps:[{t:'関係',b:'<strong>GNSS＝総称</strong>（GPS(米)・GLONASS(露)・Galileo(欧)・QZSSみちびき(日)等）。<strong>GPSはその一部</strong>。特定の国のシステムではない。'}],ans:'GPSはGNSSの一部であり、GNSSは各国の衛星測位システムの総称である'},
 {id:'ea3',cat:'頻出論点',tag:'🎯 機体・原理',text:'地磁気センサが正常な方位を示さない原因となる「角」を選びなさい。',choices:['偏角（磁北と地図の北のずれ）','迎角','横滑り角'],answer:0,hint:'磁北と真北のずれです。',steps:[{t:'偏角',b:'磁力線が示す<strong>磁北</strong>と地図の北（真北）の<strong>ずれ＝偏角</strong>。迎角・横滑り角は飛行中の空気の流入角度。'}],ans:'偏角（磁北と地図の北のずれ）'},
@@ -428,18 +406,10 @@ const Q = [
 {id:'ea5',cat:'頻出論点',tag:'🎯 制度・法規',text:'小型無人機等飛行禁止法の対象施設に「当たらない」ものを選びなさい。',choices:['政令指定都市の市役所','在日米軍施設','原子力事業所'],answer:0,hint:'国の重要施設・防衛・空港・原子力などが対象。',steps:[{t:'対象施設',b:'国会議事堂・首相官邸・皇居等／危機管理行政機関／対象政党事務所／外国公館／<strong>自衛隊・在日米軍施設</strong>／対象空港／<strong>原子力事業所</strong>。'},{t:'答え',b:'政令指定都市の市役所は対象外。'}],ans:'政令指定都市の市役所'},
 {id:'ea6',cat:'頻出論点',tag:'🎯 機体・原理',text:'プロペラ（ローター）交換時に留意すべきことを選びなさい。',choices:['モーターの回転方向（CW/CCW）に合った向き・形状で取り付ける','回転方向は気にせず取り付けてよい','大きさだけ合っていれば向きは自由'],answer:0,hint:'CW/CCWに合った形状があります。',steps:[{t:'交換時',b:'ローターは回転方向（時計回りCW／反時計回りCCW）に<strong>合わせた形状</strong>。モーターの回転方向に合わせて取り付ける。'}],ans:'モーターの回転方向（CW/CCW）に合った向き・形状で取り付ける'},
 {id:'ea7',cat:'頻出論点',tag:'🎯 機体・原理',text:'ブラシレスモーターの特性として誤っているものを選びなさい。',choices:['寿命が短い','メンテナンスが容易','静音である'],answer:0,hint:'ブラシレスは長持ちします。',steps:[{t:'特性',b:'メンテナンス容易・静音・<strong>長寿命</strong>。「寿命が短い」は誤り。'}],ans:'寿命が短い'},
-{id:'ea8',cat:'頻出論点',tag:'🎯 制度・法規',text:'リスク評価の6ステップで、運航計画（CONOPS）の説明の「次」に行うステップを選びなさい。',choices:['地上リスクの把握','隣接エリアの考慮','評価結果への対応'],answer:0,hint:'順番：CONOPS→地上→空中→安全目標→隣接→対応。',steps:[{t:'順番',b:'①運航計画(CONOPS)→②<strong>地上リスク</strong>→③空中リスク→④安全目標(SAIL→OSO)→⑤隣接エリア→⑥評価結果への対応。'}],ans:'地上リスクの把握'},
 {id:'ea9',cat:'頻出論点',tag:'🎯 特定飛行',text:'「危険物の輸送」の規制対象（危険物に該当）となるものを選びなさい。',choices:['販売・輸送する商品としての火薬類や高圧ガス','無人航空機の飛行のために必要なバッテリー','安全装置のパラシュートを開傘するための火薬類'],answer:0,hint:'「飛行のため」の物は対象外です。',steps:[{t:'対象',b:'輸送する貨物・商品としての火薬類・高圧ガス等＝危険物。'},{t:'対象外',b:'<strong>飛行のための</strong>燃料・電池、パラシュート開傘用火薬、業務機器の電池は危険物の対象外。'}],ans:'販売・輸送する商品としての火薬類や高圧ガス'},
 {id:'ea10',cat:'頻出論点',tag:'🎯 緊急・電波',text:'極超短波（300MHz〜3GHz）の特徴として正しいものを選びなさい。',choices:['超短波より直進性が強いが、多少の山や建物の陰には回り込んで伝わる','超短波より直進性が弱く減衰しにくい','水中通信に最も適している'],answer:0,hint:'無人機の制御によく使われる帯域です。',steps:[{t:'極超短波(UHF)',b:'波長10cm〜1m。超短波より<strong>直進性が強い</strong>が多少回り込む。情報量大・小型アンテナで通信可。無人機制御・携帯等。'},{t:'超短波(VHF)',b:'波長1〜10m（30〜300MHz）。'}],ans:'超短波より直進性が強いが、多少の山や建物の陰には回り込んで伝わる'},
 {id:'ea11',cat:'頻出論点',tag:'🎯 制度・法規',text:'CRMの考え方として正しいものを選びなさい。',choices:['補助者や関係者と相互確認し、全ての利用可能なリソースを活用して安全を確保する','操縦者は操縦に専念し、監視等は別スタッフに任せきりにする','操縦技量だけを高めればヒューマンエラーは完全になくせる'],answer:0,hint:'CRMは「連携」と「全リソース活用」。',steps:[{t:'CRM',b:'操縦技量だけでは限界→<strong>全リソース（人・機材・情報）を活用し相互確認・コミュニケーション</strong>でエラーに対処。'}],ans:'補助者や関係者と相互確認し、全ての利用可能なリソースを活用して安全を確保する'},
-{id:'cp4',cat:'推力パワー計算',tag:'⚡ 計算',text:'回転角速度300rpm・仕事率9.4Wの回転翼機の回転角速度を370rpmに上げた場合の仕事率は？（機体重量・空気密度は一定）',given:'P ∝ ω³',choices:['約17.6W','約14.3W','約11.6W'],answer:0,hint:'パワーは「比率の3乗」。370÷300=1.233',steps:[{t:'比率',b:'',c:'370÷300 ≒ 1.233'},{t:'計算',b:'',c:'9.4 × 1.233³ = 9.4×1.876 ≒ 17.6W'}],ans:'約17.6W'},
 
-{id:'pw1',cat:'推力パワー計算',tag:'⚡ 計算',text:'回転翼の回転角速度ωを2倍にすると、推力Tは何倍になるか。（空気密度は一定）',given:'関係式：T ∝ ρ × ω²',choices:['2倍','4倍','8倍'],answer:1,hint:'推力は回転角速度の2乗に比例します。',steps:[{t:'公式',b:'<strong>T ∝ ω²</strong>（密度一定）'},{t:'計算',b:'',c:'2² = 4倍'}],ans:'4倍'},
-{id:'pw2',cat:'推力パワー計算',tag:'⚡ 計算',text:'回転翼の回転角速度ωを2倍にすると、消費パワー（仕事率）Pは何倍になるか。（空気密度は一定）',given:'関係式：P ∝ ρ × ω³',choices:['4倍','6倍','8倍'],answer:2,hint:'パワーは回転角速度の3乗に比例します。',steps:[{t:'公式',b:'<strong>P ∝ ω³</strong>（密度一定）'},{t:'計算',b:'',c:'2³ = 8倍'}],ans:'8倍'},
-{id:'pw3',cat:'推力パワー計算',tag:'⚡ 計算',text:'ペイロード搭載で機体重量が2倍になった。同じ高度で飛行（ホバリング）するために必要な回転角速度ωは何倍になるか。',given:'ホバリング：W＝T ∝ ω²',choices:['約1.4倍','約2倍','約2.8倍'],answer:0,hint:'重量＝推力∝ω²なので、ωは重量のルートに比例します。',steps:[{t:'考え方',b:'ホバリングでは W＝T ∝ ω²。重量2倍→推力も2倍必要→<strong>ω ∝ √重量</strong>'},{t:'計算',b:'',c:'√2 ≒ 1.4倍'}],ans:'約1.4倍'},
-{id:'pw4',cat:'推力パワー計算',tag:'⚡ 計算',text:'機体重量が2倍になったとき、回転翼の消費パワーは何倍になるか。（高度などの条件は同じ）',given:'W＝T∝ω²、P∝ω³',choices:['約1.4倍','約2.8倍','約4倍'],answer:1,hint:'まずωが√2倍、パワーはその3乗です。',steps:[{t:'ステップ1',b:'重量2倍→ω＝√2倍（pw3と同じ）'},{t:'ステップ2',b:'P∝ω³なので',c:'(√2)³ = 2√2 ≒ 2.8倍'}],ans:'約2.8倍'},
-{id:'pw5',cat:'推力パワー計算',tag:'⚡ 計算',text:'空気密度が0.74倍になる高度で、同じ機体重量を飛ばす（ホバリング）のに必要な回転角速度は何倍になるか。',given:'T∝ρω²（推力T＝重量で一定）',choices:['約1.16倍','約0.86倍','約1.35倍'],answer:0,hint:'推力一定で密度が下がるので、ωを上げて補います。ω∝√(1/ρ)。',steps:[{t:'考え方',b:'推力T一定。T∝ρω²より<strong>ω ∝ √(1/ρ)</strong>'},{t:'計算',b:'',c:'√(1/0.74) ≒ √1.35 ≒ 1.16倍'}],ans:'約1.16倍'},
-{id:'pw6',cat:'推力パワー計算',tag:'⚡ 計算',text:'飛行機の機体重量が2倍になったとき、同じ迎角で水平飛行するのに必要な飛行速度は何倍になるか。',given:'W＝L∝ρV²',choices:['約1.4倍','約2倍','約2.8倍'],answer:0,hint:'揚力∝速度の2乗なので、速度は重量のルートに比例します。',steps:[{t:'考え方',b:'W＝L∝ρV²。重量2倍→<strong>V ∝ √重量</strong>'},{t:'計算',b:'',c:'√2 ≒ 1.4倍（失速速度も同様に1.4倍になる）'}],ans:'約1.4倍'},
 ];
 
 const FORMULAS=[
@@ -466,14 +436,14 @@ const CHEATSHEET=[
 
 const CATEGORIES={};Q.forEach(q=>{CATEGORIES[q.cat]=CATEGORIES[q.cat]||[];CATEGORIES[q.cat].push(q)});
 CATEGORIES['全問ランダム']=[...Q];
-const CAT_META={'頻出論点':{icon:'🎯',desc:'本試験レベルの頻出論点を集中対策'},'推力パワー計算':{icon:'⚡',desc:'√や3乗が出る難しい版の計算'},'規則':{icon:'⚖️',desc:'航空法・飛行禁止法・電波法'},'機体システム':{icon:'🛸',desc:'機体特性・センサ・電波'},'仕事率計算':{icon:'⚙️',desc:'ペイロード搭載後の仕事率'},'旋回半径計算':{icon:'✈️',desc:'バンク角・速度から旋回半径'},'滑空距離計算':{icon:'📐',desc:'高さ・滑空角から滑空距離'},'フレネルゾーン':{icon:'📡',desc:'通信・アンテナ高さ'},'高度と速度':{icon:'🌡️',desc:'空気密度・落下距離'},'操縦・運航':{icon:'🚁',desc:'操縦知識・申請・緊急時'},'気象・リスク':{icon:'🌤️',desc:'気象・リスク評価'},'全問ランダム':{icon:'🎯',desc:'全分野からランダム'}};
+const CAT_META={'頻出論点':{icon:'🎯',desc:'本試験レベルの頻出論点を集中対策'},'規則':{icon:'⚖️',desc:'航空法・飛行禁止法・電波法'},'機体システム':{icon:'🛸',desc:'機体特性・センサ・電波'},'操縦・運航':{icon:'🚁',desc:'操縦知識・申請・緊急時'},'気象・リスク':{icon:'🌤️',desc:'気象・リスク評価'},'全問ランダム':{icon:'🎯',desc:'全分野からランダム'}};
 
 let curQ=[],curOrders=[],idx=0,correct=0,answered=false,curCat='',wrongAns=[],stats={total:0,correct:0};
 let isMock=false,mockAnswers=[],timerId=null,timeLeft=0;
 
 // 弱点リスト（localStorageに永続化）
-function getWrongSet(){try{return new Set(JSON.parse(localStorage.getItem('droneWrong')||'[]'))}catch(e){return new Set()}}
-function saveWrongSet(s){try{localStorage.setItem('droneWrong',JSON.stringify([...s]))}catch(e){}}
+function getWrongSet(){try{return new Set(JSON.parse(localStorage.getItem('droneWrong2')||'[]'))}catch(e){return new Set()}}
+function saveWrongSet(s){try{localStorage.setItem('droneWrong2',JSON.stringify([...s]))}catch(e){}}
 function markWrong(id){const s=getWrongSet();s.add(id);saveWrongSet(s)}
 function markCorrect(id){const s=getWrongSet();if(s.delete(id))saveWrongSet(s)}
 function updateWeakCard(){const n=getWrongSet().size;const el=document.getElementById('weakCount');if(el)el.textContent=n+'問'}
@@ -518,12 +488,12 @@ function retryQuiz(){if(curCat==='__mock__')startMock();else if(curCat==='__weak
 
 function startMock(){
   isMock=true;curCat='__mock__';
-  curQ=shuffle(Q).slice(0,Math.min(70,Q.length));
+  curQ=shuffle(Q).slice(0,Math.min(50,Q.length));
   curOrders=curQ.map(q=>shuffle(q.choices.map((_,i)=>i)));
   mockAnswers=new Array(curQ.length).fill(null);idx=0;correct=0;
   document.getElementById('hintBtn').style.display='none';
   document.getElementById('timer').style.display='inline-block';
-  timeLeft=75*60;updateTimer();
+  timeLeft=30*60;updateTimer();
   if(timerId)clearInterval(timerId);
   timerId=setInterval(()=>{timeLeft--;updateTimer();if(timeLeft<=0){clearInterval(timerId);submitMock()}},1000);
   showTab('quiz');renderQ();
@@ -616,14 +586,14 @@ function showResult(mock){
   document.getElementById('rWrong').textContent=total-correct;
   const badge=document.getElementById('passBadge'),note=document.getElementById('passLineNote');
   if(mock){
-    const pass=pct>=90;
+    const pass=pct>=80;
     badge.style.display='inline-block';badge.className='pass-badge '+(pass?'pass':'fail');
     badge.textContent=pass?'合格':'不合格';
-    note.textContent='本番の合格ライン：正答率90%程度';
-    document.getElementById('resultMsg').textContent=pass?'おめでとうございます！本番でもこの調子で。':'あと'+(Math.ceil(total*0.9)-correct)+'問で合格ラインです。間違いを復習しましょう。';
+    note.textContent='本番の合格ライン：正答率80%程度';
+    document.getElementById('resultMsg').textContent=pass?'おめでとうございます！本番でもこの調子で。':'あと'+(Math.ceil(total*0.8)-correct)+'問で合格ラインです。間違いを復習しましょう。';
   }else{
     badge.style.display='none';note.textContent='';
-    document.getElementById('resultMsg').textContent=pct>=90?'素晴らしい！合格レベルです。':pct>=70?'あと一息！苦手分野を復習しましょう。':'公式集と解説で基礎を固めましょう。';
+    document.getElementById('resultMsg').textContent=pct>=80?'素晴らしい！合格レベルです。':pct>=60?'あと一息！苦手分野を復習しましょう。':'公式集と解説で基礎を固めましょう。';
   }
   document.getElementById('reviewBtn').style.display=wrongAns.length>0?'inline-block':'none';
   document.getElementById('screen-quiz').classList.remove('active');
