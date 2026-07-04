@@ -157,13 +157,16 @@ header h1{color:#4ade80!important}
     <p class="section-title">🔥 弱点克服</p>
     <div class="mock-card" style="background:linear-gradient(135deg,#3a1e1e,#2a1212);border-color:#ef4444" onclick="startWeak()">
       <div class="icon">🔥</div>
-      <h3>弱点モード（間違えた問題だけ）</h3>
-      <p>これまで間違えた問題だけを繰り返し練習。正解すると弱点リストから外れます。</p>
+      <h3>弱点モード（忘却曲線で再出題）</h3>
+      <p>間違えた問題を1日後→3日後→7日後に再出題。3回連続で正解すると卒業します。</p>
       <div class="mock-spec"><span id="weakCount" style="background:#7f1d1d66;color:#fecaca">0問</span></div>
     </div>
 
     <p class="section-title">📊 分野別成績</p>
     <div id="catStats" style="background:#1e293b;border:1px solid #334155;border-radius:12px;padding:14px 16px"></div>
+
+    <p class="section-title">📈 模擬試験の推移</p>
+    <div id="mockHist" style="background:#1e293b;border:1px solid #334155;border-radius:12px;padding:14px 16px"></div>
 
     <p class="section-title">📚 分野別練習（解説つき）</p>
     <div class="cat-grid" id="catGrid"></div>
@@ -439,7 +442,7 @@ const Q = [
 {id:'en6',cat:'頻出論点',tag:'🎯 機体・原理',text:'ボルテックス・リング・ステートについて正しいものを選びなさい。',choices:['垂直降下時に揚力を失う危険現象で、水平移動を合わせて予防する','降下時に積極的に活用して機体をコントロールする','上昇時に揚力を増やす有益な現象である'],answer:0,hint:'これは「避けるべき」現象です。',steps:[{t:'ボルテックスRS',b:'垂直降下時に<strong>急激に揚力を失う危険現象</strong>。<strong>水平移動を合わせて予防</strong>。「活用する」は誤り。'}],ans:'垂直降下時に揚力を失う危険現象で、水平移動を合わせて予防する'},
 {id:'en7',cat:'頻出論点',tag:'🎯 制度・法規',text:'天気図で気温を摂氏の数字で表す位置を選びなさい。',choices:['天気記号の左上','天気記号の右上','天気記号の右下'],answer:0,hint:'気温の位置を覚えましょう。',steps:[{t:'気温',b:'天気記号の<strong>左上</strong>に摂氏の度数で表す。'}],ans:'天気記号の左上'},
 {id:'en8',cat:'頻出論点',tag:'🎯 制度・法規',text:'飛行日誌の記載について正しいものを選びなさい。',choices:['特定飛行に該当しない飛行でも、飛行日誌に記載することが望ましい','特定飛行でない場合は記載しない方がよい','リスク対応が不十分でも記録は不要である'],answer:0,hint:'記録は基本的に「望ましい」。',steps:[{t:'飛行日誌',b:'特定飛行は記載義務。<strong>特定飛行でなくても記載が望ましい</strong>。リスク対応が不十分と感じたら今後に備えた記録も望ましい。'}],ans:'特定飛行に該当しない飛行でも、飛行日誌に記載することが望ましい'},
-{id:'en9',cat:'頻出論点',tag:'🎯 制度・法規',text:'高度150m以上の空域の飛行許可・承認申請の提出先として正しいものを選びなさい。',choices:['東京航空局長または大阪航空局長','東京空港事務所長または関西空港事務所長','市区町村役場'],answer:0,hint:'地方航空局長が原則の宛先です。',steps:[{t:'提出先',b:'飛行許可・承認申請は原則<strong>東京航空局長または大阪航空局長</strong>（地方航空局長）宛て。'}],ans:'東京航空局長または大阪航空局長'},
+{id:'en9',cat:'頻出論点',tag:'🎯 制度・法規',text:'高度150m以上の空域の飛行許可・承認申請の提出先として正しいものを選びなさい。',choices:['東京航空局長または大阪航空局長','東京空港事務所長または関西空港事務所長','市区町村役場'],answer:1,hint:'空港等周辺・150m以上は「空域を管轄する」機関宛てです。',steps:[{t:'提出先の区分',b:'<strong>空港等周辺・150m以上</strong>の空域の飛行＝当該空域を管轄する<strong>空港事務所長（東京空港事務所長または関西空港事務所長）</strong>宛て。'},{t:'それ以外',b:'DID・夜間・目視外・30m未満・催し・危険物・物件投下＝<strong>東京航空局長または大阪航空局長</strong>宛て。管制空域に関わる飛行だけ空港事務所という区分を覚える。'}],ans:'東京空港事務所長または関西空港事務所長'},
 {id:'en10',cat:'頻出論点',tag:'🎯 制度・法規',text:'カテゴリーIII飛行の経路設定で正しいものを選びなさい。',choices:['ジオフェンス機能の設定に、当日の他の航空機との空域調整結果が反映されていることを確認する','緊急着陸場所があれば人が立ち入らない経路設定は不要','異常時対応として目視可能な補助者を複数配置すればよい'],answer:0,hint:'ジオフェンスと空域調整がキーワード。',steps:[{t:'経路設定',b:'可能な限り第三者の立入りが少ない経路を設定し、ジオフェンスで逸脱防止。<strong>当日の空域調整結果がジオフェンスに反映されているか確認</strong>。'}],ans:'ジオフェンス機能の設定に、当日の他の航空機との空域調整結果が反映されていることを確認する'},
 {id:'en11',cat:'頻出論点',tag:'🎯 制度・法規',text:'カテゴリーIII飛行であらかじめ手順を決めておく緊急時対応に「含まれない」ものを選びなさい。',choices:['飛行前の点検手順の明確化','墜落時の安全優先順位の明確化','GNSSによる位置安定機能を用いない飛行訓練'],answer:0,hint:'「緊急時対応」の項目かどうか。',steps:[{t:'緊急時対応の項目',b:'GNSS不使用飛行訓練・緊急着陸地点確保・フェールセーフが動作しない距離の把握・墜落時の安全優先順位・発火時の消火方法・緊急連絡網。'},{t:'含まれない',b:'「飛行前の点検手順」は緊急時対応の項目ではない。'}],ans:'飛行前の点検手順の明確化'},
 {id:'en12',cat:'頻出論点',tag:'🎯 制度・法規',text:'回転翼航空機（マルチローター）の運航計画の例として正しいものを選びなさい。',choices:['プロペラガード等の安全装備がない機体の場合、立入制限できる場所の選定または補助者配置を検討する','プロペラガード等の安全装備を必ず装備しなければならない','安全装備があれば緊急着陸地点の選定は不要'],answer:0,hint:'「必ず装備」とは書かれていません。',steps:[{t:'ポイント',b:'プロペラガード等が<strong>ない機体の場合</strong>に、第三者の立入制限できる場所の選定・補助者配置を検討。「必ず装備」は誤り。'}],ans:'プロペラガード等の安全装備がない機体の場合、立入制限できる場所の選定または補助者配置を検討する'},
@@ -488,12 +491,28 @@ const CAT_META={'頻出論点':{icon:'🎯',desc:'本試験レベルの頻出論
 let curQ=[],curOrders=[],idx=0,correct=0,answered=false,curCat='',wrongAns=[],stats={total:0,correct:0};
 let isMock=false,mockAnswers=[],timerId=null,timeLeft=0;
 
-// 弱点リスト（localStorageに永続化）
+// 弱点リスト（localStorageに永続化）+ 間隔反復（1日→3日→7日で卒業）
 function getWrongSet(){try{return new Set(JSON.parse(localStorage.getItem('droneWrong2')||'[]'))}catch(e){return new Set()}}
 function saveWrongSet(s){try{localStorage.setItem('droneWrong2',JSON.stringify([...s]))}catch(e){}}
-function markWrong(id){const s=getWrongSet();s.add(id);saveWrongSet(s)}
-function markCorrect(id){const s=getWrongSet();if(s.delete(id))saveWrongSet(s)}
-function updateWeakCard(){const n=getWrongSet().size;const el=document.getElementById('weakCount');if(el)el.textContent=n+'問'}
+function getSRS(){try{return JSON.parse(localStorage.getItem('droneSRS2')||'{}')}catch(e){return {}}}
+function saveSRS(r){try{localStorage.setItem('droneSRS2',JSON.stringify(r))}catch(e){}}
+function addDays(n){const d=new Date();d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)}
+function markWrong(id){const s=getWrongSet();s.add(id);saveWrongSet(s);const r=getSRS();r[id]={due:addDays(0),iv:1};saveSRS(r)}
+function markCorrect(id){
+  const s=getWrongSet();if(!s.has(id))return;
+  const r=getSRS();const it=r[id]||{iv:1};
+  if(curCat==='__weak__'){
+    // 弱点モードで正解→次の復習間隔へ（1日→3日→7日→卒業）
+    if(it.iv>=7){s.delete(id);delete r[id]}
+    else{it.iv=(it.iv===1?3:7);it.due=addDays(it.iv);r[id]=it}
+  }else{s.delete(id);delete r[id]}
+  saveWrongSet(s);saveSRS(r);
+}
+function dueWrongIds(){
+  const s=getWrongSet(),r=getSRS(),t=addDays(0);
+  return [...s].filter(id=>!r[id]||(r[id].due||t)<=t);
+}
+function updateWeakCard(){const el=document.getElementById('weakCount');if(el)el.textContent='今日の復習 '+dueWrongIds().length+'問 / 全'+getWrongSet().size+'問'}
 
 // 分野別成績（localStorageに永続化）
 function getCatStats(){try{return JSON.parse(localStorage.getItem('droneCatStats2')||'{}')}catch(e){return {}}}
@@ -509,12 +528,29 @@ function buildCatStats(){
   }).join('');
 }
 
+// 模擬試験の成績推移
+const MOCK_PASS=80;
+function buildMockHist(){
+  const el=document.getElementById('mockHist');if(!el)return;
+  let h=[];try{h=JSON.parse(localStorage.getItem('droneMockHist2')||'[]')}catch(e){}
+  if(h.length===0){el.innerHTML='<p style="font-size:.78rem;color:#64748b;margin:0">模擬試験を受けると、成績の推移がここにグラフで表示されます。</p>';return}
+  const shown=h.slice(-10),off=h.length-shown.length;
+  el.innerHTML=shown.map((x,i)=>`<div class="catstat-item"><div class="catstat-top"><span>${off+i+1}回目（${x.d}）</span><span>${x.p}%${x.p>=MOCK_PASS?' 🎉合格圏':''}</span></div><div class="catstat-bar"><div class="catstat-fill" style="width:${x.p}%"></div></div></div>`).join('');
+}
+
 // 教則の参考章（解説の逆引き用）
 const CHAPTER_MAP={'規則':'教則 第3章（無人航空機に関する規則）','機体システム':'教則 第4章（無人航空機のシステム）','操縦・運航':'教則 第5章（操縦者及び運航体制）','気象・リスク':'教則 第6章（運航上のリスク管理）','仕事率計算':'教則 第4章 4.3（飛行原理と飛行性能）','旋回半径計算':'教則 第4章 4.3（飛行原理と飛行性能）','滑空距離計算':'教則 第4章 4.3（飛行原理と飛行性能）','フレネルゾーン':'教則 第4章 4.5（機体以外の要素技術）','高度と速度':'教則 第4章 4.3（飛行原理と飛行性能）','推力パワー計算':'教則 第4章 4.3（飛行原理と飛行性能）'};
 const TAG_CHAPTER={'🎯 制度・法規':'教則 第3章（無人航空機に関する規則）','🎯 特定飛行':'教則 第3章（無人航空機に関する規則）','🎯 カテゴリー':'教則 第3章（無人航空機に関する規則）','🎯 機体・原理':'教則 第4章（無人航空機のシステム）','🎯 センサ・電池':'教則 第4章（無人航空機のシステム）','🎯 緊急・電波':'教則 第2章・第4章'};
 function startWeak(){
-  const s=getWrongSet();const pool=Q.filter(q=>s.has(q.id));
-  if(pool.length===0){alert('弱点問題はまだありません。\n練習や模擬試験で問題を解くと、間違えた問題がここに溜まります。');return}
+  const s=getWrongSet();const due=dueWrongIds();const pool=Q.filter(q=>due.includes(q.id));
+  if(pool.length===0){
+    if(s.size>0){
+      const r=getSRS();const next=[...s].map(id=>(r[id]&&r[id].due)||addDays(0)).sort()[0];
+      alert('今日の復習分は完了しています🎉\n弱点リストには全'+s.size+'問。忘却曲線に合わせて次回('+next+')に再出題されます。');
+    }else{
+      alert('弱点問題はまだありません。\n練習や模擬試験で問題を解くと、間違えた問題がここに溜まります。');
+    }
+    return}
   isMock=false;curCat='__weak__';curQ=shuffle(pool);curOrders=curQ.map(q=>shuffle(q.choices.map((_,i)=>i)));idx=0;correct=0;
   document.getElementById('timer').style.display='none';
   document.getElementById('hintBtn').style.display='inline-block';
@@ -644,6 +680,7 @@ function submitMock(){
   if(timerId){clearInterval(timerId);timerId=null}
   correct=0;wrongAns=[];
   curQ.forEach((q,i)=>{const ok=mockAnswers[i]===q.answer;recordCatStat(q.cat,ok);if(ok){correct++;markCorrect(q.id)}else{wrongAns.push({q,yourIdx:mockAnswers[i]});markWrong(q.id)}});
+  try{const h=JSON.parse(localStorage.getItem('droneMockHist2')||'[]');h.push({d:new Date().toISOString().slice(0,10),p:Math.round(correct/curQ.length*100)});localStorage.setItem('droneMockHist2',JSON.stringify(h.slice(-30)))}catch(e){}
   showResult(true);
 }
 function showResult(mock){
@@ -703,11 +740,11 @@ function showTab(name){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('screen-'+name).classList.add('active');
-  if(name==='home'){updateWeakCard();buildCatStats()}
+  if(name==='home'){updateWeakCard();buildCatStats();buildMockHist()}
   const map={home:0,cheat:1,review:2};
   if(map[name]!==undefined)document.querySelectorAll('.tab')[map[name]]?.classList.add('active');
 }
-buildHome();buildCheat();updateWeakCard();buildCatStats();
+buildHome();buildCheat();updateWeakCard();buildCatStats();buildMockHist();
 </script>
 </body>
 </html>

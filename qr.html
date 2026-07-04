@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ドローン学習ポータル QRシート(配布・掲示用)</title>
+<style>
+  *{box-sizing:border-box;}
+  body{font-family:"Hiragino Sans","Yu Gothic",sans-serif;margin:0;background:#f1f5f9;color:#1e293b;}
+  .sheet{max-width:800px;margin:0 auto;background:#fff;padding:36px 40px;}
+  h1{text-align:center;font-size:1.5rem;margin:0 0 4px;color:#1d4ed8;}
+  .sub{text-align:center;font-size:.8rem;color:#64748b;margin-bottom:22px;}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .qr{border:2px solid #e2e8f0;border-radius:14px;padding:16px;text-align:center;}
+  .qr.main{grid-column:1/-1;border-color:#1d4ed8;background:#eff6ff;display:flex;align-items:center;gap:20px;text-align:left;}
+  .qr img{width:130px;height:130px;}
+  .qr.main img{width:150px;height:150px;flex:0 0 auto;}
+  .qr h2{font-size:1rem;margin:8px 0 4px;}
+  .qr.main h2{font-size:1.2rem;margin:0 0 6px;}
+  .qr p{font-size:.74rem;color:#64748b;margin:0;line-height:1.6;}
+  .url{font-size:.68rem;color:#94a3b8;word-break:break-all;margin-top:6px;}
+  .foot{text-align:center;font-size:.7rem;color:#94a3b8;margin-top:20px;line-height:1.7;}
+  .printbtn{position:fixed;bottom:16px;right:16px;background:#1d4ed8;color:#fff;border:none;
+    border-radius:24px;padding:13px 22px;font-size:.9rem;font-weight:bold;box-shadow:0 4px 14px rgba(0,0,0,.3);}
+  @media print{ body{background:#fff} .printbtn{display:none} .sheet{padding:10mm} @page{size:A4 portrait;margin:8mm} }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <h1>🚁 ドローン学習ポータル</h1>
+  <p class="sub">スマホでQRコードを読み取り → 開いたページを「ホーム画面に追加」するとアプリとして使えます</p>
+
+  <div class="grid">
+    <div class="qr main">
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https%3A%2F%2Fazp777.github.io%2Fdronestudy1%2F" alt="ポータルQR">
+      <div>
+        <h2>📌 まずはここから:学習ポータル</h2>
+        <p>すべてのアプリの入口です。学科対策(一等・二等)、実地試験シミュレーター、飛行日誌、英語教材へアクセスできます。</p>
+        <div class="url">https://azp777.github.io/dronestudy1/</div>
+      </div>
+    </div>
+    <div class="qr">
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=https%3A%2F%2Fazp777.github.io%2Fdronestudy1%2Fstudy%2F" alt="一等QR">
+      <h2>🥇 一等 学科対策アプリ</h2>
+      <p>208問・模擬試験(70問75分)・弱点復習・分野別成績</p>
+    </div>
+    <div class="qr">
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=https%3A%2F%2Fazp777.github.io%2Fdronestudy1%2Fstudy2%2F" alt="二等QR">
+      <h2>🥈 二等 学科対策アプリ</h2>
+      <p>213問・模擬試験(50問30分)・二等の出題範囲に最適化</p>
+    </div>
+    <div class="qr">
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=https%3A%2F%2Fazp777.github.io%2Fdronestudy1%2Fpractical%2F" alt="実地QR">
+      <h2>🛩️ 実地試験シミュレーター</h2>
+      <p>科目ガイド・減点判定クイズ・口述対策(2026年6月施行の新基準対応)</p>
+    </div>
+    <div class="qr">
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=https%3A%2F%2Fazp777.github.io%2Fdronestudy1%2Flogbook%2F" alt="飛行日誌QR">
+      <h2>📓 飛行日誌</h2>
+      <p>様式1〜3準拠。離着陸ワンタップ記録・総飛行時間自動計算・DIDマップ</p>
+    </div>
+  </div>
+
+  <p class="foot">
+    データはすべて各自のスマートフォン内にのみ保存されます(アカウント登録不要・個人情報の送信なし)<br>
+    出典:国土交通省 教則第4版/実地試験実施基準・細則(令和8年6月5日施行)/飛行日誌取扱要領
+  </p>
+</div>
+<button class="printbtn" onclick="window.print()">🖨 印刷する</button>
+</body>
+</html>

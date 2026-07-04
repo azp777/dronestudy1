@@ -90,11 +90,11 @@ const DEFAULT_DATA = {
   ],
   flights: [], inspections: [], maint: [],
   settings: {pilot:'', cert:''},
-  places: []
+  places: [], reminders: [], lastBackup: null
 };
 let DB = load();
 function load(){
-  try{ const d = JSON.parse(localStorage.getItem('flightLogbook')); if(d && d.aircraft) return d; }catch(e){}
+  try{ const d = JSON.parse(localStorage.getItem('flightLogbook')); if(d && d.aircraft){ d.reminders = d.reminders||[]; return d; } }catch(e){}
   return JSON.parse(JSON.stringify(DEFAULT_DATA));
 }
 function save(){ localStorage.setItem('flightLogbook', JSON.stringify(DB)); }
@@ -153,12 +153,38 @@ function setMode(m){
   else if(m===2) viewMaint();
   else if(m===3) viewMap();
   else viewSettings();
+  renderAlerts();
   window.scrollTo(0,0);
 }
 [0,1,2,3,4].forEach(i=>$('tab'+i).onclick=()=>setMode(i));
 
 function acOptions(sel){
   return DB.aircraft.map(a=>`<option value="${a.id}" ${a.id===sel?'selected':''}>${esc(acLabel(a))}</option>`).join('');
+}
+
+/* ================= 期限アラート・バックアップ警告 ================= */
+function daysUntil(dateStr){
+  return Math.floor((new Date(dateStr) - new Date(today())) / 86400000);
+}
+function renderAlerts(){
+  const alerts = [];
+  (DB.reminders||[]).forEach(r=>{
+    if(!r.date) return;
+    const d = daysUntil(r.date);
+    if(d < 0) alerts.push({c:'#450a0a;border:1px solid var(--ng)', t:'🚨 <b>期限切れ:</b> '+esc(r.label)+'(期限 '+r.date+'・'+(-d)+'日超過)'});
+    else if(d <= 45) alerts.push({c:'#451a03;border:1px solid var(--warn)', t:'⏰ <b>あと'+d+'日:</b> '+esc(r.label)+'(期限 '+r.date+')'});
+  });
+  const recs = DB.flights.length + DB.inspections.length + DB.maint.length;
+  if(recs >= 5){
+    const lb = DB.lastBackup;
+    const over = !lb || daysUntil(lb) <= -30;
+    if(over) alerts.push({c:'#1e1b4b;border:1px solid #818cf8', t:'💾 <b>バックアップ推奨:</b> '+(lb?('最後のバックアップ('+lb+')から30日以上経過しています':'まだ一度もバックアップしていません')+'。「⚙️機体・設定」タブから書き出してください'});
+  }
+  const old = document.getElementById('alertArea'); if(old) old.remove();
+  if(alerts.length === 0) return;
+  const div = document.createElement('div'); div.id = 'alertArea';
+  div.innerHTML = alerts.map(a=>`<div style="background:${a.c};border-radius:11px;padding:9px 13px;font-size:.78rem;line-height:1.6;margin-bottom:8px;color:#f1f5f9">${a.t}</div>`).join('');
+  document.getElementById('main').prepend(div);
 }
 
 /* ================= ✈️ 飛行記録 ================= */
@@ -446,6 +472,19 @@ function viewSettings(){
     <div class="row"><button class="btn g" onclick="editAc(null)">➕ 機体を追加</button></div>
   </div>
   <div class="box">
+    <h3>⏰ 期限リマインダー</h3>
+    <p style="font-size:.75rem;color:var(--sub);margin:0 0 8px">期限の45日前から画面上部にお知らせが表示されます。よく使う項目:</p>
+    <div class="chips">
+      ${['機体登録の更新(3年)','技能証明の更新(3年)','保険の満期','次回定期点検'].map(s=>`<span class="chip" onclick="$('r_label').value='${s}'">${s}</span>`).join('')}
+    </div>
+    <div class="grid2" style="margin-top:8px">
+      <div><label>項目名</label><input id="r_label" placeholder="例: 機体登録の更新(Air 3S)"></div>
+      <div><label>期限日</label><input type="date" id="r_date"></div>
+    </div>
+    <div class="row"><button class="btn g" onclick="addReminder()">➕ リマインダーを追加</button></div>
+    <div id="r_list" style="margin-top:10px"></div>
+  </div>
+  <div class="box">
     <h3>データのバックアップ</h3>
     <p style="font-size:.75rem;color:var(--sub);margin:0 0 8px">⚠ 記録はこの端末の中だけに保存されています。飛行日誌は法定書類なので、<b>定期的にバックアップを書き出して</b>クラウドやPCに保管してください。機種変更時は書き出したファイルを新しい端末で読み込みます。</p>
     <div class="row">
@@ -454,10 +493,32 @@ function viewSettings(){
     </div>
     <input type="file" id="restoreFile" accept=".json" style="display:none" onchange="restore(this)">
   </div>
-  <div class="note">飛行日誌取扱要領(国空無機第236963号)様式1〜3の記載事項に準拠<br>特定飛行では飛行日誌の携行・記載が義務(航空法第132条の89、罰則:10万円以下の罰金)</div>
+  <div class="note">飛行日誌取扱要領(国空無機第236963号)様式1〜3の記載事項に準拠<br>特定飛行では飛行日誌の携行・記載が義務(航空法第132条の89、罰則:10万円以下の罰金)<br>※本アプリは記録補助ツールです。最新の法令・通達は必ず国土交通省の公式情報でご確認ください</div>
   <dialog id="acDlg"></dialog>`;
-  renderAcList();
+  renderAcList(); renderReminders();
 }
+function addReminder(){
+  const label = $('r_label').value, date = $('r_date').value;
+  if(!label || !date){ alert('項目名と期限日を入力してください'); return; }
+  DB.reminders.push({id:uid(), label, date});
+  DB.reminders.sort((a,b)=>a.date.localeCompare(b.date));
+  save(); $('r_label').value=''; $('r_date').value='';
+  renderReminders(); renderAlerts();
+}
+function renderReminders(){
+  const el = $('r_list'); if(!el) return;
+  el.innerHTML = (DB.reminders||[]).length===0 ? '<div class="empty" style="padding:8px 0">リマインダーは未登録です</div>' :
+    DB.reminders.map(r=>{
+      const d = daysUntil(r.date);
+      const col = d<0 ? 'var(--ng)' : d<=45 ? 'var(--warn)' : 'var(--ok)';
+      return `<div class="rec" style="border-left-color:${col}">
+        <div class="t1">${esc(r.label)}</div>
+        <div class="t2">期限: ${r.date}(${d<0? (-d)+'日超過' : 'あと'+d+'日'})</div>
+        <div class="ops"><button class="btn sm r" onclick="delReminder('${r.id}')">削除</button></div>
+      </div>`;
+    }).join('');
+}
+function delReminder(id){ DB.reminders=DB.reminders.filter(r=>r.id!==id); save(); renderReminders(); renderAlerts(); }
 function renderAcList(){
   $('s_list').innerHTML = DB.aircraft.map(a=>`
     <div class="rec">
@@ -509,11 +570,13 @@ function delAc(id){
   save(); renderAcList();
 }
 function backup(){
+  DB.lastBackup = today(); save();
   const blob = new Blob([JSON.stringify(DB,null,1)], {type:'application/json'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
   a.download = '飛行日誌バックアップ_' + today() + '.json';
   a.click();
+  renderAlerts();
 }
 function restore(input){
   const f = input.files[0]; if(!f) return;
