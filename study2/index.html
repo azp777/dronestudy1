@@ -130,8 +130,7 @@ header h1{color:#4ade80!important}
   <div class="tabs">
     <button class="tab active" onclick="showTab('home')">ホーム</button>
     <button class="tab" onclick="showTab('cheat')">要点</button>
-    <button class="tab" onclick="showTab('formulas')">公式</button>
-    <button class="tab" onclick="showTab('review')">復習</button>
+        <button class="tab" onclick="showTab('review')">復習</button>
   </div>
 
   <div id="screen-home" class="screen active">
@@ -208,7 +207,7 @@ header h1{color:#4ade80!important}
     </div>
   </div>
 
-  <div id="screen-formulas" class="screen"><p style="font-size:.78rem;color:#64748b;margin-bottom:12px">※本格的な計算問題は主に一等で出題されます。二等は考え方だけ押さえておけば十分です。</p><div class="formula-list" id="formulaList"></div></div>
+  
 
   <div id="screen-cheat" class="screen">
     <p style="font-size:.78rem;color:#64748b;margin-bottom:12px">間違えやすいポイント・暗記すべき数値をまとめました。試験直前の見直しに。</p>
@@ -636,10 +635,10 @@ function showTab(name){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('screen-'+name).classList.add('active');
   if(name==='home')updateWeakCard();
-  const map={home:0,cheat:1,formulas:2,review:3};
+  const map={home:0,cheat:1,review:2};
   if(map[name]!==undefined)document.querySelectorAll('.tab')[map[name]]?.classList.add('active');
 }
-buildHome();buildFormulas();buildCheat();updateWeakCard();
+buildHome();buildCheat();updateWeakCard();
 </script>
 </body>
 </html>
