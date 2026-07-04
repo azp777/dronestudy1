@@ -40,12 +40,8 @@
   .btns{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;}
   .btns button{border:none;border-radius:8px;padding:8px 12px;font-size:.82rem;background:#334155;color:var(--txt);}
   .btns .play{background:var(--acc);color:#03202f;font-weight:bold;}
-  .btns .recbtn.recording{background:var(--rec);color:#fff;animation:blink 1s infinite;}
-  .btns .myvoice{display:none;background:#7c3aed;color:#fff;}
-  .btns .myvoice.avail{display:inline-block;}
   .btns .said{background:#14532d;color:#bbf7d0;}
   .card.saidok .said{background:var(--ok);color:#04270f;font-weight:bold;}
-  @keyframes blink{50%{opacity:.5;}}
   .hidden-en .en,.hidden-en .kana{filter:blur(6px);}
   .card.revealed .en,.card.revealed .kana{filter:none;}
   .quizhint{display:none;font-size:.75rem;color:var(--ok);margin-top:6px;}
@@ -60,7 +56,7 @@
 <body>
 <header>
   <h1>🚁 ドローン講師 英語フレーズ練習 v2</h1>
-  <p>聞く → 真似る → 録音して聞き比べ → 「✓言えた」で進捗記録</p>
+  <p>聞く → 真似る → 「✓言えた」で進捗記録</p>
   <div class="progressAll" id="progAll"></div>
 </header>
 
@@ -222,33 +218,6 @@ function speak(text, rate){
   speechSynthesis.speak(u);
 }
 
-/* 録音 */
-let mediaStream=null, recorder=null, activeRecCard=null;
-async function toggleRec(card, item, btn, myBtn){
-  if(recorder && recorder.state==='recording'){
-    recorder.stop(); return;
-  }
-  try{
-    if(!mediaStream) mediaStream = await navigator.mediaDevices.getUserMedia({audio:true});
-  }catch(e){
-    alert('マイクを使用できません。\n・ブラウザのマイク許可を確認\n・Netlify等のhttps上で開くと確実に動きます');
-    return;
-  }
-  const chunks=[];
-  recorder = new MediaRecorder(mediaStream);
-  activeRecCard = card;
-  recorder.ondataavailable = e=>chunks.push(e.data);
-  recorder.onstop = ()=>{
-    btn.classList.remove('recording'); btn.textContent='🎤 録音';
-    const blob = new Blob(chunks,{type:recorder.mimeType||'audio/webm'});
-    card._audioUrl && URL.revokeObjectURL(card._audioUrl);
-    card._audioUrl = URL.createObjectURL(blob);
-    myBtn.classList.add('avail');
-  };
-  recorder.start();
-  btn.classList.add('recording'); btn.textContent='⏹ 停止';
-}
-
 function progressOf(cat){
   const items = DATA[cat];
   const n = items.filter(i=>said[keyOf(i)]).length;
@@ -296,17 +265,12 @@ function renderList(){
       '<div class="btns">' +
         '<button class="play">▶ 再生</button>' +
         '<button class="slow">🐢 ゆっくり</button>' +
-        '<button class="recbtn">🎤 録音</button>' +
-        '<button class="myvoice">👤 自分の声</button>' +
         '<button class="said">✓ 言えた</button>' +
       '</div>';
     const playB=c.querySelector('.play'), slowB=c.querySelector('.slow'),
-          recB=c.querySelector('.recbtn'), myB=c.querySelector('.myvoice'),
           saidB=c.querySelector('.said');
     playB.onclick=e=>{e.stopPropagation(); c.classList.add('revealed'); speak(item.en,1);};
     slowB.onclick=e=>{e.stopPropagation(); c.classList.add('revealed'); speak(item.en,0.55);};
-    recB.onclick=e=>{e.stopPropagation(); toggleRec(c,item,recB,myB);};
-    myB.onclick=e=>{e.stopPropagation(); if(c._audioUrl){ new Audio(c._audioUrl).play(); }};
     saidB.onclick=e=>{
       e.stopPropagation();
       said[keyOf(item)] = !said[keyOf(item)];

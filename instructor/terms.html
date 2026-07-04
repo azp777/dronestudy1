@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ドローン英語 用語一覧</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1d4ed8">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
+<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js');}</script>
+
+<style>
+  :root{--bg:#0f172a;--card:#1e293b;--acc:#38bdf8;--acc2:#f59e0b;--txt:#f1f5f9;--sub:#94a3b8;--ok:#22c55e;}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  body{margin:0;font-family:"Hiragino Sans","Yu Gothic",system-ui,sans-serif;background:var(--bg);color:var(--txt);}
+  header{padding:14px;text-align:center;background:linear-gradient(135deg,#0ea5e9,#1d4ed8);}
+  header h1{margin:0;font-size:1.1rem;}
+  header p{margin:4px 0 0;font-size:.72rem;opacity:.85;}
+  .searchbar{position:sticky;top:0;z-index:5;background:#0b1220;padding:10px 12px;display:flex;gap:8px;align-items:center;}
+  .searchbar input{flex:1;background:var(--card);border:1px solid #334155;border-radius:10px;
+    padding:10px 14px;color:var(--txt);font-size:.95rem;outline:none;}
+  .searchbar input:focus{border-color:var(--acc);}
+  .searchbar label{font-size:.75rem;color:var(--sub);display:flex;align-items:center;gap:4px;white-space:nowrap;}
+  main{max-width:640px;margin:0 auto;padding:0 12px 40px;}
+  h2{font-size:.85rem;color:var(--sub);font-weight:normal;border-left:4px solid var(--acc);
+     padding-left:8px;margin:20px 4px 10px;}
+  .term{background:var(--card);border-radius:12px;padding:11px 14px;margin:8px 0;
+        display:flex;align-items:center;gap:10px;border-left:4px solid var(--acc);}
+  .term .body{flex:1;min-width:0;}
+  .jp{font-size:.95rem;font-weight:bold;}
+  .en{color:var(--acc);font-size:.9rem;margin-top:2px;}
+  .kana{color:var(--acc2);font-size:.78rem;margin-top:2px;}
+  .note{color:var(--sub);font-size:.74rem;margin-top:2px;line-height:1.5;}
+  .term button{border:none;border-radius:50%;width:42px;height:42px;flex:0 0 auto;
+    background:var(--acc);color:#03202f;font-size:1rem;}
+  .empty{text-align:center;color:var(--sub);padding:40px 0;font-size:.9rem;display:none;}
+  .count{font-size:.72rem;color:var(--sub);text-align:center;padding:8px 0 0;}
+</style>
+</head>
+<body>
+<header>
+  <h1>📖 ドローン英語 用語一覧</h1>
+  <p>日本語⇔英語 対訳|▶で発音を再生|検索対応</p>
+</header>
+
+<div class="searchbar">
+  <input type="search" id="q" placeholder="🔍 検索(日本語・英語・カナ)">
+  <label><input type="checkbox" id="showKana" checked> カナ</label>
+</div>
+
+<main>
+  <div class="count" id="count"></div>
+  <div id="list"></div>
+  <div class="empty" id="empty">該当する用語がありません</div>
+</main>
+
+<script>
+const TERMS = {
+"🪪 資格・制度": [
+ {jp:"無人航空機(ドローン)", en:"Unmanned Aircraft (UA)", kana:"アンマンド エアクラフト"},
+ {jp:"技能証明(国家ライセンス)", en:"Remote Pilot Certificate", kana:"リモート パイロット サーティフィケート"},
+ {jp:"一等無人航空機操縦士", en:"First-Class Unmanned Aircraft Pilot", kana:"ファーストクラス アンマンド エアクラフト パイロット"},
+ {jp:"二等無人航空機操縦士", en:"Second-Class Unmanned Aircraft Pilot", kana:"セカンドクラス アンマンド エアクラフト パイロット"},
+ {jp:"限定変更(夜間・目視外・25kg)", en:"Removal of limitations", kana:"リムーバル オブ リミテーションズ", note:"rating change とも言う"},
+ {jp:"機体認証", en:"UAS certification", kana:"ユーエーエス サーティフィケーション"},
+ {jp:"型式認証", en:"Type certification", kana:"タイプ サーティフィケーション"},
+ {jp:"登録講習機関(スクール)", en:"Registered Training Organization", kana:"レジスタード トレーニング オーガニゼーション", note:"略して RTO"},
+ {jp:"修了審査", en:"Completion exam", kana:"コンプリーション イグザム", note:"国の実地試験の代わりになる校内審査"},
+ {jp:"指定試験機関", en:"Designated Testing Organization", kana:"デジグネイテッド テスティング オーガニゼーション"},
+ {jp:"学科試験", en:"Knowledge test", kana:"ナレッジ テスト", note:"CBT方式・日本語のみ"},
+ {jp:"実地試験", en:"Practical test", kana:"プラクティカル テスト"},
+ {jp:"身体検査", en:"Medical check", kana:"メディカル チェック"},
+ {jp:"機体の登録", en:"Registration", kana:"レジストレーション", note:"100g以上は義務"},
+ {jp:"リモートID", en:"Remote ID", kana:"リモート アイディー"},
+ {jp:"飛行日誌", en:"Flight logbook", kana:"フライト ログブック"},
+ {jp:"事故", en:"Accident", kana:"アクシデント", note:"人の死傷・物件損壊・航空機との衝突"},
+ {jp:"重大インシデント", en:"Serious incident", kana:"シリアス インシデント"}
+],
+"📋 飛行ルール": [
+ {jp:"特定飛行", en:"Specified flights", kana:"スペシファイド フライツ", note:"許可・承認が必要な飛行"},
+ {jp:"カテゴリーI/II/III飛行", en:"Category one / two / three flights", kana:"カテゴリー ワン・トゥー・スリー フライツ"},
+ {jp:"立入管理措置", en:"Safety zone (keeping people out)", kana:"セーフティ ゾーン", note:"第三者の立入りを制限する措置"},
+ {jp:"第三者", en:"Third parties", kana:"サード パーティーズ", note:"飛行に関係しない人"},
+ {jp:"目視内飛行", en:"VLOS (Visual Line of Sight)", kana:"ブイロス"},
+ {jp:"目視外飛行", en:"BVLOS (Beyond Visual Line of Sight)", kana:"ビーブイロス"},
+ {jp:"夜間飛行", en:"Night flight", kana:"ナイト フライト"},
+ {jp:"人口集中地区", en:"Densely Inhabited District (DID)", kana:"ディーアイディー"},
+ {jp:"空港等の周辺", en:"Around airports", kana:"アラウンド エアポーツ"},
+ {jp:"150m以上の上空", en:"Above 150 meters", kana:"アバブ ワンフィフティ ミーターズ"},
+ {jp:"緊急用務空域", en:"Emergency operation airspace", kana:"エマージェンシー オペレーション エアスペース"},
+ {jp:"許可(空域)・承認(方法)", en:"Permission / Approval", kana:"パーミッション/アプルーバル", note:"DIPS 2.0で申請"},
+ {jp:"飛行計画の通報", en:"Flight plan notification", kana:"フライト プラン ノーティフィケーション"},
+ {jp:"レベル3.5飛行", en:"Level 3.5 flight", kana:"レベル スリーポイントファイブ フライト", note:"教則第4版の新論点"}
+],
+"🎯 実地試験": [
+ {jp:"机上試験", en:"Planning test", kana:"プランニング テスト"},
+ {jp:"口述試験", en:"Oral test", kana:"オーラル テスト"},
+ {jp:"実技試験", en:"Flight skill test", kana:"フライト スキル テスト"},
+ {jp:"減点式採点(100点持ち点)", en:"Deduction-based scoring", kana:"ディダクション ベースト スコアリング"},
+ {jp:"合格ライン", en:"Pass line", kana:"パス ライン", note:"一等80点/二等70点"},
+ {jp:"不合格区画", en:"Red zone (disqualification zone)", kana:"レッド ゾーン"},
+ {jp:"減点区画", en:"Yellow zone (deduction zone)", kana:"イエロー ゾーン"},
+ {jp:"スクエア飛行", en:"Square flight", kana:"スクエア フライト"},
+ {jp:"8の字飛行", en:"Figure-eight", kana:"フィギュア エイト"},
+ {jp:"ピルエットホバリング", en:"Pirouette hovering", kana:"ピルエット ホバリング", note:"360°その場回転(約20秒)"},
+ {jp:"緊急着陸", en:"Emergency landing", kana:"エマージェンシー ランディング"},
+ {jp:"異常事態における飛行", en:"Flight under abnormal conditions", kana:"フライト アンダー アブノーマル コンディションズ"},
+ {jp:"位置安定機能", en:"Position stabilization", kana:"ポジション スタビライゼーション", note:"GNSS・ビジョンセンサー等"},
+ {jp:"ATTIモード", en:"ATTI mode", kana:"アッティ モード", note:"位置安定OFFの状態"},
+ {jp:"機首", en:"Nose (heading)", kana:"ノーズ"},
+ {jp:"飛行前点検", en:"Pre-flight inspection", kana:"プリフライト インスペクション"},
+ {jp:"飛行後点検", en:"Post-flight inspection", kana:"ポストフライト インスペクション"},
+ {jp:"日常点検記録", en:"Daily inspection record", kana:"デイリー インスペクション レコード"},
+ {jp:"試験員/修了審査員", en:"Examiner", kana:"イグザミナー"},
+ {jp:"受験者", en:"Candidate", kana:"キャンディデート"},
+ {jp:"ふらつき", en:"Wobble", kana:"ウォブル"},
+ {jp:"制限時間", en:"Time limit", kana:"タイム リミット"}
+],
+"🚁 機体・現場": [
+ {jp:"離陸/着陸", en:"Takeoff / Landing", kana:"テイクオフ/ランディング"},
+ {jp:"ホバリング", en:"Hover", kana:"ホバー"},
+ {jp:"上昇/下降", en:"Climb / Descend", kana:"クライム/ディセンド"},
+ {jp:"プロペラ(ローター)", en:"Propeller", kana:"プロペラー"},
+ {jp:"操縦装置(プロポ)", en:"Controller (transmitter)", kana:"コントローラー"},
+ {jp:"バッテリー残量", en:"Battery level", kana:"バッテリー レベル"},
+ {jp:"帰還機能(RTH)", en:"Return to Home (RTH)", kana:"リターン トゥ ホーム"},
+ {jp:"フェールセーフ", en:"Fail-safe", kana:"フェイルセーフ"},
+ {jp:"電波(通信)", en:"Signal", kana:"シグナル"},
+ {jp:"風速", en:"Wind speed", kana:"ウィンド スピード", note:"5 m/s = five meters per second"},
+ {jp:"気象", en:"Weather", kana:"ウェザー"},
+ {jp:"保護具(ヘルメット等)", en:"Safety gear", kana:"セーフティ ギア", note:"2026年6月から着用義務"},
+ {jp:"安全確認よし!", en:"Safety check — OK!", kana:"セーフティ チェック オーケー", note:"声に出さないと未確認扱い"}
+]
+};
+
+const $ = id => document.getElementById(id);
+let voice = null;
+function pickVoice(){
+  const vs = speechSynthesis.getVoices().filter(v=>v.lang.startsWith('en'));
+  voice = vs.find(v=>/US|United States/i.test(v.name+v.lang)) || vs[0] || null;
+}
+speechSynthesis.onvoiceschanged = pickVoice;
+pickVoice();
+function speak(text){
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text.replace(/\(.*?\)/g,''));
+  u.lang='en-US'; if(voice) u.voice=voice; u.rate=0.85;
+  speechSynthesis.speak(u);
+}
+
+function render(){
+  const kw = $('q').value.trim().toLowerCase();
+  const showKana = $('showKana').checked;
+  const list = $('list'); list.innerHTML='';
+  let shown = 0, total = 0;
+  Object.keys(TERMS).forEach(group=>{
+    const hits = TERMS[group].filter(t=>{
+      total++;
+      if(!kw) return true;
+      return (t.jp + t.en + (t.kana||'') + (t.note||'')).toLowerCase().includes(kw);
+    });
+    if(hits.length===0) return;
+    const h = document.createElement('h2'); h.textContent = group + `(${hits.length})`;
+    list.appendChild(h);
+    hits.forEach(t=>{
+      shown++;
+      const d = document.createElement('div'); d.className='term';
+      d.innerHTML = `<div class="body">
+        <div class="jp">${t.jp}</div>
+        <div class="en">${t.en}</div>
+        ${showKana && t.kana ? `<div class="kana">🔊 ${t.kana}</div>` : ''}
+        ${t.note ? `<div class="note">💡 ${t.note}</div>` : ''}
+      </div><button title="発音を再生">▶</button>`;
+      d.querySelector('button').onclick = ()=>speak(t.en);
+      list.appendChild(d);
+    });
+  });
+  $('count').textContent = kw ? `${shown}件ヒット` : `全${total}語`;
+  $('empty').style.display = shown===0 ? 'block' : 'none';
+}
+$('q').oninput = render;
+$('showKana').onchange = render;
+render();
+</script>
+
+<a href="./" id="homeBtn" style="position:fixed;top:10px;right:10px;z-index:99;
+ background:rgba(15,23,42,.75);color:#fff;text-decoration:none;font-size:1.1rem;
+ width:40px;height:40px;border-radius:50%;display:flex;align-items:center;
+ justify-content:center;border:1px solid rgba(255,255,255,.3);">🏠</a>
+<style>@media print{#homeBtn{display:none;}}</style>
+</body>
+</html>
