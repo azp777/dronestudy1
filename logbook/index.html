@@ -178,7 +178,7 @@ function renderAlerts(){
   if(recs >= 5){
     const lb = DB.lastBackup;
     const over = !lb || daysUntil(lb) <= -30;
-    if(over) alerts.push({c:'#1e1b4b;border:1px solid #818cf8', t:'💾 <b>バックアップ推奨:</b> '+(lb?('最後のバックアップ('+lb+')から30日以上経過しています':'まだ一度もバックアップしていません')+'。「⚙️機体・設定」タブから書き出してください'});
+    if(over) alerts.push({c:'#1e1b4b;border:1px solid #818cf8', t:'💾 <b>バックアップ推奨:</b> '+(lb?'最後のバックアップ('+lb+')から30日以上経過しています':'まだ一度もバックアップしていません')+'。「⚙️機体・設定」タブから書き出してください'});
   }
   const old = document.getElementById('alertArea'); if(old) old.remove();
   if(alerts.length === 0) return;
