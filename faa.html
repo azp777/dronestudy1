@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>アメリカのドローンライセンス(FAA Part 107)ガイド</title>
+<style>
+  :root{--bg:#0f172a;--card:#1e293b;--acc:#38bdf8;--warn:#f59e0b;--ok:#22c55e;--txt:#f1f5f9;--sub:#94a3b8;--line:#334155;}
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Hiragino Sans","Yu Gothic",system-ui,sans-serif;background:var(--bg);color:var(--txt);line-height:1.7;}
+  header{padding:26px 16px;text-align:center;background:linear-gradient(135deg,#b91c1c,#1d4ed8);}
+  header h1{margin:0;font-size:1.2rem;}
+  header p{margin:6px 0 0;font-size:.75rem;opacity:.9;}
+  main{max-width:640px;margin:0 auto;padding:16px 14px 50px;}
+  h2{font-size:1rem;color:var(--acc);border-left:4px solid var(--acc);padding-left:10px;margin:26px 0 10px;}
+  .box{background:var(--card);border-radius:14px;padding:14px 16px;margin-bottom:12px;font-size:.88rem;}
+  .en{color:#7dd3fc;font-size:.8em;}
+  table{border-collapse:collapse;width:100%;font-size:.8rem;margin:10px 0;}
+  th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top;}
+  th{background:#0b1220;color:var(--acc);}
+  .step{display:flex;gap:12px;margin-bottom:12px;}
+  .num{flex:0 0 30px;height:30px;border-radius:50%;background:var(--acc);color:#03202f;font-weight:bold;
+       display:flex;align-items:center;justify-content:center;}
+  .step b{display:block;}
+  .step p{margin:2px 0 0;font-size:.82rem;color:var(--sub);}
+  .warnbox{background:#451a03;border:1px solid var(--warn);border-radius:11px;padding:10px 14px;font-size:.78rem;color:#fde68a;margin:12px 0;}
+  .tip{background:#052e16;border:1px solid var(--ok);border-radius:11px;padding:10px 14px;font-size:.8rem;color:#bbf7d0;margin:12px 0;}
+  a{color:var(--acc);}
+  .note{font-size:.72rem;color:var(--sub);text-align:center;margin-top:20px;line-height:1.7;}
+  #homeBtn{position:fixed;top:10px;right:10px;z-index:99;background:rgba(15,23,42,.75);color:#fff;
+    text-decoration:none;font-size:1.1rem;width:40px;height:40px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.3);}
+</style>
+</head>
+<body>
+<a href="./" id="homeBtn">🏠</a>
+<header>
+  <h1>🇺🇸 アメリカのドローンライセンス<br>FAA Part 107 ガイド</h1>
+  <p>日本語解説|日本の技能証明との比較つき|2026年7月時点の情報</p>
+</header>
+<main>
+
+  <h2>1. アメリカの制度の全体像</h2>
+  <div class="box">
+    アメリカでは連邦航空局 <span class="en">FAA(Federal Aviation Administration)</span> がドローンを管轄し、飛行の目的で2つの制度に分かれます。
+    <table>
+      <tr><th></th><th>趣味・レクリエーション</th><th>業務(商用)</th></tr>
+      <tr><td>必要な資格</td><td><b>TRUST</b><span class="en">(The Recreational UAS Safety Test)</span><br>無料のオンラインテスト。その場で修了証</td><td><b>Part 107 Remote Pilot Certificate</b><br>(リモートパイロット証明。通称「Part 107」)</td></tr>
+      <tr><td>機体登録</td><td>250g以上は登録($5/3年)</td><td>重量問わず全機登録($5/3年)</td></tr>
+      <tr><td>ルール</td><td>44809条(趣味飛行の例外規定)</td><td>連邦規則 Part 107</td></tr>
+    </table>
+    日本の「登録+技能証明」に近いですが、<b>趣味飛行は無料テストだけでOK</b>という点が大きく違います。報酬を得る飛行(空撮販売・点検業務・YouTube収益化も含む)はPart 107が必要です。
+  </div>
+
+  <h2>2. Part 107 取得の流れ(5ステップ)</h2>
+  <div class="box">
+    <div class="step"><div class="num">1</div><div><b>受験資格の確認</b><p>16歳以上/英語の読み書き・会話ができること/心身の状態が飛行に支障ないこと。<b>国籍要件はなく日本人も取得可能</b>です。</p></div></div>
+    <div class="step"><div class="num">2</div><div><b>FTN(FAA Tracking Number)の取得</b><p>FAAの申請システム <span class="en">IACRA</span>(iacra.faa.gov)で無料のアカウントを作るとFTNが発行されます。</p></div></div>
+    <div class="step"><div class="num">3</div><div><b>学科試験(UAG)を予約・受験</b><p>試験名 <span class="en">"Unmanned Aircraft General – Small (UAG)"</span>。PSI社のテストセンター(米国内)で受験。<b>60問・2時間・70%で合格</b>。受験料は$175前後。出題:規則・空域(セクショナルチャートの読図)・気象・性能・運航。</p></div></div>
+    <div class="step"><div class="num">4</div><div><b>IACRAで証明書を申請</b><p>合格後、IACRAでRemote Pilot Certificateを申請(TSAのセキュリティ審査あり)。仮証明書がオンライン発行され、後日カードが郵送されます。</p></div></div>
+    <div class="step"><div class="num">5</div><div><b>2年ごとの更新学習</b><p>証明書自体は失効しませんが、<b>24か月ごと</b>にFAA公式の無料オンライン講習<span class="en">(Recurrent Training)</span>の修了が必要です。</p></div></div>
+    <div class="warnbox">⚠ 学科試験は<b>英語のみ・米国内のテストセンターでの受験</b>です(日本国内では受験できません)。旅行・出張と組み合わせて計画するのが現実的です。</div>
+  </div>
+
+  <h2>3. Part 107 の主要ルール</h2>
+  <div class="box">
+    <table>
+      <tr><th>項目</th><th>ルール</th></tr>
+      <tr><td>機体重量</td><td>55ポンド(約25kg)未満</td></tr>
+      <tr><td>最大高度</td><td>地上400フィート(約122m)。構造物の点検時はその上空400ftまで可</td></tr>
+      <tr><td>速度</td><td>100mph(約161km/h)以下</td></tr>
+      <tr><td>目視</td><td>VLOS(目視内)が原則。<b>目視外(BVLOS)はウェーバー(個別許可)が必要</b></td></tr>
+      <tr><td>夜間飛行</td><td>更新学習の受講+衝突防止灯(3SM=約4.8km先から視認できる灯火)で<b>許可なしで可</b>(2021年〜)</td></tr>
+      <tr><td>人の上空</td><td>機体の重量・安全性で<b>カテゴリー1〜4</b>に区分。カテゴリー1は250g以下+露出回転部なし等</td></tr>
+      <tr><td>管制空域</td><td><b>LAANC</b>(ラーンス)というアプリで<b>その場で即時承認</b>が取れる(日本のDIPSより高速)</td></tr>
+      <tr><td>リモートID</td><td>義務化済み(2023年〜)。日本と同様、内蔵または外付けモジュール</td></tr>
+      <tr><td>飛行記録</td><td>法的な飛行日誌の義務はなし(推奨)。※日本との大きな違い</td></tr>
+    </table>
+  </div>
+
+  <h2>4. 日本の技能証明との比較</h2>
+  <div class="box">
+    <table>
+      <tr><th>項目</th><th>🇯🇵 日本(技能証明)</th><th>🇺🇸 アメリカ(Part 107)</th></tr>
+      <tr><td>実地試験</td><td><b>あり</b>(減点式の実技試験)</td><td><b>なし</b>(学科のみ)</td></tr>
+      <tr><td>学科試験</td><td>CBT・日本語(三肢択一)</td><td>テストセンター・英語(60問)</td></tr>
+      <tr><td>資格の区分</td><td>一等/二等+限定変更</td><td>1種類のみ</td></tr>
+      <tr><td>夜間飛行</td><td>限定変更(実技試験)が必要</td><td>講習+灯火で可</td></tr>
+      <tr><td>目視外</td><td>限定変更+承認/一等でカテゴリーIII</td><td>ウェーバー制(新規則Part 108を策定中)</td></tr>
+      <tr><td>有効期間</td><td>3年(更新講習)</td><td>失効なし(24か月ごと無料講習)</td></tr>
+      <tr><td>費用感</td><td>スクール経由で数十万円規模</td><td>受験料$175前後+登録$5</td></tr>
+      <tr><td>飛行日誌</td><td>特定飛行で法的義務</td><td>義務なし(推奨)</td></tr>
+    </table>
+    <div class="tip">💡 <b>考え方:</b>日本は「操縦技能を試験で証明する」制度、アメリカは「知識を証明し、運用ルールで安全を担保する」制度です。日本の技能証明を持っていても米国では使えません(逆も同じ)が、学科知識(気象・空力・電波)は大部分が共通なので、日本の一等・二等の学習はPart 107取得の大きなアドバンテージになります。</div>
+  </div>
+
+  <h2>5. 目視外の新規則「Part 108」の動き</h2>
+  <div class="box">
+    米国では目視外飛行(BVLOS)を個別許可なしで可能にする新規則<b>「Part 108」</b>の策定が進んでいます。2025年8月に規則案(NPRM)が公表され、パブリックコメントを経て最終規則の公布待ちの段階です(2026年7月時点)。成立すれば配送・長距離点検などの商用BVLOSが一気に広がる見込みで、<b>日本のレベル3.5/カテゴリーIIIとよく比較される</b>ホットトピックです。最新状況は<a href="https://www.faa.gov/uas" target="_blank">FAA公式(faa.gov/uas)</a>で確認してください。
+  </div>
+
+  <h2>6. ミニ用語対訳(FAA編)</h2>
+  <div class="box">
+    <table>
+      <tr><th>英語</th><th>意味</th></tr>
+      <tr><td>Remote Pilot in Command (RPIC)</td><td>飛行の最終責任を負う操縦者(日本の「飛行させる者」に相当)</td></tr>
+      <tr><td>Waiver <span class="en">ウェーバー</span></td><td>個別の規制免除許可(日本の「承認」に近い)</td></tr>
+      <tr><td>LAANC <span class="en">ラーンス</span></td><td>管制空域の即時飛行承認システム</td></tr>
+      <tr><td>Sectional Chart</td><td>航空図(学科試験で読図が出る・日本の学科にはない分野)</td></tr>
+      <tr><td>Controlled Airspace (Class B/C/D/E)</td><td>管制空域の区分(空港の規模で分かれる)</td></tr>
+      <tr><td>NOTAM <span class="en">ノータム</span></td><td>航空情報(一時的な飛行制限など)</td></tr>
+      <tr><td>TFR (Temporary Flight Restriction)</td><td>一時的飛行制限区域(大統領移動・災害・スポーツイベント等)</td></tr>
+      <tr><td>Operations Over People (OOP)</td><td>人の上空の飛行(カテゴリー1〜4)</td></tr>
+    </table>
+  </div>
+
+  <h2>7. 公式リンク</h2>
+  <div class="box" style="font-size:.82rem">
+    ・<a href="https://www.faa.gov/uas" target="_blank">FAA UAS(ドローン)トップ</a><br>
+    ・<a href="https://www.faa.gov/uas/commercial_operators/become_a_drone_pilot" target="_blank">Become a Drone Pilot(Part 107取得手順)</a><br>
+    ・<a href="https://iacra.faa.gov/" target="_blank">IACRA(証明書の申請システム)</a><br>
+    ・<a href="https://faadronezone-access.faa.gov/" target="_blank">FAA DroneZone(機体登録)</a><br>
+    ・<a href="https://www.faa.gov/uas/getting_started/b4ufly" target="_blank">B4UFLY(飛行可否確認アプリ)</a>
+  </div>
+
+  <p class="note">本ページは2026年7月時点の一般情報です(法的助言ではありません)。<br>受験・渡航の前に必ずFAA公式サイトで最新の要件をご確認ください。<br>English資料は講師アプリの「Student Textbook」「英語用語一覧」にもあります。</p>
+</main>
+</body>
+</html>

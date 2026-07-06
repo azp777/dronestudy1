@@ -428,7 +428,7 @@ function delMaint(id){ if(!confirm('この整備記録を削除しますか?')) 
 /* ================= 🗺 エリア確認 ================= */
 function viewMap(){
   $('main').innerHTML = `
-  <div class="warnbox">⚠ この地図で確認できるのは<b>人口集中地区(DID)</b>(オレンジ〜赤の着色)のみです。空港等周辺・緊急用務空域・小型無人機等飛行禁止法の対象施設などは表示されません。飛行前に必ず<b>DIPS等で最新情報</b>を確認してください。</div>
+  <div class="warnbox">⚠ この地図で確認できるのは<b>人口集中地区(DID)</b>(オレンジ〜赤の着色)のみです。空港等周辺・緊急用務空域・小型無人機等飛行禁止法の対象施設などは表示されません。飛行前に必ず<b>DIPS等で最新情報</b>を確認してください。<br>🆕 <b>2026年7月14日から</b>小型無人機等飛行禁止法の対象施設周辺地域が<b>おおむね300m→1,000mに拡大</b>されました(国会議事堂・原発・防衛施設・主要8空港等の周辺)。該当エリア付近では<a href="https://www.npa.go.jp/bureau/security/kogatamujinki/index.html" target="_blank" style="color:#fde68a">警察庁の対象施設マップ</a>を必ず確認してください。</div>
   <div id="map"></div>
   <div class="row">
     <button class="btn p" onclick="locate()">📍 現在地を表示</button>
