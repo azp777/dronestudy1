@@ -1,11 +1,13 @@
-const CACHE = 'instructor-app-v2';
+const CACHE = 'instructor-app-v3';
 const ASSETS = [
   './',
   'index.html',
   'drill.html',
   'phrases.html',
   'terms.html',
+  'terms-zh.html',
   'textbook.html',
+  'textbook-zh.html',
   'manifest.webmanifest',
   'icon-192.png',
   'icon-512.png',

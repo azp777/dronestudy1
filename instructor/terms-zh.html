@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ドローン中国語 用語一覧</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1d4ed8">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
+<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js');}</script>
+
+<style>
+  :root{--bg:#0f172a;--card:#1e293b;--acc:#38bdf8;--acc2:#f59e0b;--txt:#f1f5f9;--sub:#94a3b8;--ok:#22c55e;}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  body{margin:0;font-family:"Hiragino Sans","Yu Gothic",system-ui,sans-serif;background:var(--bg);color:var(--txt);}
+  header{padding:14px;text-align:center;background:linear-gradient(135deg,#0ea5e9,#1d4ed8);}
+  header h1{margin:0;font-size:1.1rem;}
+  header p{margin:4px 0 0;font-size:.72rem;opacity:.85;}
+  .searchbar{position:sticky;top:0;z-index:5;background:#0b1220;padding:10px 12px;display:flex;gap:8px;align-items:center;}
+  .searchbar input{flex:1;background:var(--card);border:1px solid #334155;border-radius:10px;
+    padding:10px 14px;color:var(--txt);font-size:.95rem;outline:none;}
+  .searchbar input:focus{border-color:var(--acc);}
+  .searchbar label{font-size:.75rem;color:var(--sub);display:flex;align-items:center;gap:4px;white-space:nowrap;}
+  main{max-width:640px;margin:0 auto;padding:0 12px 40px;}
+  h2{font-size:.85rem;color:var(--sub);font-weight:normal;border-left:4px solid var(--acc);
+     padding-left:8px;margin:20px 4px 10px;}
+  .term{background:var(--card);border-radius:12px;padding:11px 14px;margin:8px 0;
+        display:flex;align-items:center;gap:10px;border-left:4px solid var(--acc);}
+  .term .body{flex:1;min-width:0;}
+  .jp{font-size:.95rem;font-weight:bold;}
+  .en{color:var(--acc);font-size:.9rem;margin-top:2px;}
+  .zht{color:var(--sub);font-size:.8rem;margin-top:2px;}
+  .kana{color:var(--acc2);font-size:.78rem;margin-top:2px;}
+  .note{color:var(--sub);font-size:.74rem;margin-top:2px;line-height:1.5;}
+  .term button{border:none;border-radius:50%;width:42px;height:42px;flex:0 0 auto;
+    background:var(--acc);color:#03202f;font-size:1rem;}
+  .empty{text-align:center;color:var(--sub);padding:40px 0;font-size:.9rem;display:none;}
+  .count{font-size:.72rem;color:var(--sub);text-align:center;padding:8px 0 0;}
+</style>
+</head>
+<body>
+<header>
+  <h1>📖 ドローン中国語 用語一覧</h1>
+  <p>日本語⇔中国語(簡体・繁体)|▶で発音|検索対応</p>
+</header>
+
+<div class="searchbar">
+  <input type="search" id="q" placeholder="🔍 検索(日本語・簡体・繁体・ピンイン)">
+  <label><input type="checkbox" id="showKana" checked> ピンイン</label>
+  <label><input type="checkbox" id="showZht"> 繁体字</label>
+</div>
+
+<main>
+  <div class="count" id="count"></div>
+  <div id="list"></div>
+  <div class="empty" id="empty">該当する用語がありません</div>
+</main>
+
+<script>
+const TERMS = {
+"🪪 資格・制度": [
+ {jp:"無人航空機(ドローン)", zh:"无人机", zht:"無人機", py:"wúrénjī", note:"正式名称:无人驾驶航空器"},
+ {jp:"技能証明(国家ライセンス)", zh:"技能证明", zht:"技能證明", py:"jìnéng zhèngmíng", note:"日本无人机驾驶执照"},
+ {jp:"一等無人航空機操縦士", zh:"一等无人机驾驶员", zht:"一等無人機駕駛員", py:"yīděng wúrénjī jiàshǐyuán"},
+ {jp:"二等無人航空機操縦士", zh:"二等无人机驾驶员", zht:"二等無人機駕駛員", py:"èrděng wúrénjī jiàshǐyuán"},
+ {jp:"限定変更(夜間・目視外・25kg)", zh:"解除限定", zht:"解除限定", py:"jiěchú xiàndìng", note:"解除夜间・目视外・25公斤等限制"},
+ {jp:"機体認証", zh:"机体认证", zht:"機體認證", py:"jītǐ rènzhèng"},
+ {jp:"型式認証", zh:"型号认证", zht:"型號認證", py:"xínghào rènzhèng"},
+ {jp:"登録講習機関(スクール)", zh:"登记讲习机构", zht:"登記講習機構", py:"dēngjì jiǎngxí jīgòu", note:"即无人机学校(RTO)"},
+ {jp:"修了審査", zh:"结业审查", zht:"結業審查", py:"jiéyè shěnchá", note:"可替代国家实地考试的校内审查"},
+ {jp:"指定試験機関", zh:"指定考试机构", zht:"指定考試機構", py:"zhǐdìng kǎoshì jīgòu"},
+ {jp:"学科試験", zh:"学科考试", zht:"學科考試", py:"xuékē kǎoshì", note:"CBT机考・仅日语"},
+ {jp:"実地試験", zh:"实地考试", zht:"實地考試", py:"shídì kǎoshì"},
+ {jp:"身体検査", zh:"体检", zht:"體檢", py:"tǐjiǎn"},
+ {jp:"機体の登録", zh:"机体登记", zht:"機體登記", py:"jītǐ dēngjì", note:"100克以上须登记"},
+ {jp:"リモートID", zh:"远程识别", zht:"遠程識別", py:"yuǎnchéng shíbié", note:"Remote ID"},
+ {jp:"飛行日誌", zh:"飞行日志", zht:"飛行日誌", py:"fēixíng rìzhì"},
+ {jp:"事故", zh:"事故", py:"shìgù", note:"人员伤亡・物件损坏・与航空器相撞"},
+ {jp:"重大インシデント", zh:"重大事件", py:"zhòngdà shìjiàn", note:"航空术语:严重征候(serious incident)"}
+],
+"📋 飛行ルール": [
+ {jp:"特定飛行", zh:"特定飞行", zht:"特定飛行", py:"tèdìng fēixíng", note:"须取得许可・承认的飞行"},
+ {jp:"カテゴリーI/II/III飛行", zh:"类别I/II/III飞行", zht:"類別I/II/III飛行", py:"lèibié yī/èr/sān fēixíng"},
+ {jp:"立入管理措置", zh:"安全区管理措施", zht:"安全區管理措施", py:"ānquánqū guǎnlǐ cuòshī", note:"限制第三者进入的措施"},
+ {jp:"第三者", zh:"第三者", py:"dìsānzhě", note:"与飞行作业无关的人"},
+ {jp:"目視内飛行", zh:"目视内飞行", zht:"目視內飛行", py:"mùshìnèi fēixíng", note:"VLOS"},
+ {jp:"目視外飛行", zh:"超视距飞行", zht:"超視距飛行", py:"chāoshìjù fēixíng", note:"BVLOS・即目视外飞行"},
+ {jp:"夜間飛行", zh:"夜间飞行", zht:"夜間飛行", py:"yèjiān fēixíng"},
+ {jp:"人口集中地区", zh:"人口集中地区", zht:"人口集中地區", py:"rénkǒu jízhōng dìqū", note:"DID"},
+ {jp:"空港等の周辺", zh:"机场周边", zht:"機場周邊", py:"jīchǎng zhōubiān"},
+ {jp:"150m以上の上空", zh:"150米以上高空", zht:"150米以上高空", py:"150 mǐ yǐshàng gāokōng"},
+ {jp:"緊急用務空域", zh:"紧急用务空域", zht:"緊急用務空域", py:"jǐnjí yòngwù kōngyù"},
+ {jp:"許可(空域)・承認(方法)", zh:"许可(空域)・承认(方法)", zht:"許可(空域)・承認(方法)", py:"xǔkě・chéngrèn", note:"通过DIPS 2.0申请"},
+ {jp:"飛行計画の通報", zh:"飞行计划通报", zht:"飛行計劃通報", py:"fēixíng jìhuà tōngbào"},
+ {jp:"レベル3.5飛行", zh:"3.5级飞行", zht:"3.5級飛行", py:"3.5 jí fēixíng", note:"教则第4版的新论点"}
+],
+"🎯 実地試験": [
+ {jp:"机上試験", zh:"书面考试", zht:"書面考試", py:"shūmiàn kǎoshì", note:"日语称「机上試験」,考飞行计划相关问题"},
+ {jp:"口述試験", zh:"口述考试", zht:"口述考試", py:"kǒushù kǎoshì"},
+ {jp:"実技試験", zh:"实技考试", zht:"實技考試", py:"shíjì kǎoshì", note:"即飞行操作考试"},
+ {jp:"減点式採点(100点持ち点)", zh:"扣分制评分", zht:"扣分制評分", py:"kòufēnzhì píngfēn", note:"100分起算"},
+ {jp:"合格ライン", zh:"合格线", zht:"合格線", py:"hégéxiàn", note:"一等80分/二等70分"},
+ {jp:"不合格区画", zh:"红区(不合格区)", zht:"紅區(不合格區)", py:"hóngqū", note:"进入即直接不合格"},
+ {jp:"減点区画", zh:"黄区(扣分区)", zht:"黃區(扣分區)", py:"huángqū"},
+ {jp:"スクエア飛行", zh:"方形飞行", zht:"方形飛行", py:"fāngxíng fēixíng"},
+ {jp:"8の字飛行", zh:"8字飞行", zht:"8字飛行", py:"bā zì fēixíng"},
+ {jp:"ピルエットホバリング", zh:"原地回转悬停", zht:"原地迴轉懸停", py:"yuándì huízhuǎn xuántíng", note:"360°定点转向(约20秒)"},
+ {jp:"緊急着陸", zh:"紧急降落", zht:"緊急降落", py:"jǐnjí jiàngluò"},
+ {jp:"異常事態における飛行", zh:"异常状态下的飞行", zht:"異常狀態下的飛行", py:"yìcháng zhuàngtài xià de fēixíng"},
+ {jp:"位置安定機能", zh:"位置稳定功能", zht:"位置穩定功能", py:"wèizhì wěndìng gōngnéng", note:"GNSS・视觉传感器等"},
+ {jp:"ATTIモード", zh:"ATTI(姿态)模式", zht:"ATTI(姿態)模式", py:"ATTI móshì", note:"位置稳定关闭的状态"},
+ {jp:"機首", zh:"机头", zht:"機頭", py:"jītóu", note:"即机体朝向"},
+ {jp:"飛行前点検", zh:"飞行前检查", zht:"飛行前檢查", py:"fēixíng qián jiǎnchá"},
+ {jp:"飛行後点検", zh:"飞行后检查", zht:"飛行後檢查", py:"fēixíng hòu jiǎnchá"},
+ {jp:"日常点検記録", zh:"日常检查记录", zht:"日常檢查記錄", py:"rìcháng jiǎnchá jìlù"},
+ {jp:"試験員/修了審査員", zh:"考官", zht:"考官", py:"kǎoguān", note:"即试验员/修了审查员"},
+ {jp:"受験者", zh:"应试者", zht:"應試者", py:"yìngshìzhě"},
+ {jp:"ふらつき", zh:"晃动", zht:"晃動", py:"huàngdòng", note:"机体不稳的轻微摆动"},
+ {jp:"制限時間", zh:"时间限制", zht:"時間限制", py:"shíjiān xiànzhì"}
+],
+"🚁 機体・現場": [
+ {jp:"離陸/着陸", zh:"起飞/降落", zht:"起飛/降落", py:"qǐfēi / jiàngluò"},
+ {jp:"ホバリング", zh:"悬停", zht:"懸停", py:"xuántíng"},
+ {jp:"上昇/下降", zh:"上升/下降", zht:"上升/下降", py:"shàngshēng / xiàjiàng"},
+ {jp:"プロペラ(ローター)", zh:"螺旋桨", zht:"螺旋槳", py:"luóxuánjiǎng", note:"旋翼/桨叶"},
+ {jp:"操縦装置(プロポ)", zh:"遥控器", zht:"遙控器", py:"yáokòngqì", note:"即发射机(プロポ)"},
+ {jp:"バッテリー残量", zh:"电池电量", zht:"電池電量", py:"diànchí diànliàng"},
+ {jp:"帰還機能(RTH)", zh:"自动返航", zht:"自動返航", py:"zìdòng fǎnháng", note:"Return to Home"},
+ {jp:"フェールセーフ", zh:"失控保护", zht:"失控保護", py:"shīkòng bǎohù", note:"Fail-safe"},
+ {jp:"電波(通信)", zh:"信号", zht:"信號", py:"xìnhào", note:"即无线电通信"},
+ {jp:"風速", zh:"风速", zht:"風速", py:"fēngsù", note:"5 m/s = 每秒5米"},
+ {jp:"気象", zh:"天气", zht:"天氣", py:"tiānqì", note:"即气象条件"},
+ {jp:"保護具(ヘルメット等)", zh:"防护装备", zht:"防護裝備", py:"fánghù zhuāngbèi", note:"2026年6月起须佩戴"},
+ {jp:"安全確認よし!", zh:"安全确认——OK!", zht:"安全確認——OK!", py:"ānquán quèrèn — OK!", note:"不大声说出来即视为未确认"}
+]
+};
+
+const $ = id => document.getElementById(id);
+let voice = null;
+function pickVoice(){
+  const vs = speechSynthesis.getVoices().filter(v=>v.lang.startsWith('zh'));
+  voice = vs.find(v=>/CN|Chinese \(China\)|zh-CN|Mandarin/i.test(v.name+v.lang)) || vs[0] || null;
+}
+speechSynthesis.onvoiceschanged = pickVoice;
+pickVoice();
+function speak(text){
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text.replace(/[（(].*?[)）]/g,'').replace(/[—!！]/g,''));
+  u.lang='zh-CN'; if(voice) u.voice=voice; u.rate=0.85;
+  speechSynthesis.speak(u);
+}
+
+function render(){
+  const kw = $('q').value.trim().toLowerCase();
+  const showKana = $('showKana').checked;
+  const showZht = $('showZht').checked;
+  const list = $('list'); list.innerHTML='';
+  let shown = 0, total = 0;
+  Object.keys(TERMS).forEach(group=>{
+    const hits = TERMS[group].filter(t=>{
+      total++;
+      if(!kw) return true;
+      return (t.jp + t.zh + (t.zht||'') + (t.py||'') + (t.note||'')).toLowerCase().includes(kw);
+    });
+    if(hits.length===0) return;
+    const h = document.createElement('h2'); h.textContent = group + `(${hits.length})`;
+    list.appendChild(h);
+    hits.forEach(t=>{
+      shown++;
+      const d = document.createElement('div'); d.className='term';
+      d.innerHTML = `<div class="body">
+        <div class="jp">${t.jp}</div>
+        <div class="en">${t.zh}</div>
+        ${showZht && t.zht && t.zht!==t.zh ? `<div class="zht">繁:${t.zht}</div>` : ''}
+        ${showKana && t.py ? `<div class="kana">🔊 ${t.py}</div>` : ''}
+        ${t.note ? `<div class="note">💡 ${t.note}</div>` : ''}
+      </div><button title="発音を再生">▶</button>`;
+      d.querySelector('button').onclick = ()=>speak(t.zh);
+      list.appendChild(d);
+    });
+  });
+  $('count').textContent = kw ? `${shown}件ヒット` : `全${total}語`;
+  $('empty').style.display = shown===0 ? 'block' : 'none';
+}
+$('q').oninput = render;
+$('showKana').onchange = render;
+$('showZht').onchange = render;
+render();
+</script>
+
+<a href="./" id="homeBtn" style="position:fixed;top:10px;right:10px;z-index:99;
+ background:rgba(15,23,42,.75);color:#fff;text-decoration:none;font-size:1.1rem;
+ width:40px;height:40px;border-radius:50%;display:flex;align-items:center;
+ justify-content:center;border:1px solid rgba(255,255,255,.3);">🏠</a>
+<style>@media print{#homeBtn{display:none;}}</style>
+</body>
+</html>

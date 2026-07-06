@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>无人机驾驶员课程 学员教材(中文版)</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1d4ed8">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
+<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js');}</script>
+
+<style>
+  :root{--blue:#1d4ed8;--sky:#0ea5e9;--ink:#1e293b;--sub:#64748b;--bg:#f8fafc;
+        --red:#dc2626;--yel:#d97706;--grn:#16a34a;}
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:Georgia,"Times New Roman","Hiragino Mincho ProN",serif;
+       color:var(--ink);background:var(--bg);line-height:1.65;}
+  .page{max-width:800px;margin:0 auto;background:#fff;padding:40px 48px;}
+  .cover{background:linear-gradient(150deg,#0ea5e9,#1d4ed8 70%);color:#fff;text-align:center;
+         padding:90px 40px;border-radius:0;}
+  .cover h1{font-size:2rem;margin:0 0 8px;}
+  .cover .sub{font-size:1rem;opacity:.9;}
+  .cover .meta{margin-top:60px;font-size:.85rem;opacity:.8;line-height:1.8;}
+  h2{color:var(--blue);border-bottom:3px solid var(--sky);padding-bottom:6px;margin-top:0;
+     font-size:1.35rem;}
+  h3{color:var(--ink);font-size:1.05rem;margin-bottom:6px;border-left:5px solid var(--sky);padding-left:10px;}
+  p{margin:8px 0;}
+  table{border-collapse:collapse;width:100%;margin:12px 0;font-size:.88rem;}
+  th,td{border:1px solid #cbd5e1;padding:7px 10px;text-align:left;vertical-align:top;}
+  th{background:#e0f2fe;color:#0c4a6e;}
+  .jp{font-family:"Hiragino Sans","Yu Gothic",sans-serif;color:var(--sub);font-size:.85em;}
+  .keybox{background:#eff6ff;border-left:5px solid var(--blue);padding:12px 16px;margin:14px 0;
+          border-radius:0 8px 8px 0;font-size:.92rem;}
+  .keybox b:first-child{color:var(--blue);}
+  .warn{background:#fef2f2;border-left:5px solid var(--red);padding:12px 16px;margin:14px 0;
+        border-radius:0 8px 8px 0;font-size:.92rem;}
+  .tip{background:#f0fdf4;border-left:5px solid var(--grn);padding:12px 16px;margin:14px 0;
+       border-radius:0 8px 8px 0;font-size:.92rem;}
+  .fail{color:var(--red);font-weight:bold;}
+  .m5{color:var(--yel);font-weight:bold;}
+  .m1{color:var(--grn);font-weight:bold;}
+  figure{margin:16px 0;text-align:center;}
+  figcaption{font-size:.8rem;color:var(--sub);margin-top:6px;}
+  .chapnum{display:inline-block;background:var(--blue);color:#fff;border-radius:6px;
+           padding:2px 12px;font-size:.85rem;margin-bottom:6px;font-family:sans-serif;}
+  .answer{color:var(--sub);font-size:.85rem;}
+  ol.q li{margin-bottom:10px;}
+  footer{max-width:800px;margin:0 auto;background:#fff;padding:20px 48px 40px;font-size:.75rem;color:var(--sub);border-top:1px solid #e2e8f0;}
+  @media print{
+    body{background:#fff;}
+    .page{max-width:none;padding:20px 10mm;}
+    .chapter{page-break-before:always;}
+    .cover{border-radius:0;page-break-after:always;}
+  }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <h1>🚁 无人机驾驶员课程</h1>
+  <div class="sub">Drone Pilot Course — Student Textbook (Chinese Edition)<br>
+  日本无人机驾驶执照(二等 / 一等)</div>
+  <div class="meta">
+    依据日本国土交通省(MLIT)2026年6月5日起施行的官方标准<br>
+    及《安全教则》(<i>教則 kyousoku</i>)第4版编写<br><br>
+    姓名: ______________________
+  </div>
+</div>
+
+<!-- CHAPTER 1 -->
+<div class="page chapter">
+  <span class="chapnum">第 1 章</span>
+  <h2>欢迎——本课程如何进行</h2>
+  <p>欢迎来到本无人机学校!本教材将引导你考取日本国家无人机驾驶执照
+  (<span class="jp">技能证明(技能証明 <i>ginou shoumei</i>)</span>)。教材以简明中文编写。
+  重要的日语词汇会同时标注<i>罗马字读音</i>,因为你在训练和考试中会听到它们。</p>
+
+  <h3>考照流程</h3>
+  <table>
+    <tr><th>步骤</th><th>内容</th><th>语言</th></tr>
+    <tr><td>1</td><td>本校<b>课堂学习</b>(即本教材)</td><td>中文</td></tr>
+    <tr><td>2</td><td>由教官指导的<b>飞行训练</b></td><td>中文口令</td></tr>
+    <tr><td>3</td><td>本校<b>结业审查</b>(<span class="jp">修了审查(修了審査 <i>shuuryou shinsa</i>)</span>)——与政府实地考试采用同一国家标准</td><td>日语(本校会为你训练)</td></tr>
+    <tr><td>4</td><td><b>国家学科考试</b>(在考试中心以CBT机考方式进行)</td><td><b>仅日语</b></td></tr>
+    <tr><td>5</td><td><b>体检</b>及网上申请</td><td>日语(本校协助你)</td></tr>
+  </table>
+
+  <div class="warn"><b>⚠ 重要:</b>国家学科考试<b>仅提供日语</b>,没有中文版本。
+  本校会帮助你掌握考试的关键日语词汇(见第7章)。
+  如果你的日语阅读能力有限,请预留额外的学习时间——请尽早与你的教官沟通。</div>
+
+  <div class="keybox"><b>执照有效期为3年。</b>届时通过一个简短的更新培训课程即可续期。</div>
+</div>
+
+<!-- CHAPTER 2 -->
+<div class="page chapter">
+  <span class="chapnum">第 2 章</span>
+  <h2>日本的无人机制度</h2>
+
+  <p class="keybox"><b>注:</b>本教材介绍的是<b>日本</b>的无人机制度(与中国大陆的《无人驾驶航空器飞行管理暂行条例》体系不同)。</p>
+
+  <h3>2.1 机体登记与远程识别(Remote ID)</h3>
+  <p>在日本,凡<b>100克及以上</b>的无人机都必须进行<b>登记</b>
+  (<span class="jp">登录(登録 <i>touroku</i>)</span>)。登记编号须标示在机体上,
+  且无人机必须广播<b>远程识别信息(Remote ID)</b>。登记通过政府系统
+  <b>DIPS 2.0</b>在线办理。</p>
+
+  <h3>2.2 特定飞行(<span class="jp">特定飛行 <i>tokutei hikou</i></span>)</h3>
+  <p>部分飞行需要取得政府的<b>许可或承认(批准)</b>,这类飞行称为
+  <b>特定飞行</b>。可分为两大类:</p>
+  <table>
+    <tr><th>空域(在哪里飞)</th><th>方式(怎么飞)</th></tr>
+    <tr><td>• 机场周边<br>• <b>150米</b>以上的高空<br>• <b>DID</b>——人口集中地区(大部分城市区域)<br>• 紧急用务空域</td>
+        <td>• <b>夜间</b>飞行<br>• <b>BVLOS</b>——超视距(目视外)飞行<br>• 距人或物30米以内<br>• 活动上空、运输危险品、抛投物件</td></tr>
+  </table>
+
+  <h3>2.3 三类风险类别</h3>
+  <table>
+    <tr><th>类别</th><th>含义</th><th>所需条件</th></tr>
+    <tr><td><b>I</b></td><td>非特定飞行</td><td>无需办理手续(遵守基本规则即可)</td></tr>
+    <tr><td><b>II</b></td><td>设有<b>禁止他人进入的安全区</b>的特定飞行(<span class="jp">立入管理措置(立入管理措置 <i>tachiiri kanri sochi</i>)</span>)</td><td>许可/承认。持有<b>二等执照+已认证机体</b>可简化或免除部分手续</td></tr>
+    <tr><td><b>III</b></td><td><b>飞越第三者上空、且未设</b>安全区的特定飞行——风险最高</td><td><b>一等执照+一等认证机体+承认(批准)</b></td></tr>
+  </table>
+
+  <div class="keybox"><b>请记住:</b>"第三者"(<span class="jp">第三者(第三者 <i>daisansha</i>)</span>)
+  是指与你的飞行作业无关的人。类别III即指飞越这些人的上空。</div>
+
+  <h3>2.4 每次飞行的基本规则</h3>
+  <p>禁止饮酒或服药后飞行。每次飞行前必须进行检查。不得以危险方式飞行。
+  须避让有人驾驶航空器。最大飞行高度150米。特定飞行还须:提交
+  <b>飞行计划通报</b>、填写<b>飞行日志</b>
+  (<span class="jp">飛行日誌 <i>hikou nisshi</i></span>),并向政府<b>报告事故</b>。</p>
+
+  <div class="warn"><b>⚠ 处罚是真实存在的。</b>酒后飞行,或未经许可在DID(人口集中地区)上空飞行,
+  可能招致刑事处罚及执照吊销。规则是在保护你和他人。</div>
+</div>
+
+<!-- CHAPTER 3 -->
+<div class="page chapter">
+  <span class="chapnum">第 3 章</span>
+  <h2>执照制度</h2>
+
+  <h3>3.1 两个等级</h3>
+  <table>
+    <tr><th></th><th>二等 <span class="jp">二等</span></th><th>一等 <span class="jp">一等</span></th></tr>
+    <tr><td>适用于</td><td>类别II作业</td><td>类别III作业</td></tr>
+    <tr><td>实地考试合格线</td><td><b>70 / 100</b> 分</td><td><b>80 / 100</b> 分</td></tr>
+    <tr><td>基本飞行考试模式</td><td>GPS开启(常规),GPS关闭(应急科目)</td><td>所有基本科目均在GPS<b>关闭</b>下进行</td></tr>
+    <tr><td>学科考试</td><td>50题 / 30分钟</td><td>70题 / 75分钟</td></tr>
+  </table>
+
+  <h3>3.2 限定(<span class="jp">限定 <i>gentei</i></span>)</h3>
+  <p>新取得的执照带有三项限定:<b>仅限白天</b>、<b>仅限目视内(VLOS)</b>、以及
+  <b>25公斤以下</b>。通过额外的实地考试,可逐项解除限定
+  (<span class="jp">限定变更(限定変更 <i>gentei henkou</i>)</span>):</p>
+  <table>
+    <tr><th>解除限定</th><th>可进行</th></tr>
+    <tr><td>夜间资格</td><td>夜间飞行</td></tr>
+    <tr><td>目视外(BVLOS)资格</td><td>超视距飞行(仅凭摄像头)</td></tr>
+    <tr><td>25公斤资格</td><td>25公斤及以上的机体</td></tr>
+  </table>
+
+  <div class="tip"><b>💡 温馨提示:</b>本校的结业审查采用与国家<b>完全相同的标准</b>
+  (MLIT标准,最新修订于2026年6月5日施行)。你在本校通过后,
+  即无需再参加政府的实地考试。</div>
+</div>
+
+<!-- CHAPTER 4 -->
+<div class="page chapter">
+  <span class="chapnum">第 4 章</span>
+  <h2>了解你的机体</h2>
+
+  <h3>4.1 多旋翼基础</h3>
+  <p>多旋翼无人机通过改变各电机的转速来飞行。共有四种操控:</p>
+  <table>
+    <tr><th>摇杆操作</th><th>动作</th><th>你会听到的口令</th></tr>
+    <tr><td>油门(Throttle)</td><td>上升 / 下降</td><td>"上升" / "下降"</td></tr>
+    <tr><td>升降(Elevator)</td><td>前进 / 后退</td><td>"前进" / "后退"</td></tr>
+    <tr><td>副翼(Aileron)</td><td>左移 / 右移</td><td>"向左" / "向右"</td></tr>
+    <tr><td>方向(Rudder)</td><td>旋转(偏航)</td><td>"转动机头"</td></tr>
+  </table>
+
+  <h3>4.2 GPS模式 与 ATTI(姿态)模式</h3>
+  <p>在<b>位置稳定功能开启</b>时(GPS+视觉传感器),无人机会保持自身位置;
+  在稳定功能<b>关闭</b>时(即"ATTI姿态模式"),无人机会随风飘移——你必须不断进行修正。
+  考试之所以考核ATTI飞行,是因为真实的紧急情况可能导致GPS失效。</p>
+  <div class="keybox"><b>一等学员请注意:</b>所有基本科目都在稳定功能关闭下飞行。
+  你大部分训练时间都将用于ATTI练习。这很正常——每个人一开始都觉得难。</div>
+
+  <h3>4.3 电池安全(锂聚合物 LiPo)</h3>
+  <p>不得使用鼓包或受损的电池。存放时保持50–60%电量,不要充满。
+  低温会降低电池性能。运输电池须使用防火袋。切勿丢入普通垃圾。</p>
+
+  <h3>4.4 失控保护 / 自动返航(RTH)</h3>
+  <p>每次飞行前须检查:返航高度(要高于障碍物!)、返航点(Home Point)是否已更新,
+  以及失去信号时的动作设定(悬停 / 降落 / 返航)。返航设置错误是许多事故的成因。</p>
+</div>
+
+<!-- CHAPTER 5 -->
+<div class="page chapter">
+  <span class="chapnum">第 5 章</span>
+  <h2>检查与记录</h2>
+
+  <h3>5.1 飞行前检查——要大声说出来!</h3>
+  <p>在考试中,你要一边执行检查,一边<b>将结果记录在日常检查记录表上</b>
+  (<span class="jp">日常点检记录(日常点検記録 <i>nichijou tenken kiroku</i>)</span>)。
+  两个检查科目的时间限制约为<b>12分钟</b>。请按以下顺序反复练习:</p>
+  <table>
+    <tr><th>#</th><th>检查项目</th><th>报告口令</th></tr>
+    <tr><td>1</td><td>空域与周边环境</td><td>"空域与周边环境——无异常。"</td></tr>
+    <tr><td>2</td><td>天气 / 风速</td><td>"风速在每秒5米以下。"</td></tr>
+    <tr><td>3</td><td>螺旋桨、机架、识别牌</td><td>"无损伤。"</td></tr>
+    <tr><td>4</td><td>螺丝与接头</td><td>"已拧紧。"</td></tr>
+    <tr><td>5</td><td>动力系统</td><td>"正常。"</td></tr>
+    <tr><td>6</td><td>信号与GPS</td><td>"正常。"</td></tr>
+    <tr><td>7</td><td>电池电量</td><td>"充足。"</td></tr>
+    <tr><td>8</td><td>远程识别(Remote ID)</td><td>"工作正常。"</td></tr>
+    <tr><td>9</td><td>电机</td><td>"正常。"</td></tr>
+    <tr><td>10</td><td>悬停中的操控检查</td><td>"正常。"</td></tr>
+  </table>
+  <div class="warn"><b>⚠ 考试规则:</b>如果你完成了安全检查却<b>没有向考官说出来</b>,
+  就视为未检查——扣5分。务必大声报告。</div>
+
+  <h3>5.2 飞行结束后</h3>
+  <p>飞行后检查(机体发热、损伤、脏污)+ 填写<b>飞行日志</b>:日期、地点、
+  起降时间、以及总飞行时间。时间限制:5分钟。飞行时间计算出错
+  会<b>扣10分</b>——请核对你的计算!</p>
+
+  <h3>5.3 事故与重大事件——务必记住这三项</h3>
+  <div class="keybox">
+  <b>事故(<span class="jp">事故 <i>jiko</i></span>):</b>① 人员伤亡 ② 物件损坏
+  ③ 与有人驾驶航空器相撞或接触。<br>
+  <b>重大事件(<span class="jp">重大インシデント <i>juudai inshidento</i></span>):</b>① 与有人驾驶航空器险些相撞
+  ② 人员(轻微)受伤 ③ 失控 ④ 飞行中起火/冒烟。<br>
+  一旦发生事故:<b>停止飞行 → 救助伤者 → 向国土交通省(MLIT)报告。</b></div>
+</div>
+
+<!-- CHAPTER 6 -->
+<div class="page chapter">
+  <span class="chapnum">第 6 章</span>
+  <h2>实地考试</h2>
+
+  <h3>6.1 采分方式</h3>
+  <p>每个科目均以<b>100分</b>起算,失误则扣分。
+  达到<b>70分及以上(二等)</b>或<b>80分及以上(一等)</b>即为合格。</p>
+  <table>
+    <tr><th>结果</th><th>示例</th></tr>
+    <tr><td class="fail">直接不合格</td><td>坠机・撞到物体(标志杆、旗子、网)・失控・
+      危险速度(约5 m/s)・单手操控・<b>机体一半以上进入红区</b>
+      (不合格区)・超过时限・考官接管操控・
+      接受他人协助・(目视外考试中)未经指示看向无人机</td></tr>
+    <tr><td class="m5">−5 分</td><td>进入<b>黄区</b>(扣分区)・程序或方向错误・
+      硬着陆・未注视无人机・未做安全报告・未经指示提前移动・
+      高度明显错误・(一等)原地回转快于16秒或慢于26秒</td></tr>
+    <tr><td class="m1">−1 分</td><td>晃动・操控粗糙(突然加速/骤停)・机头朝向短暂错误</td></tr>
+  </table>
+  <div class="tip"><b>💡 两秒规则:</b>在某一航段上首次飘入黄区时,
+  只要在考官提示后约<b>2秒</b>内返回航线,就<b>不扣分</b>。
+  快速修正,保持冷静。</div>
+  <div class="tip"><b>💡 阵风:</b>如果无人机被风吹动,而你能迅速、正确地予以修正,
+  则<b>不扣分</b>。不要慌张。</div>
+
+  <h3>6.2 各飞行科目</h3>
+
+  <figure>
+  <svg viewBox="0 0 460 210" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;">
+    <rect x="10" y="10" width="440" height="190" fill="#fef2f2" stroke="#dc2626" stroke-dasharray="6 4"/>
+    <rect x="45" y="40" width="370" height="130" fill="#fffbeb" stroke="#d97706" stroke-dasharray="4 3"/>
+    <rect x="80" y="70" width="300" height="70" fill="#fff" stroke="#94a3b8"/>
+    <circle cx="230" cy="105" r="14" fill="none" stroke="#16a34a" stroke-width="2"/>
+    <text x="230" y="109" font-size="10" text-anchor="middle" fill="#16a34a">A</text>
+    <text x="80" y="63" font-size="11" fill="#334155">B</text>
+    <text x="376" y="63" font-size="11" fill="#334155">C</text>
+    <text x="376" y="156" font-size="11" fill="#334155">D</text>
+    <text x="80" y="156" font-size="11" fill="#334155">E</text>
+    <path d="M230 105 L80 105 L80 70 L380 70 L380 140 L80 140" fill="none" stroke="#1d4ed8" stroke-width="2" marker-end="url(#arr)"/>
+    <defs><marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#1d4ed8"/></marker></defs>
+    <text x="230" y="30" font-size="11" text-anchor="middle" fill="#dc2626">红区 = 直接不合格</text>
+    <text x="230" y="58" font-size="11" text-anchor="middle" fill="#d97706">黄区 = −5 分</text>
+    <text x="230" y="190" font-size="11" text-anchor="middle" fill="#334155">方形飞行:A → 悬停5秒 → 沿航线飞行,机头朝行进方向</text>
+  </svg>
+  <figcaption>方形飞行。一等:在B–C段与E–D段之间由1.5米爬升至3.5米。</figcaption>
+  </figure>
+
+  <figure>
+  <svg viewBox="0 0 460 170" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;">
+    <circle cx="160" cy="85" r="55" fill="none" stroke="#1d4ed8" stroke-width="2"/>
+    <circle cx="300" cy="85" r="55" fill="none" stroke="#1d4ed8" stroke-width="2"/>
+    <circle cx="160" cy="85" r="3" fill="#dc2626"/>
+    <circle cx="300" cy="85" r="3" fill="#dc2626"/>
+    <circle cx="230" cy="85" r="12" fill="none" stroke="#16a34a" stroke-width="2"/>
+    <text x="230" y="89" font-size="9" text-anchor="middle" fill="#16a34a">起点</text>
+    <text x="160" y="30" font-size="10" text-anchor="middle" fill="#64748b">圆 ≈ 5 米</text>
+    <text x="300" y="30" font-size="10" text-anchor="middle" fill="#64748b">圆 ≈ 5 米</text>
+    <text x="230" y="160" font-size="11" text-anchor="middle" fill="#334155">8字飞行:保持机头朝前。必须绕过每个红色圆心点飞行。</text>
+  </svg>
+  <figcaption>8字飞行。从圆心内侧抄近路 = 直接不合格。</figcaption>
+  </figure>
+
+  <table>
+    <tr><th>科目</th><th>二等(基本)</th><th>一等(基本)</th></tr>
+    <tr><td>方形飞行</td><td>GPS开,3.5米,8分钟</td><td>GPS关,由1.5米爬升至3.5米,6分钟</td></tr>
+    <tr><td>8字飞行</td><td>GPS开,1.5米,2圈,8分钟</td><td>GPS关,1圈以上,随后<b>紧急降落</b>,5分钟</td></tr>
+    <tr><td>原地回转悬停(360°定点转向)</td><td>—</td><td>GPS关,3.5米,约20秒完成一圈(16–26秒),3分钟</td></tr>
+    <tr><td>异常状态下的飞行</td><td>GPS关,直线飞行+紧急降落,6分钟</td><td>(含于8字飞行科目中)</td></tr>
+  </table>
+
+  <h3>6.3 紧急降落程序</h3>
+  <p>当考官喊出<b>"紧急事态发生!"</b>时:① 立即停止并悬停 →
+  ② 等待降落指示 → ③ <b>保持高度</b>,沿<b>最短路线</b>飞向降落点 →
+  ④ 在2米圆圈内轻柔降落。</p>
+
+  <h3>6.4 考试当天流程与时间限制</h3>
+  <table>
+    <tr><th>环节</th><th>内容</th><th>时间</th></tr>
+    <tr><td>机上考试(书面)</td><td>关于飞行计划的问题(二等4题 / 一等5题)</td><td>5分钟 / 10分钟</td></tr>
+    <tr><td>口述:飞行前</td><td>空域确认+对照记录表进行检查</td><td>3分钟 + 12分钟</td></tr>
+    <tr><td>实技考试(飞行)</td><td>上述各飞行科目</td><td>各科目分别计时</td></tr>
+    <tr><td>口述:飞行后</td><td>飞行后检查+飞行日志</td><td>5分钟</td></tr>
+    <tr><td>口述:事故</td><td>说出三类事故 / 正确的应对方式</td><td>各3分钟</td></tr>
+  </table>
+  <div class="warn"><b>⚠ 新规(自2026年6月5日起):</b>若时间用尽,未作答的部分和未完成的检查
+  均计为失误。请将检查练成一套流畅的连贯动作。</div>
+  <div class="tip"><b>💡 防护装备:</b>飞行考试期间须佩戴头盔和护目镜——场内所有人都须佩戴。</div>
+</div>
+
+<!-- CHAPTER 7 -->
+<div class="page chapter">
+  <span class="chapnum">第 7 章</span>
+  <h2>考试中会听到的日语</h2>
+  <p>结业审查和官方文件均使用日语。请通过声音记住这些词语:</p>
+  <table>
+    <tr><th>日语</th><th>罗马字读音</th><th>中文译义</th></tr>
+    <tr><td class="jp">離陸してください</td><td><i>ririku shite kudasai</i></td><td>请起飞</td></tr>
+    <tr><td class="jp">着陸してください</td><td><i>chakuriku shite kudasai</i></td><td>请降落</td></tr>
+    <tr><td class="jp">ホバリング</td><td><i>hobaringu</i></td><td>悬停</td></tr>
+    <tr><td class="jp">上昇 / 下降</td><td><i>joushou / kakou</i></td><td>上升 / 下降</td></tr>
+    <tr><td class="jp">前進 / 後進</td><td><i>zenshin / koushin</i></td><td>前进 / 后退</td></tr>
+    <tr><td class="jp">右 / 左</td><td><i>migi / hidari</i></td><td>右 / 左</td></tr>
+    <tr><td class="jp">機首</td><td><i>kishu</i></td><td>机头(朝向)</td></tr>
+    <tr><td class="jp">緊急事態発生</td><td><i>kinkyuu jitai hassei</i></td><td>紧急事态发生!</td></tr>
+    <tr><td class="jp">緊急着陸</td><td><i>kinkyuu chakuriku</i></td><td>紧急降落</td></tr>
+    <tr><td class="jp">点検</td><td><i>tenken</i></td><td>检查</td></tr>
+    <tr><td class="jp">異常なし</td><td><i>ijou nashi</i></td><td>无异常 / 正常</td></tr>
+    <tr><td class="jp">安全確認よし</td><td><i>anzen kakunin yoshi</i></td><td>安全确认——OK!(要大声说出来)</td></tr>
+    <tr><td class="jp">風速</td><td><i>fuusoku</i></td><td>风速</td></tr>
+    <tr><td class="jp">減点</td><td><i>genten</i></td><td>扣分</td></tr>
+    <tr><td class="jp">不合格 / 合格</td><td><i>fugoukaku / goukaku</i></td><td>不合格 / 合格</td></tr>
+    <tr><td class="jp">事故 / 重大インシデント</td><td><i>jiko / juudai inshidento</i></td><td>事故 / 重大事件</td></tr>
+    <tr><td class="jp">飛行日誌</td><td><i>hikou nisshi</i></td><td>飞行日志</td></tr>
+    <tr><td class="jp">立入管理措置</td><td><i>tachiiri kanri sochi</i></td><td>安全区管理措施(禁止他人进入)</td></tr>
+    <tr><td class="jp">目視内 / 目視外</td><td><i>mokushi-nai / mokushi-gai</i></td><td>目视内(VLOS) / 目视外(BVLOS)</td></tr>
+    <tr><td class="jp">技能証明</td><td><i>ginou shoumei</i></td><td>驾驶执照(即技能证明)</td></tr>
+  </table>
+  <div class="tip"><b>💡 应考窍门:</b>训练中我们会同时用中文和日语下达口令。
+  到考试当天,一声<i>"kinkyuu jitai hassei!"</i>就会让你产生与听到"紧急!"时相同的反应。</div>
+</div>
+
+<!-- CHAPTER 8 -->
+<div class="page chapter">
+  <span class="chapnum">第 8 章</span>
+  <h2>自我检测——10道题</h2>
+  <ol class="q">
+    <li>在日本,无人机达到多重时必须登记?<br><span class="answer">→ 100克。</span></li>
+    <li>说出使飞行成为"特定飞行"的三种空域。<br><span class="answer">→ 机场周边 / 150米以上高空 / DID人口集中地区上空(+紧急用务空域)。</span></li>
+    <li>什么是类别III?<br><span class="answer">→ 未设安全区、飞越第三者上空的特定飞行。需持有一等执照及一等认证机体。</span></li>
+    <li>二等实地考试的合格线是多少?<br><span class="answer">→ 100分中的70分(一等:80分)。</span></li>
+    <li>你在某一航段首次进入黄区,要如何做才能不被扣分?<br><span class="answer">→ 在考官提示后约2秒内返回航线。</span></li>
+    <li>说出三种会导致直接不合格的行为。<br><span class="answer">→ 例如:坠机、撞到物体、失控、危险速度(约5 m/s)、单手操控、进入红区、超过时限。</span></li>
+    <li>你必须报告的三类"事故"是什么?<br><span class="answer">→ 人员伤亡、物件损坏、与有人驾驶航空器相撞或接触。</span></li>
+    <li>考试为何采用ATTI模式(关闭稳定功能)?<br><span class="answer">→ 为证明在真实紧急情况下GPS失效时,你仍能安全操控无人机。</span></li>
+    <li>完成一项安全检查后,你必须做什么?<br><span class="answer">→ 向考官大声说出来。默不作声的检查视为未做(−5分)。</span></li>
+    <li>执照有效期多长,国家学科考试用什么语言?<br><span class="answer">→ 3年;仅日语。</span></li>
+  </ol>
+</div>
+
+<footer>
+  本教材为本校编制的培训辅助资料,概括了以下内容:国土交通省(MLIT)《无人机驾驶员实地考试标准》
+  及一等/二等多旋翼详细规则(2025年12月5日修订,2026年6月5日施行),以及《安全教则》(教則 Kyousoku)第4版
+  (2025年2月1日)。官方来源:mlit.go.jp/koku/license.html ・ mlit.go.jp/en/koku/uas.html。
+  规则会有变动——请务必查阅最新的官方文件。<br>
+  本教材为日文法规的中文说明,如有歧义以日文官方文件为准。
+</footer>
+
+
+<a href="./" id="homeBtn" style="position:fixed;top:10px;right:10px;z-index:99;
+ background:rgba(15,23,42,.75);color:#fff;text-decoration:none;font-size:1.1rem;
+ width:40px;height:40px;border-radius:50%;display:flex;align-items:center;
+ justify-content:center;border:1px solid rgba(255,255,255,.3);">🏠</a>
+<style>@media print{#homeBtn{display:none;}}</style>
+</body>
+</html>

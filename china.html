@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>中国・台湾・香港のドローン事情ガイド</title>
+<style>
+  :root{--bg:#0f172a;--card:#1e293b;--acc:#38bdf8;--warn:#f59e0b;--ok:#22c55e;--txt:#f1f5f9;--sub:#94a3b8;--line:#334155;}
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Hiragino Sans","Yu Gothic",system-ui,sans-serif;background:var(--bg);color:var(--txt);line-height:1.7;}
+  header{padding:26px 16px;text-align:center;background:linear-gradient(135deg,#dc2626,#f59e0b);}
+  header h1{margin:0;font-size:1.2rem;}
+  header p{margin:6px 0 0;font-size:.75rem;opacity:.9;}
+  main{max-width:640px;margin:0 auto;padding:16px 14px 50px;}
+  h2{font-size:1rem;color:var(--acc);border-left:4px solid var(--acc);padding-left:10px;margin:26px 0 10px;}
+  .box{background:var(--card);border-radius:14px;padding:14px 16px;margin-bottom:12px;font-size:.88rem;}
+  .en{color:#7dd3fc;font-size:.8em;}
+  table{border-collapse:collapse;width:100%;font-size:.8rem;margin:10px 0;}
+  th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top;}
+  th{background:#0b1220;color:var(--acc);}
+  .step{display:flex;gap:12px;margin-bottom:12px;}
+  .num{flex:0 0 30px;height:30px;border-radius:50%;background:var(--acc);color:#03202f;font-weight:bold;
+       display:flex;align-items:center;justify-content:center;}
+  .step b{display:block;}
+  .step p{margin:2px 0 0;font-size:.82rem;color:var(--sub);}
+  .warnbox{background:#451a03;border:1px solid var(--warn);border-radius:11px;padding:10px 14px;font-size:.78rem;color:#fde68a;margin:12px 0;}
+  .tip{background:#052e16;border:1px solid var(--ok);border-radius:11px;padding:10px 14px;font-size:.8rem;color:#bbf7d0;margin:12px 0;}
+  a{color:var(--acc);}
+  .note{font-size:.72rem;color:var(--sub);text-align:center;margin-top:20px;line-height:1.7;}
+  #homeBtn{position:fixed;top:10px;right:10px;z-index:99;background:rgba(15,23,42,.75);color:#fff;
+    text-decoration:none;font-size:1.1rem;width:40px;height:40px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.3);}
+</style>
+</head>
+<body>
+<a href="./" id="homeBtn">🏠</a>
+<header>
+  <h1>🇨🇳🇹🇼🇭🇰 中国・台湾・香港のドローン事情ガイド</h1>
+  <p>日本語解説|出張・業務渡航の前に|2026年7月時点の情報</p>
+</header>
+<main>
+
+  <h2>1. 中国本土の規制(2024年〜の新体制)</h2>
+  <div class="box">
+    中国では2023年6月に《无人驾驶航空器飞行管理暂行条例》(無人駕駛航空器飛行管理暫行条例。無人航空機飛行管理暫定条例)が公布され、<b>2024年1月1日に施行</b>されました。これが中国初の包括的なドローン法規です。
+    <br><br>
+    すべての民生用ドローン(機体重量の小さい「微型」含む)は、<b>「UOM」</b><span class="en">(民用無人駕駛航空器総合管理プラットフォーム、uom.caac.gov.cn)</span>で実名登録する必要があり、発行された登録標識(QRコード)を機体に貼付します。
+    <br><br>
+    機体は<b>重量ベースの5分類</b>で区分されます。
+    <table>
+      <tr><th>分類</th><th>重量の目安</th></tr>
+      <tr><td>微型</td><td>空虚重量250g未満</td></tr>
+      <tr><td>軽型</td><td>空虚重量4kg以下かつ最大離陸重量7kg以下</td></tr>
+      <tr><td>小型</td><td>空虚重量15kg以下または最大離陸重量25kg以下</td></tr>
+      <tr><td>中型</td><td>最大離陸重量150kg以下</td></tr>
+      <tr><td>大型</td><td>最大離陸重量150kg超</td></tr>
+    </table>
+    日本の技能証明制度は「飛行の方法(夜間・目視外など)」を基準に規制が組み立てられているのに対し、中国は「機体の重量」を起点に規制が組み立てられている点が対照的です。設計思想の違いとして押さえておくとわかりやすいです。
+    <br><br>
+    空域は「管制空域」と「適飛空域」(飛行可能として告示された空域)に二分されます。適飛空域では微型は真高50m以下、軽型・小型は120m以下が目安とされ、管制空域を飛行する場合は事前の飛行活動申請が必要です。
+    <br><br>
+    ライセンスについては、中型・大型の操縦や特定の運航にはCAAC(中国民用航空局)が発行する<b>「操控員執照」</b>が必要です。軽型・小型を非営利で適飛空域内において飛行させる場合は執照は不要ですが、安全教育の受講は求められます。営利運航には別途、運営合格証が必要です。
+    <div class="warnbox">⚠ 北京の五環路内など主要都市の中心部は広域で常時禁飛です。政府機関・軍事施設・空港周辺の規制は極めて厳格で、違反は治安管理処罰(行政拘留を含む)の対象となり、<b>外国人にも適用</b>されます。</div>
+  </div>
+
+  <h2>2. 出張者向けの実務アドバイス</h2>
+  <div class="box">
+    <div class="warnbox">
+      ① 観光・短期出張では<b>「ドローンを持ち込まない」のが最も安全な選択</b>です。実名登録には事実上、中国の身分証明や現地の携帯電話番号が必要となる場合が多く、短期の旅行者にはハードルが高いのが実情です。<br><br>
+      ② 業務上どうしても必要な場合は、現地パートナー企業や現地法人を通じて登録・飛行申請を行うのが現実的です。<br><br>
+      ③ 入国時に税関で機体の申告を求められる場合があります。<br><br>
+      ④ 空撮データを国外に持ち出す行為は、測絵(測量)データに関する規制に触れるおそれがあり、特に注意が必要です。
+    </div>
+  </div>
+
+  <h2>3. 台湾の規制</h2>
+  <div class="box">
+    台湾では民用航空法の「遙控無人機」専章が<b>2020年3月31日に施行</b>されました。所管は交通部民用航空局<span class="en">(CAA)</span>です。
+    <br><br>
+    最大離陸重量<b>250g以上</b>の機体は民航局サイトで機体登録を行い、発行された登録番号を機体に表示する必要があります(登録には有効期間があります)。
+    <br><br>
+    操作証は2段階です。学科試験のみで取得できる<b>「普通操作證」</b>と、実技試験を含む<b>「專業操作證」</b>(業務運航・重量の大きい機体・政府や法人の運航などで求められる)があります。年齢要件は区分によって異なるとされているため、詳細は必ず公式情報を確認してください。
+    <br><br>
+    最大高度は400フィート(約120m)です。
+    <br><br>
+    飛行禁止・制限のエリアは、民航局の<b>「遙控無人機管理資訊系統」</b><span class="en">(drone.caa.gov.tw)</span>の地図上で公開されており、赤(禁航區・禁止)・黄(限航區・制限)・緑の色分けで確認できます。
+    <br><br>
+    外国人・外国法人も機体登録や操作証の取得は可能ですが、<b>事前申請と審査が必要</b>で、観光でそのまま飛ばすことはできません。台湾で業務を受ける場合は、数週間以上の余裕をもって申請を進めるのが鉄則です。
+    <br><br>
+    無登録での飛行や禁航區での違反には、数十万台湾ドル規模の高額罰金が科される場合があります。
+    <div class="tip">💡 台湾は「登録+2段階ライセンス+公式地図での空域確認」という制度の構造が日本と似ており、日本の一等・二等の知識がそのまま活きる制度と言えます。</div>
+  </div>
+
+  <h2>4. 香港の規制(+マカオ)</h2>
+  <div class="box">
+    香港は中国本土とは<b>完全に別制度</b>です(UOMや重量5分類は適用されません)。根拠法は<b>「小型無人機令」</b><span class="en">(Small Unmanned Aircraft Order、Cap. 448G)</span>で、<b>2022年に施行</b>されました。所管は民航処<span class="en">(CAD:Civil Aviation Department)</span>です。
+    <br><br>
+    機体は重量で3区分されます。
+    <table>
+      <tr><th>区分</th><th>重量</th><th>主な扱い</th></tr>
+      <tr><td>カテゴリーA1</td><td>250g以下</td><td>最も制限が軽い(基本ルールは適用)</td></tr>
+      <tr><td>カテゴリーA2</td><td>250g超〜7kg</td><td>機体登録+操縦者登録が必要</td></tr>
+      <tr><td>カテゴリーB</td><td>7kg超〜25kg</td><td>訓練・評価などより厳格な要件</td></tr>
+    </table>
+    登録や申請は専用プラットフォーム<b>「eSUA」</b><span class="en">(esua.cad.gov.hk)</span>で行い、飛行可能エリアも同システムの地図で確認できます。標準的な飛行の高度上限は<b>300フィート(約90m)</b>で、日本(150m)や中台(120m)より低い点に注意してください。
+    <br><br>
+    香港の大きな特徴は、<b>第三者賠償責任保険への加入が法律上の義務</b>であることです(日本では推奨、香港では強制)。また市街地が高密度なため、ヴィクトリア・ハーバー周辺や空港周辺など飛行禁止・制限エリアが広く設定されています。
+    <br><br>
+    渡航者も登録・申請自体は可能とされていますが、区分や年齢などの要件が細かいため、<b>渡航前にeSUAで最新の要件を確認</b>してください。
+    <div class="warnbox">⚠ <b>マカオは香港ともまた別制度</b>(民航局AACMの所管)で、ドローンの飛行が広く制限されています。中国本土・香港・マカオ・台湾の4つはそれぞれ独立した制度──「中華圏でひとくくりにしない」ことが実務の鉄則です。</div>
+  </div>
+
+  <h2>5. 「低空経済」— 中国のドローン産業事情</h2>
+  <div class="box">
+    中国は低空域(ローエアスペース)の産業利用、たとえば物流ドローンやeVTOL(空飛ぶクルマ)の活用を<b>「低空経済」</b>として国家戦略に位置づけており、2024年には政府活動報告に初めて明記されました。深圳は「ドローンの都」と呼ばれDJI本社の所在地でもあり、EHang(億航)によるeVTOLの型式証明の取得や、美団・順豊による物流ドローンの実用化などが進んでいます。業界人同士の話題として知っておく価値のあるトピックです。
+  </div>
+
+  <h2>6. DJIと米中摩擦(業界リスクの視点)</h2>
+  <div class="box">
+    米国ではDJIに対する規制強化が進んでおり、政府調達の禁止や、国防授権法に基づく安全性審査の要求などが議論・実施されています。日本では政府調達については国産機優先の方針がありますが、民間分野では引き続きDJI製品が主流です。スクール運営者・事業者としては、機体調達の継続性(調達リスク)や、ファームウェア・飛行データの取り扱いについて意識しておくことが望ましいでしょう。
+  </div>
+
+  <h2>7. 日・中・台・香港 比較表</h2>
+  <div class="box">
+    <table>
+      <tr><th>項目</th><th>🇯🇵 日本</th><th>🇨🇳 中国</th><th>🇹🇼 台湾</th><th>🇭🇰 香港</th></tr>
+      <tr><td>登録の閾値</td><td>100g以上</td><td>全機実名登録(微型含む)</td><td>250g以上</td><td>250g超</td></tr>
+      <tr><td>分類の考え方</td><td>飛行の方法(夜間・目視外等)</td><td>重量による5分類</td><td>重量+用途</td><td>重量3区分(A1/A2/B)</td></tr>
+      <tr><td>ライセンス</td><td>一等・二等</td><td>執照(中型・大型等が対象)</td><td>普通・專業(2段階)</td><td>操縦者登録+区分別要件</td></tr>
+      <tr><td>高度上限</td><td>150m</td><td>適飛空域内で120m</td><td>400ft(約120m)</td><td>300ft(約90m)</td></tr>
+      <tr><td>空域確認</td><td>DIPS</td><td>UOM</td><td>drone.caa.gov.tw の地図</td><td>eSUA の地図</td></tr>
+      <tr><td>保険</td><td>推奨(一部で要件)</td><td>要件あり</td><td>業務等で要件</td><td><b>法律で強制</b></td></tr>
+      <tr><td>外国人の飛行</td><td>登録すれば可</td><td>実務上ハードルが高い</td><td>事前申請すれば可</td><td>登録・申請のうえ可(要事前確認)</td></tr>
+    </table>
+  </div>
+
+  <h2>8. ミニ用語対訳(中国語編)</h2>
+  <div class="box">
+    <table>
+      <tr><th>中国語(簡体字/繁体字)</th><th>ピンイン</th><th>意味</th></tr>
+      <tr><td>无人机 / 無人機</td><td>wúrénjī</td><td>ドローン</td></tr>
+      <tr><td>实名登记 / 實名登記</td><td>shímíng dēngjì</td><td>実名登録</td></tr>
+      <tr><td>禁飞区 / 禁飛區</td><td>jìnfēiqū</td><td>飛行禁止区域</td></tr>
+      <tr><td>适飞空域 / 適飛空域</td><td>shìfēi kōngyù</td><td>飛行可能空域</td></tr>
+      <tr><td>执照 / 執照</td><td>zhízhào</td><td>ライセンス</td></tr>
+      <tr><td>遥控无人机 / 遙控無人機</td><td>yáokòng wúrénjī</td><td>リモコン無人機(台湾の法令用語)</td></tr>
+      <tr><td>低空经济 / 低空經濟</td><td>dīkōng jīngjì</td><td>低空経済</td></tr>
+      <tr><td>小型无人机 / 小型無人機</td><td>xiǎoxíng wúrénjī</td><td>小型無人機(香港の法令用語・SUA)</td></tr>
+      <tr><td>操控员执照 / 操控員執照</td><td>cāokòngyuán zhízhào</td><td>操縦者ライセンス(中国)</td></tr>
+      <tr><td>普通操作證</td><td>pǔtōng cāozuò zhèng</td><td>普通操作証(台湾)</td></tr>
+      <tr><td>專業操作證</td><td>zhuānyè cāozuò zhèng</td><td>専業操作証(台湾)</td></tr>
+    </table>
+  </div>
+
+  <h2>9. 公式リンク</h2>
+  <div class="box" style="font-size:.82rem">
+    ・<a href="https://www.caac.gov.cn" target="_blank">CAAC(中国民用航空局)</a><br>
+    ・<a href="https://uom.caac.gov.cn" target="_blank">UOM(民用無人駕駛航空器総合管理プラットフォーム)</a><br>
+    ・<a href="https://drone.caa.gov.tw" target="_blank">台湾民航局 遙控無人機管理資訊系統</a><br>
+    ・<a href="https://www.cad.gov.hk" target="_blank">香港CAD(民航処)</a>
+  </div>
+
+  <p class="note">本ページは2026年7月時点の一般情報です(法的助言ではありません)。<br>中国・台湾の規制は変化が速いため、渡航・業務の前に必ず公式情報と現地の専門家にご確認ください。<br>中国語圏の受講生向け教材は<a href="instructor/textbook-zh.html">学员教材(中文版)</a>・<a href="instructor/terms-zh.html">中国語用語一覧</a>にあります。</p>
+</main>
+</body>
+</html>
