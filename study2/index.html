@@ -120,61 +120,103 @@ header .sub{font-size:.7rem;color:#475569;margin-top:2px}
 header{border-bottom-color:#16a34a!important}
 header h1{color:#4ade80!important}
 .section-title{color:#4ade80!important}
+
+.work-note{background:#1c1a0e;border:1px solid #92400e;border-radius:8px;padding:10px 13px;font-size:.74rem;color:#fde68a;line-height:1.7;margin-bottom:14px}
+.work-card{background:#1e293b;border:1px solid #334155;border-radius:12px;margin-bottom:11px;overflow:hidden}
+.work-head{display:flex;align-items:center;gap:10px;padding:14px 16px;cursor:pointer}
+.work-head .icon{font-size:1.5rem}
+.work-head h4{font-size:.92rem;color:#93c5fd;flex:1}
+.work-head p{font-size:.7rem;color:#64748b;margin-top:2px}
+.work-head .arrow{color:#475569;font-size:.85rem;transition:transform .2s}
+.work-card.open .arrow{transform:rotate(90deg)}
+.work-body{display:none;padding:2px 16px 15px;border-top:1px solid #334155}
+.work-card.open .work-body{display:block}
+.work-sec{margin-top:13px}
+.work-sec h5{font-size:.78rem;margin-bottom:7px;letter-spacing:.03em}
+.work-sec ul{list-style:none;margin:0;padding:0}
+.work-sec li{font-size:.8rem;color:#cbd5e1;line-height:1.8;padding-left:1em;text-indent:-1em;margin-bottom:4px}
+.work-sec li b{color:#93c5fd}
+#langBtn{background:transparent;border:1.5px solid #22c55e;color:#86efac;border-radius:20px;padding:3px 10px;font-size:.7rem;cursor:pointer;white-space:nowrap}
+#langBtn:active{background:#14352b}
+.flash-card{background:linear-gradient(135deg,#1e293b,#172033);border:1.5px solid #334155;border-radius:16px;min-height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:22px 18px;cursor:pointer;text-align:center;gap:8px}
+.flash-cat{font-size:.68rem;color:#475569}
+.flash-front{font-size:1.15rem;font-weight:700;color:#e2e8f0;line-height:1.6}
+.flash-hint{font-size:.7rem;color:#475569}
+.flash-back{border-top:1px dashed #334155;padding-top:12px;margin-top:4px;width:100%}
+.flash-en{font-size:1.05rem;color:#86efac;font-weight:700;line-height:1.5}
+.flash-zh{font-size:1.05rem;color:#7dd3fc;font-weight:700;line-height:1.5}
+.flash-kana{font-size:.78rem;color:#94a3b8;margin-top:5px}
+.flash-note{font-size:.74rem;color:#fbbf24;margin-top:7px;line-height:1.6}
+.chip{padding:5px 10px;border-radius:16px;border:1px solid #334155;background:transparent;color:#64748b;font-size:.72rem;cursor:pointer}
+.chip.active{background:#16a34a;border-color:#16a34a;color:#fff}
 </style>
 </head>
 <body>
 <header>
   <div>
     <h1>二等無人航空機 学科対策</h1>
-    <div class="sub">教則 令和7年2月第4版準拠 ・ 三肢択一</div>
+    <div class="sub" id="hdrSub">教則 令和7年2月第4版準拠 ・ 三肢択一</div>
   </div>
-  <span class="badge">v3.0</span>
+  <div style="display:flex;align-items:center;gap:8px">
+    <button id="langBtn" onclick="toggleLang()">🌐 EN</button>
+    <span class="badge">v3.3</span>
+  </div>
 </header>
 
 <div class="main">
   <div class="tabs">
     <button class="tab active" onclick="showTab('home')">ホーム</button>
     <button class="tab" onclick="showTab('cheat')">要点</button>
-        <button class="tab" onclick="showTab('review')">復習</button>
+    <button class="tab" onclick="showTab('work')">実務</button>
+    <button class="tab" onclick="showTab('review')">復習</button>
   </div>
 
   <div id="screen-home" class="screen active">
     <div id="stat-bar" class="stat-bar" style="display:none">
-      <div class="stat-item"><div class="val" id="stat-total">0</div><div class="lbl">解答済</div></div>
-      <div class="stat-item"><div class="val green" id="stat-correct">0</div><div class="lbl">正解</div></div>
-      <div class="stat-item"><div class="val red" id="stat-wrong">0</div><div class="lbl">不正解</div></div>
-      <div class="stat-item"><div class="val" id="stat-pct">0%</div><div class="lbl">正解率</div></div>
+      <div class="stat-item"><div class="val" id="stat-total">0</div><div class="lbl" id="lblAns">解答済</div></div>
+      <div class="stat-item"><div class="val green" id="stat-correct">0</div><div class="lbl" id="lblOk">正解</div></div>
+      <div class="stat-item"><div class="val red" id="stat-wrong">0</div><div class="lbl" id="lblNg">不正解</div></div>
+      <div class="stat-item"><div class="val" id="stat-pct">0%</div><div class="lbl" id="lblPct">正解率</div></div>
     </div>
 
-    <p class="section-title">🎓 本番形式の模擬試験</p>
+    <div class="work-note" id="jaNote" style="display:none"></div>
+
+    <p class="section-title" id="stMock">🎓 本番形式の模擬試験</p>
     <div class="mock-card" onclick="startMock()">
       <div class="icon">📝</div>
-      <h3>本番モード（模擬試験）</h3>
-      <p>二等学科試験と同じ条件で挑戦。CBT本番の感覚をつかみましょう。</p>
-      <div class="mock-spec"><span>50問</span><span>30分</span><span>三肢択一</span><span>合格80%</span></div>
+      <h3 id="mockH3">本番モード（模擬試験）</h3>
+      <p id="mockP">二等学科試験と同じ条件で挑戦。CBT本番の感覚をつかみましょう。</p>
+      <div class="mock-spec" id="mockSpec"><span>50問</span><span>30分</span><span>三肢択一</span><span>合格80%</span></div>
     </div>
 
-    <p class="section-title">🔥 弱点克服</p>
+    <p class="section-title" id="stWeak">🔥 弱点克服</p>
     <div class="mock-card" style="background:linear-gradient(135deg,#3a1e1e,#2a1212);border-color:#ef4444" onclick="startWeak()">
       <div class="icon">🔥</div>
-      <h3>弱点モード（忘却曲線で再出題）</h3>
-      <p>間違えた問題を1日後→3日後→7日後に再出題。3回連続で正解すると卒業します。</p>
+      <h3 id="weakH3">弱点モード（忘却曲線で再出題）</h3>
+      <p id="weakP">間違えた問題を1日後→3日後→7日後に再出題。3回連続で正解すると卒業します。</p>
       <div class="mock-spec"><span id="weakCount" style="background:#7f1d1d66;color:#fecaca">0問</span></div>
     </div>
 
-    <p class="section-title">📊 分野別成績</p>
+    <p class="section-title" id="stFlash">🌐 多言語学習（日英中）</p>
+    <div class="mock-card" style="background:linear-gradient(135deg,#14352b,#0d2921);border-color:#22c55e" onclick="startFlash()">
+      <div class="icon">📇</div>
+      <h3 id="flashH3">用語フラッシュカード（日・英・中）</h3>
+      <p id="flashP">教則の重要用語を日英中3言語＋読み（カタカナ／ピンイン）で暗記。タップで反転。外国人受講生への指導にも。</p>
+    </div>
+
+    <p class="section-title" id="stStats">📊 分野別成績</p>
     <div id="catStats" style="background:#1e293b;border:1px solid #334155;border-radius:12px;padding:14px 16px"></div>
 
-    <p class="section-title">📈 模擬試験の推移</p>
+    <p class="section-title" id="stHist">📈 模擬試験の推移</p>
     <div id="mockHist" style="background:#1e293b;border:1px solid #334155;border-radius:12px;padding:14px 16px"></div>
 
-    <p class="section-title">📚 分野別練習（解説つき）</p>
+    <p class="section-title" id="stPractice">📚 分野別練習（解説つき）</p>
     <div class="cat-grid" id="catGrid"></div>
   </div>
 
   <div id="screen-quiz" class="screen">
     <div class="q-header">
-      <button class="btn btn-secondary" style="padding:6px 11px;font-size:.76rem" onclick="quitQuiz()">← 中断</button>
+      <button class="btn btn-secondary" id="quitBtn" style="padding:6px 11px;font-size:.76rem" onclick="quitQuiz()">← 中断</button>
       <div class="q-progress-bar"><div class="q-progress-fill" id="progressFill"></div></div>
       <span class="q-count" id="qCount">1/1</span>
       <span class="timer" id="timer" style="display:none">30:00</span>
@@ -202,18 +244,18 @@ header h1{color:#4ade80!important}
     <div class="result-card">
       <div id="passBadge" class="pass-badge" style="display:none"></div>
       <div class="result-score" id="resultScore"></div>
-      <div class="result-label">正解率</div>
+      <div class="result-label" id="rLabel">正解率</div>
       <div class="result-breakdown">
-        <div><div class="val green" id="rCorrect"></div><div class="lbl">正解</div></div>
-        <div><div class="val" style="color:#94a3b8" id="rTotal"></div><div class="lbl">全問</div></div>
-        <div><div class="val red" id="rWrong"></div><div class="lbl">不正解</div></div>
+        <div><div class="val green" id="rCorrect"></div><div class="lbl" id="rlOk">正解</div></div>
+        <div><div class="val" style="color:#94a3b8" id="rTotal"></div><div class="lbl" id="rlAll">全問</div></div>
+        <div><div class="val red" id="rWrong"></div><div class="lbl" id="rlNg">不正解</div></div>
       </div>
       <div class="pass-line-note" id="passLineNote"></div>
       <div class="result-msg" id="resultMsg"></div>
       <div style="display:flex;gap:9px;justify-content:center;flex-wrap:wrap">
-        <button class="btn btn-primary" onclick="retryQuiz()">もう一度</button>
+        <button class="btn btn-primary" id="retryBtn" onclick="retryQuiz()">もう一度</button>
         <button class="btn btn-secondary" onclick="reviewWrong()" id="reviewBtn">間違い確認</button>
-        <button class="btn btn-secondary" onclick="showTab('home')">ホーム</button>
+        <button class="btn btn-secondary" id="rHomeBtn" onclick="showTab('home')">ホーム</button>
       </div>
     </div>
   </div>
@@ -221,14 +263,36 @@ header h1{color:#4ade80!important}
   
 
   <div id="screen-cheat" class="screen">
-    <p style="font-size:.78rem;color:#64748b;margin-bottom:12px">間違えやすいポイント・暗記すべき数値をまとめました。試験直前の見直しに。</p>
+    <p style="font-size:.78rem;color:#64748b;margin-bottom:12px" id="cheatIntro">間違えやすいポイント・暗記すべき数値をまとめました。試験直前の見直しに。</p>
     <div class="formula-list" id="cheatList"></div>
+  </div>
+
+  <div id="screen-work" class="screen">
+    <p style="font-size:.78rem;color:#64748b;margin-bottom:12px" id="workIntro">資格を趣味・仕事に活かすための実務ガイド。分野をタップすると詳細が開きます。</p>
+    <div class="work-note" id="workNote">⚠️ 制度・ガイドラインは改正されます。実際の飛行前に必ず国土交通省・農林水産省の最新情報とDIPSのお知らせを確認してください。</div>
+    <div id="workList"></div>
+  </div>
+
+  <div id="screen-flash" class="screen">
+    <div style="margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:8px">
+      <h3 style="color:#60a5fa;font-size:.92rem" id="flashTitle">用語フラッシュカード（日・英・中）</h3>
+      <button class="btn btn-secondary" id="flashBack" style="font-size:.76rem;padding:6px 11px" onclick="showTab('home')">← 戻る</button>
+    </div>
+    <div id="flashChips" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:13px"></div>
+    <div class="flash-card" id="flashCard" onclick="flipFlash()"></div>
+    <div style="display:flex;justify-content:center;gap:8px;margin-top:14px;flex-wrap:wrap">
+      <button class="btn btn-secondary" onclick="prevFlash()" style="min-width:56px">←</button>
+      <button class="btn btn-primary" id="flashDirBtn" onclick="toggleFlashDir()">日 → 英</button>
+      <button class="btn btn-secondary" id="flashShufBtn" onclick="shuffleFlash()">🔀</button>
+      <button class="btn btn-secondary" onclick="nextFlash()" style="min-width:56px">→</button>
+    </div>
+    <p id="flashCounter" style="text-align:center;color:#64748b;font-size:.76rem;margin-top:10px"></p>
   </div>
 
   <div id="screen-review" class="screen">
     <div style="margin-bottom:13px;display:flex;align-items:center;justify-content:space-between">
-      <h3 style="color:#60a5fa;font-size:.92rem">間違えた問題の復習</h3>
-      <button class="btn btn-secondary" style="font-size:.76rem;padding:6px 11px" onclick="showTab('home')">← 戻る</button>
+      <h3 style="color:#60a5fa;font-size:.92rem" id="revTitle">間違えた問題の復習</h3>
+      <button class="btn btn-secondary" id="revBack" style="font-size:.76rem;padding:6px 11px" onclick="showTab('home')">← 戻る</button>
     </div>
     <div class="review-list" id="reviewList"></div>
   </div>
@@ -488,7 +552,7 @@ const CHEATSHEET=[
 
 const CATEGORIES={};Q.forEach(q=>{CATEGORIES[q.cat]=CATEGORIES[q.cat]||[];CATEGORIES[q.cat].push(q)});
 CATEGORIES['全問ランダム']=[...Q];
-const CAT_META={'頻出論点':{icon:'🎯',desc:'本試験レベルの頻出論点を集中対策'},'規則':{icon:'⚖️',desc:'航空法・飛行禁止法・電波法'},'機体システム':{icon:'🛸',desc:'機体特性・センサ・電波'},'操縦・運航':{icon:'🚁',desc:'操縦知識・申請・緊急時'},'気象・リスク':{icon:'🌤️',desc:'気象・リスク評価'},'全問ランダム':{icon:'🎯',desc:'全分野からランダム'}};
+const CAT_META={'頻出論点':{icon:'🎯',desc:'本試験レベルの頻出論点を集中対策',en:'Frequently tested points at real-exam level'},'規則':{icon:'⚖️',desc:'航空法・飛行禁止法・電波法',en:'Aviation Act, restricted-area law, radio law'},'機体システム':{icon:'🛸',desc:'機体特性・センサ・電波',en:'Airframe, sensors, radio'},'操縦・運航':{icon:'🚁',desc:'操縦知識・申請・緊急時',en:'Operations, applications, emergencies'},'気象・リスク':{icon:'🌤️',desc:'気象・リスク評価',en:'Weather & risk assessment'},'全問ランダム':{icon:'🎯',desc:'全分野からランダム',en:'Random from all topics'}};
 
 let curQ=[],curOrders=[],idx=0,correct=0,answered=false,curCat='',wrongAns=[],stats={total:0,correct:0};
 let isMock=false,mockAnswers=[],timerId=null,timeLeft=0;
@@ -514,7 +578,7 @@ function dueWrongIds(){
   const s=getWrongSet(),r=getSRS(),t=addDays(0);
   return [...s].filter(id=>!r[id]||(r[id].due||t)<=t);
 }
-function updateWeakCard(){const el=document.getElementById('weakCount');if(el)el.textContent='今日の復習 '+dueWrongIds().length+'問 / 全'+getWrongSet().size+'問'}
+function updateWeakCard(){const el=document.getElementById('weakCount');if(el)el.textContent=tf('weakToday',{a:dueWrongIds().length,b:getWrongSet().size})}
 
 // 分野別成績（localStorageに永続化）
 function getCatStats(){try{return JSON.parse(localStorage.getItem('droneCatStats2')||'{}')}catch(e){return {}}}
@@ -523,7 +587,7 @@ function buildCatStats(){
   const el=document.getElementById('catStats');if(!el)return;
   const s=getCatStats();
   const cats=Object.keys(CAT_META).filter(c=>c!=='全問ランダム'&&s[c]&&s[c].t>0);
-  if(cats.length===0){el.innerHTML='<p style="font-size:.78rem;color:#64748b;margin:0">問題を解くと、分野ごとの正答率がここにグラフで表示されます。</p>';return}
+  if(cats.length===0){el.innerHTML='<p style="font-size:.78rem;color:#64748b;margin:0">'+t('emptyCat')+'</p>';return}
   el.innerHTML=cats.map(c=>{
     const st=s[c],pct=Math.round(st.c/st.t*100);
     return `<div class="catstat-item"><div class="catstat-top"><span>${CAT_META[c].icon} ${c}</span><span>${pct}%（${st.c}/${st.t}）</span></div><div class="catstat-bar"><div class="catstat-fill" style="width:${pct}%"></div></div></div>`;
@@ -535,9 +599,12 @@ const MOCK_PASS=80;
 function buildMockHist(){
   const el=document.getElementById('mockHist');if(!el)return;
   let h=[];try{h=JSON.parse(localStorage.getItem('droneMockHist2')||'[]')}catch(e){}
-  if(h.length===0){el.innerHTML='<p style="font-size:.78rem;color:#64748b;margin:0">模擬試験を受けると、成績の推移がここにグラフで表示されます。</p>';return}
+  if(h.length===0){el.innerHTML='<p style="font-size:.78rem;color:#64748b;margin:0">'+t('emptyMock')+'</p>';return}
   const shown=h.slice(-10),off=h.length-shown.length;
-  el.innerHTML=shown.map((x,i)=>`<div class="catstat-item"><div class="catstat-top"><span>${off+i+1}回目（${x.d}）</span><span>${x.p}%${x.p>=MOCK_PASS?' 🎉合格圏':''}</span></div><div class="catstat-bar"><div class="catstat-fill" style="width:${x.p}%"></div></div></div>`).join('');
+  el.innerHTML=shown.map((x,i)=>{
+    const label=LANG==='en'?('#'+(off+i+1)+' ('+x.d+')'):((off+i+1)+'回目（'+x.d+'）');
+    return `<div class="catstat-item"><div class="catstat-top"><span>${label}</span><span>${x.p}%${x.p>=MOCK_PASS?t('passZone'):''}</span></div><div class="catstat-bar"><div class="catstat-fill" style="width:${x.p}%"></div></div></div>`;
+  }).join('');
 }
 
 // 教則の参考章（解説の逆引き用）
@@ -566,7 +633,8 @@ function buildHome(){
   Object.keys(CAT_META).forEach(cat=>{
     const m=CAT_META[cat],cnt=CATEGORIES[cat]?CATEGORIES[cat].length:0;
     const c=document.createElement('div');c.className='cat-card';
-    c.innerHTML=`<div class="icon">${m.icon}</div><h3>${cat}</h3><p>${m.desc}</p><div class="qc">${cat==='全問ランダム'?Q.length+'問':cnt+'問'}</div>`;
+    const desc=(LANG==='en'&&m.en)?m.en:m.desc,unit=t('unit');
+    c.innerHTML=`<div class="icon">${m.icon}</div><h3>${cat}</h3><p>${desc}</p><div class="qc">${cat==='全問ランダム'?Q.length+unit:cnt+unit}</div>`;
     c.onclick=()=>startQuiz(cat);g.appendChild(c);
   });
 }
@@ -659,22 +727,22 @@ function selectMock(i){
   document.querySelectorAll('.choice-btn').forEach((b,p)=>b.classList.toggle('selected',order[p]===i));
 }
 function showExplanation(q){
-  const el=document.getElementById('explanation');let h='<h4>解説</h4>';
+  const el=document.getElementById('explanation');let h='<h4>'+t('expl')+'</h4>';
   if(q.steps)q.steps.forEach((s,i)=>{
     h+=`<div class="step"><div class="step-num">${i+1}</div><div class="step-body">`;
     if(s.t)h+=`<strong>${s.t}</strong><br>`;if(s.b)h+=s.b;if(s.c)h+=`<span class="calc">${s.c}</span>`;
     h+='</div></div>';
   });
-  h+=`<div class="answer-highlight">正解：${q.ans}</div>`;
+  h+=`<div class="answer-highlight">${t('correctIs')}${q.ans}</div>`;
   const ref=CHAPTER_MAP[q.cat]||TAG_CHAPTER[q.tag]||'';
-  if(ref)h+=`<div style="font-size:.72rem;color:#64748b;margin-top:8px">📖 参考：${ref}</div>`;
+  if(ref)h+=`<div style="font-size:.72rem;color:#64748b;margin-top:8px">${t('ref')}${ref}</div>`;
   el.innerHTML=h;el.classList.add('show');
 }
 function toggleHint(){document.getElementById('hintPanel').classList.toggle('show')}
 function prevQuestion(){if(idx>0){idx--;renderQ()}}
 function nextQuestion(){idx++;if(idx>=curQ.length){if(isMock)return;showResult(false)}else renderQ()}
 function quitQuiz(){
-  if(isMock&&!confirm('模擬試験を中断しますか？（成績は記録されません）'))return;
+  if(isMock&&!confirm(t('confirmQuit')))return;
   if(timerId){clearInterval(timerId);timerId=null}
   showTab('home');
 }
@@ -695,12 +763,12 @@ function showResult(mock){
   if(mock){
     const pass=pct>=80;
     badge.style.display='inline-block';badge.className='pass-badge '+(pass?'pass':'fail');
-    badge.textContent=pass?'合格':'不合格';
-    note.textContent='本番の合格ライン：正答率80%程度';
-    document.getElementById('resultMsg').textContent=pass?'おめでとうございます！本番でもこの調子で。':'あと'+(Math.ceil(total*0.8)-correct)+'問で合格ラインです。間違いを復習しましょう。';
+    badge.textContent=pass?t('pass'):t('fail');
+    note.textContent=t('passNote');
+    document.getElementById('resultMsg').textContent=pass?t('msgMockPass'):tf('msgMockFail',{n:Math.ceil(total*0.8)-correct});
   }else{
     badge.style.display='none';note.textContent='';
-    document.getElementById('resultMsg').textContent=pct>=80?'素晴らしい！合格レベルです。':pct>=60?'あと一息！苦手分野を復習しましょう。':'公式集と解説で基礎を固めましょう。';
+    document.getElementById('resultMsg').textContent=pct>=80?t('msg90'):pct>=60?t('msg70'):t('msgLow');
   }
   document.getElementById('reviewBtn').style.display=wrongAns.length>0?'inline-block':'none';
   document.getElementById('screen-quiz').classList.remove('active');
@@ -708,11 +776,11 @@ function showResult(mock){
 }
 function reviewWrong(){
   const el=document.getElementById('reviewList');
-  if(wrongAns.length===0){el.innerHTML='<p style="color:#64748b;text-align:center;padding:20px">間違えた問題はありません！</p>'}
+  if(wrongAns.length===0){el.innerHTML='<p style="color:#64748b;text-align:center;padding:20px">'+t('noWrong')+'</p>'}
   else{el.innerHTML='';wrongAns.forEach(({q,yourIdx})=>{
     const d=document.createElement('div');d.className='review-item';
-    const your=yourIdx==null?'（未回答）':q.choices[yourIdx];
-    d.innerHTML=`<div class="rtag">${q.tag}</div><div class="rq">${q.text}</div><div class="ya">✗ あなた：${your}</div><div class="ca">✓ 正解：${q.ans}</div>`;
+    const your=yourIdx==null?t('unanswered'):q.choices[yourIdx];
+    d.innerHTML=`<div class="rtag">${q.tag}</div><div class="rq">${q.text}</div><div class="ya">${t('yourAns')}${your}</div><div class="ca">${t('corrAns')}${q.ans}</div>`;
     el.appendChild(d);
   })}
   showTab('review');
@@ -730,7 +798,7 @@ function buildFormulas(){
 }
 function buildCheat(){
   const el=document.getElementById('cheatList');el.innerHTML='';
-  CHEATSHEET.forEach(c=>{
+  (LANG==='en'?CHEATSHEET_EN:CHEATSHEET).forEach(c=>{
     const d=document.createElement('div');d.className='formula-item';
     let h=`<h4>${c.title}</h4><p style="line-height:1.9">`;
     h+=c.points.map(p=>'・'+p).join('<br>');
@@ -743,10 +811,349 @@ function showTab(name){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('screen-'+name).classList.add('active');
   if(name==='home'){updateWeakCard();buildCatStats();buildMockHist()}
-  const map={home:0,cheat:1,review:2};
+  const map={home:0,cheat:1,work:2,review:3};
   if(map[name]!==undefined)document.querySelectorAll('.tab')[map[name]]?.classList.add('active');
 }
-buildHome();buildCheat();updateWeakCard();buildCatStats();buildMockHist();
+// ===== 実務ガイド =====
+const WORK=[
+{icon:'📷',title:'空撮（趣味・業務）',sub:'風景・不動産・ウェディング・観光PR',secs:[
+{h:'📋 必要な手続き・知識',c:'#60a5fa',items:[
+'DID・夜間・目視外・人／物30m未満は<b>特定飛行</b>。技能証明＋機体認証（カテゴリーII）か、DIPSでの許可・承認が必要',
+'特定飛行では<b>飛行計画の通報・飛行日誌の記載</b>が義務。事故時の報告・救護も法定義務',
+'FPVで5.7GHz帯を使う場合は<b>アマチュア無線技士（4級以上）＋無線局開局</b>が必要。技適マーク付き2.4GHz帯はそのまま使用可'],},
+{h:'⚠️ 注意点',c:'#fca5a5',items:[
+'<b>航空法の許可＝飛ばせる、ではない</b>。土地・施設管理者の許可が別途必要（都市公園・河川・港湾・国有林・私有地など。都立公園は原則持込み禁止）',
+'人が写り込む映像は<b>肖像権・プライバシー</b>に配慮（顔・表札・洗濯物などはぼかし処理が原則）',
+'イベント・催し場所の上空は原則個別の許可＋補助者配置・立入禁止区画などの<b>追加安全基準</b>が課される',
+'海岸・観光地は条例規制が増加中。飛行前に自治体サイトで確認'],},
+{h:'💡 実務アドバイス',c:'#86efac',items:[
+'日中の白飛び対策に<b>NDフィルター</b>は必携。動画はD-Log等のフラットプロファイル＋ジンバル速度を落とすとプロの画になる',
+'作品は<b>ポートフォリオ（YouTube・Instagram）</b>にまとめる。営業資料そのものになる',
+'対人・対物<b>1億円以上の賠償責任保険</b>に加入（業務の受注条件になることが多い）'],},
+{h:'💰 収益の目安',c:'#fbbf24',items:[
+'空撮案件は半日3〜10万円程度から。不動産・建設記録・ウェディング・自治体観光PRが主要顧客',
+'ストックフォト・映像素材の販売は単価は低いが積み上げ型の副収入になる'],}]},
+{icon:'🔧',title:'点検・洗浄',sub:'外壁・屋根・ソーラーパネル',secs:[
+{h:'📋 必要な手続き・知識',c:'#60a5fa',items:[
+'外壁調査は<b>赤外線カメラ</b>による温度差検出が主流。定期報告の外壁調査でドローン活用が制度上認められている',
+'洗浄液や水を撒く行為は<b>「物件投下」に該当し許可・承認が必要</b>（水だけでも物件投下扱い）',
+'<b>係留飛行の特例</b>：十分な強度の30m以下の紐で係留し立入管理をすれば、DID・夜間・目視外・30m未満・物件投下等の許可が不要に。洗浄業務は係留が定石'],},
+{h:'⚠️ 注意点',c:'#fca5a5',items:[
+'壁面への近接飛行は<b>障害物センサーを切る場面</b>がある。ビル風の巻き込み・吹き下ろしに注意',
+'鉄骨・金属構造物の近くは<b>磁気干渉でコンパスエラー</b>が起きやすい。電線・アンテナ付近は特に慎重に',
+'赤外線点検は<b>日射条件に依存</b>（晴天で壁面に温度差が出る時間帯を選ぶ）。曇天は精度が落ちる'],},
+{h:'💡 実務アドバイス',c:'#86efac',items:[
+'収益の本体は<b>点検報告書</b>。撮って終わりにせず、診断コメント付きレポートまで納品する',
+'建物診断系の民間資格（赤外線建物診断技能師など）があると信頼度が上がる',
+'<b>管理会社・工務店と組む</b>のが近道。足場代（数十〜数百万円）との比較で提案すると刺さる'],},
+{h:'💰 収益の目安',c:'#fbbf24',items:[
+'外壁点検は建物規模により数万〜数十万円／棟。足場不要が最大の営業材料',
+'ソーラーパネル点検は発電事業者との<b>定期契約</b>にできると安定収入になる'],}]},
+{icon:'🌾',title:'農薬散布',sub:'水稲・果樹の防除請負',secs:[
+{h:'📋 必要な手続き・知識',c:'#60a5fa',items:[
+'農薬散布は<b>危険物輸送＋物件投下</b>の特定飛行。この2つは技能証明＋機体認証があっても<b>許可・承認が免除されない</b>（毎回DIPS申請）',
+'<b>農薬取締法</b>：無人航空機用に登録された農薬のみ使用可。ラベルの希釈倍率・使用回数・使用時期を厳守',
+'農水省の<b>空中散布ガイドライン</b>に沿って、事前の周辺周知・風速確認・緩衝地帯の設定を行う',
+'メーカー認定教習（DJIアグラス、ヤマハ等）の修了が<b>保険・機体保証の実質条件</b>'],},
+{h:'⚠️ 注意点',c:'#fca5a5',items:[
+'<b>ドリフト（飛散）事故</b>が最大のリスク。隣接する有機圃場・住宅・養蜂箱・学校への飛散は賠償＋信用問題に直結',
+'風速の目安を超えたら中止する勇気を持つ（朝夕の無風時間帯に作業を組む）',
+'<b>散布記録の保存</b>（日時・場所・農薬名・使用量）は必須。トラブル時の唯一の証拠になる'],},
+{h:'💡 実務アドバイス',c:'#86efac',items:[
+'農業用機体は数百万円クラス。初期は<b>散布事業者へのオペレーター参加</b>や共同購入から入るのが現実的',
+'<b>農協・営農組合経由</b>で面積をまとめて受注するのが定石。個人農家の単発受注は移動コスト負けしやすい',
+'需要は夏場の水稲防除に集中。<b>年間契約＋複数作物</b>で平準化する'],},
+{h:'💰 収益の目安',c:'#fbbf24',items:[
+'水稲防除の相場は<b>10aあたり2,000〜3,500円前後</b>。1日で数ha処理できれば日当換算は高い',
+'繁忙期集中型なので、点検や空撮など<b>他分野との組み合わせ</b>で年間を安定させる'],}]},
+{icon:'💼',title:'仕事にする共通知識',sub:'保険・営業・一等の活かし方',secs:[
+{h:'📋 必ず整えるもの',c:'#60a5fa',items:[
+'<b>対人・対物1億円以上の賠償責任保険</b>＋機体保険。発注側から証券コピーを求められることが多い',
+'特定飛行の<b>飛行計画通報（DIPS2.0）と飛行日誌</b>を習慣化。業務では監査・発注要件になる',
+'<b>二等の強み</b>：第二種機体認証との組合せでDID・夜間・目視外・30m未満のカテゴリーII飛行が許可・承認不要に。実務案件の大半をカバーできる。第三者上空（カテゴリーIII）は一等が必要なので次のステップアップ目標に'],},
+{h:'💡 案件獲得のルート',c:'#86efac',items:[
+'ドローンスクール・建設／不動産会社・自治体・農協との<b>下請け／提携</b>が最初の入口',
+'マッチングサービスやクラウドソーシングは実績づくりに使い、単価は直接契約で上げる',
+'<b>資格＋語学</b>など複数スキルの掛け算が単価を決める（例：英語対応の空撮・講習は競合が激減する）'],},
+{h:'⚠️ 事務まわりの注意',c:'#fca5a5',items:[
+'副業の所得が<b>年20万円を超えたら確定申告</b>。機体・保険・教習費は経費計上できる',
+'業務委託契約書に<b>天候中止時の扱い・再撮影の条件</b>を必ず入れる（空撮トラブルの定番）',
+'制度は毎年変わる。国交省無人航空機サイトとDIPSのお知らせを定期チェック'],}]}
+];
+// ===== 多言語（日/英） =====
+let LANG='ja';try{LANG=localStorage.getItem('droneLang')||'ja'}catch(e){}
+const I18N={
+ja:{
+sub:'教則 令和7年2月第4版準拠 ・ 三肢択一',tabs:['ホーム','要点','実務','復習'],
+lblAns:'解答済',lblOk:'正解',lblNg:'不正解',lblPct:'正解率',
+stMock:'🎓 本番形式の模擬試験',mockH3:'本番モード（模擬試験）',mockP:'二等学科試験と同じ条件で挑戦。CBT本番の感覚をつかみましょう。',mockSpec:'<span>50問</span><span>30分</span><span>三肢択一</span><span>合格80%</span>',
+stWeak:'🔥 弱点克服',weakH3:'弱点モード（忘却曲線で再出題）',weakP:'間違えた問題を1日後→3日後→7日後に再出題。3回連続で正解すると卒業します。',
+stFlash:'🌐 多言語学習（日英中）',flashH3:'用語フラッシュカード（日・英・中）',flashP:'教則の重要用語を日英中3言語＋読み（カタカナ／ピンイン）で暗記。タップで反転。外国人受講生への指導にも。',
+stStats:'📊 分野別成績',stHist:'📈 模擬試験の推移',stPractice:'📚 分野別練習（解説つき）',jaNote:'',
+quit:'← 中断',hint:'💡 ヒント',prev:'← 前へ',next:'次へ →',submit:'採点する',
+expl:'解説',correctIs:'正解：',ref:'📖 参考：',
+pass:'合格',fail:'不合格',passNote:'本番の合格ライン：正答率80%程度',
+msgMockPass:'おめでとうございます！本番でもこの調子で。',msgMockFail:'あと{n}問で合格ラインです。間違いを復習しましょう。',
+msg90:'素晴らしい！合格レベルです。',msg70:'あと一息！苦手分野を復習しましょう。',msgLow:'公式集と解説で基礎を固めましょう。',
+rLabel:'正解率',rlOk:'正解',rlAll:'全問',rlNg:'不正解',retry:'もう一度',reviewW:'間違い確認',home:'ホーム',
+revTitle:'間違えた問題の復習',back:'← 戻る',noWrong:'間違えた問題はありません！',yourAns:'✗ あなた：',unanswered:'（未回答）',corrAns:'✓ 正解：',
+cheatIntro:'間違えやすいポイント・暗記すべき数値をまとめました。試験直前の見直しに。',
+workIntro:'資格を趣味・仕事に活かすための実務ガイド。分野をタップすると詳細が開きます。',
+workNote:'⚠️ 制度・ガイドラインは改正されます。実際の飛行前に必ず国土交通省・農林水産省の最新情報とDIPSのお知らせを確認してください。',
+emptyCat:'問題を解くと、分野ごとの正答率がここにグラフで表示されます。',emptyMock:'模擬試験を受けると、成績の推移がここにグラフで表示されます。',
+weakToday:'今日の復習 {a}問 / 全{b}問',passZone:' 🎉合格圏',
+confirmQuit:'模擬試験を中断しますか？（成績は記録されません）',
+flashTitle:'用語フラッシュカード（日・英・中）',flashTap:'タップで反転',flashAll:'すべて',dirJp:'表：日本語',dirEn:'表：英語',dirZh:'表：中国語',unit:'問',
+langBtn:'🌐 EN'},
+en:{
+sub:'Based on the official textbook 4th ed. (Feb 2025) ・ 3-choice CBT',tabs:['Home','Points','Field','Review'],
+lblAns:'Answered',lblOk:'Correct',lblNg:'Wrong',lblPct:'Rate',
+stMock:'🎓 Full mock exam',mockH3:'Mock Exam Mode',mockP:'Same conditions as the real second-class knowledge test. Get used to the CBT format.',mockSpec:'<span>50 questions</span><span>30 min</span><span>3-choice</span><span>Pass 80%</span>',
+stWeak:'🔥 Weak points',weakH3:'Weak-Point Mode (spaced repetition)',weakP:'Missed questions come back after 1 → 3 → 7 days. Three correct answers in a row and the question graduates.',
+stFlash:'🌐 Multilingual study (JA·EN·ZH)',flashH3:'Term Flashcards (JA / EN / ZH)',flashP:'Key exam terms in Japanese, English and Chinese with readings (katakana / pinyin). Tap the card to flip.',
+stStats:'📊 Results by topic',stHist:'📈 Mock exam history',stPractice:'📚 Practice by topic (with explanations)',
+jaNote:'ℹ️ Questions and explanations are in Japanese — the actual CBT exam is offered in Japanese only. This app keeps them authentic so you study exactly what you will see on test day.',
+quit:'← Quit',hint:'💡 Hint',prev:'← Prev',next:'Next →',submit:'Submit',
+expl:'Explanation',correctIs:'Answer: ',ref:'📖 Ref: ',
+pass:'PASS',fail:'FAIL',passNote:'Real exam pass line: about 80%',
+msgMockPass:'Congratulations! Keep this up on exam day.',msgMockFail:'{n} more correct answers to reach the pass line. Review your mistakes.',
+msg90:'Excellent — pass level!',msg70:'Almost there! Review your weak topics.',msgLow:'Build your fundamentals with the formulas and explanations.',
+rLabel:'Score',rlOk:'Correct',rlAll:'Total',rlNg:'Wrong',retry:'Retry',reviewW:'Mistakes',home:'Home',
+revTitle:'Review mistakes',back:'← Back',noWrong:'No mistakes yet!',yourAns:'✗ You: ',unanswered:'(no answer)',corrAns:'✓ Answer: ',
+cheatIntro:'Common traps and must-memorize numbers — perfect for last-minute review.',
+workIntro:'A practical guide to turning your license into hobby and paid work. Tap a field to expand.',
+workNote:'⚠️ Rules and guidelines change. Always check the latest MLIT / MAFF information and DIPS notices before flying.',
+emptyCat:'Solve questions and your per-topic accuracy will appear here.',emptyMock:'Take a mock exam and your score history will appear here.',
+weakToday:'Due today {a} / total {b}',passZone:' 🎉 pass zone',
+confirmQuit:'Quit the mock exam? (Your score will not be recorded.)',
+flashTitle:'Term Flashcards (JA / EN / ZH)',flashTap:'tap to flip',flashAll:'All',dirJp:'Front: JA',dirEn:'Front: EN',dirZh:'Front: 中文',unit:' Qs',
+langBtn:'🌐 日本語'}
+};
+function t(k){return (I18N[LANG]&&I18N[LANG][k]!==undefined)?I18N[LANG][k]:I18N.ja[k]}
+function tf(k,v){let s=t(k);Object.keys(v).forEach(x=>{s=s.replace('{'+x+'}',v[x])});return s}
+function toggleLang(){LANG=LANG==='ja'?'en':'ja';try{localStorage.setItem('droneLang',LANG)}catch(e){}applyLang()}
+function applyLang(){
+  document.documentElement.lang=LANG;
+  const set=(id,key)=>{const el=document.getElementById(id);if(el)el.textContent=t(key)};
+  document.getElementById('langBtn').textContent=t('langBtn');
+  set('hdrSub','sub');
+  document.querySelectorAll('.tabs .tab').forEach((b,i)=>b.textContent=t('tabs')[i]);
+  ['lblAns','lblOk','lblNg','lblPct','stMock','mockH3','mockP','stWeak','weakH3','weakP','stFlash','flashH3','flashP','stStats','stHist','stPractice','quit:quitBtn','hint:hintBtn','prev:prevBtn','next:nextBtn','submit:submitBtn','rLabel','rlOk','rlAll','rlNg','retry:retryBtn','reviewW:reviewBtn','home:rHomeBtn','revTitle','back:revBack','cheatIntro','workIntro','workNote','flashTitle','back:flashBack'].forEach(p=>{
+    const [key,id]=p.includes(':')?p.split(':'):[p,p];set(id,key);
+  });
+  document.getElementById('mockSpec').innerHTML=t('mockSpec');
+  const jn=document.getElementById('jaNote');jn.style.display=LANG==='en'?'block':'none';jn.textContent=t('jaNote');
+  buildHome();buildCheat();buildWork();updateWeakCard();buildCatStats();buildMockHist();
+  if(document.getElementById('screen-flash').classList.contains('active'))renderFlash();
+}
+
+const CHEATSHEET_EN=[
+{title:'📏 Key numbers (most tested)',points:['<b>100 g or more</b> = "unmanned aircraft" (below = model aircraft)','<b>150 m or higher</b> = restricted airspace (height above ground directly below)','<b>Under 30 m</b> = distance rule from third parties / property','<b>25 kg</b> = large-aircraft threshold (registration mark 25 mm+)','<b>300 m</b> = around designated key facilities (anti-flight law)','<b>200 m+</b> = air traffic control area','<b>250 m+</b> = model aircraft notification altitude','<b>Age 16</b> = minimum age for the pilot certificate']},
+{title:'⏳ Validity periods & deadlines',points:['Registration = <b>3 yrs</b> / Pilot certificate (1st & 2nd class) = <b>3 yrs</b>','UAS certification: Class 1 = <b>1 yr</b> / Class 2 = <b>3 yrs</b>','Category II application = <b>10 business days</b> before the flight','Category III application = <b>20 business days</b> before','Renewal course within 3 months before applying / apply within 6 months before expiry']},
+{title:'🗂 Categories & levels',points:['Category I = not a specified flight (no procedures needed)','Category II = with safety zone for third parties (Level 3)','Category III = no safety zone = over third parties (Level 4)','Level 3.5 = onboard camera replaces ground observers','Category III needs: 1st-class certificate + Class-1 UAS certification + permission/approval']},
+{title:'⚖️ Penalties',points:['<b>2 yrs / ¥1M</b> = failing to prevent danger after an accident','<b>1 yr / ¥0.5M</b> = flying an unregistered aircraft','<b>1 yr / ¥0.3M</b> = flying under alcohol or drugs','<b>15+ demerit points</b> = certificate revoked','12–14 pts = 1-yr suspension, 9–11 = 6 months, 6–8 = 3 months']},
+{title:'🌀 Confusable phenomena & terms',points:['<b>Ground effect</b> = extra lift very close to the ground (right after takeoff)','<b>Vortex ring state</b> = lift loss during vertical descent (recover with horizontal motion)','<b>Multipath</b> = reflected radio signals → temporary loss of control','Throttle = up/down / Aileron = left/right / Elevator = fwd/back / Rudder = yaw','A multirotor moves by lowering the side toward the direction of travel']},
+{title:'🌤 Weather points',points:['Tighter isobars = <b>stronger wind</b>','High pressure = descending air, fair / Low = rising air, bad weather','Cold front = gusts, thunder, heavy rain; temperature drops after it passes','Stationary front = long rainy spells (baiu / autumn rains)','Winter pattern = high-west / low-east (snow on the Sea of Japan side)','Wind speed = average over the previous 10 minutes']},
+{title:'📡 Radio & sensors',points:['2.4 GHz = travels straight, diffracts poorly (weak against obstacles)','Attenuation ∝ 1/distance² (double the distance → 1/4 strength)','GNSS needs at least <b>4 satellites</b>; vertical error is the largest','RTK / DGPS = cm-to-m level accuracy','The magnetometer is affected by iron and current → calibrate']},
+{title:'🔋 LiPo batteries',points:['Long-term storage at about <b>60% charge</b>','Never store fully charged or fully drained (degradation, swelling)','Swollen pack = flammable gas building up → replace early','Avoid heat above 35℃, shorts, impact and water','Flight time can drop by half in cold weather','Charge multi-cell packs through the balance connector']}
+];
+
+const WORK_EN=[
+{icon:'📷',title:'Aerial Photography (hobby & paid work)',sub:'Landscape, real estate, weddings, tourism PR',secs:[
+{h:'📋 Procedures & knowledge',c:'#60a5fa',items:[
+'DID, night, BVLOS and flights within 30 m of people/property are <b>specified flights</b> — fly under Category II (certificate + UAS certification) or apply for permission/approval via DIPS',
+'Specified flights require a <b>flight plan notification and a flight logbook</b>; reporting accidents and rescuing the injured are legal duties',
+'FPV on the 5.7 GHz band needs an <b>amateur radio license (4th class+) and a station license</b>; 2.4 GHz gear with the technical conformity mark is fine as-is'],},
+{h:'⚠️ Watch out',c:'#fca5a5',items:[
+'<b>Aviation Act clearance alone is not enough.</b> You also need the land/facility manager’s consent (city parks, rivers, ports, national forests, private land — many Tokyo parks ban drones outright)',
+'Respect <b>portrait rights and privacy</b> when people appear in footage (blur faces, nameplates, laundry)',
+'Flying over events and gatherings needs individual permission plus <b>extra safety requirements</b> (observers, no-entry zones)',
+'Local ordinances at beaches and tourist spots are increasing — check the municipality’s site before flying'],},
+{h:'💡 Field advice',c:'#86efac',items:[
+'Carry <b>ND filters</b> for daytime shots; shoot D-Log or flat profiles and slow the gimbal for a professional look',
+'Build a <b>portfolio (YouTube / Instagram)</b> — it doubles as your sales material',
+'Carry <b>liability insurance of ¥100M+</b>; clients often require proof before awarding work'],},
+{h:'💰 Earning potential',c:'#fbbf24',items:[
+'Typical jobs start around ¥30,000–100,000 per half day: real estate, construction records, weddings, municipal tourism PR',
+'Stock photo/footage sales pay little per item but build up as passive income'],}]},
+{icon:'🔧',title:'Inspection & Cleaning',sub:'Facades, roofs, solar panels',secs:[
+{h:'📋 Procedures & knowledge',c:'#60a5fa',items:[
+'Facade inspection relies on <b>infrared cameras</b> detecting temperature differences; drone-based IR surveys are officially accepted for periodic building reports',
+'Spraying cleaning fluid — even plain water — counts as <b>"dropping objects" and needs approval</b>',
+'<b>Tethered-flight exception:</b> a strong tether of 30 m or less plus entry control exempts DID, night, BVLOS, 30 m and object-dropping approvals. Tethering is the standard approach for cleaning work'],},
+{h:'⚠️ Watch out',c:'#fca5a5',items:[
+'Flying close to walls sometimes means <b>turning obstacle sensors off</b>; beware of building-edge winds and downdrafts',
+'Steel structures cause <b>magnetic interference and compass errors</b> — extra care near power lines and antennas',
+'IR inspection <b>depends on sunlight</b>: pick clear days and hours when the wall shows temperature contrast'],},
+{h:'💡 Field advice',c:'#86efac',items:[
+'The real product is the <b>inspection report</b> — deliver diagnosis comments, not just photos',
+'Private credentials in building diagnostics (e.g., IR building inspector) boost credibility',
+'<b>Partner with property managers and contractors</b>; pitch against scaffolding costs (often ¥several hundred thousand+) and the value is obvious'],},
+{h:'💰 Earning potential',c:'#fbbf24',items:[
+'Facade inspections run from tens of thousands to several hundred thousand yen per building — no scaffolding is the killer sales point',
+'Solar panel inspection becomes stable income with <b>periodic contracts</b> from plant operators'],}]},
+{icon:'🌾',title:'Agricultural Spraying',sub:'Contract pest control for rice & orchards',secs:[
+{h:'📋 Procedures & knowledge',c:'#60a5fa',items:[
+'Spraying is a specified flight involving <b>dangerous goods + object dropping</b> — these are <b>never exempted</b> even with certificates, so every job needs DIPS approval',
+'<b>Agricultural Chemicals Regulation Act:</b> only chemicals registered for UAV use; follow the label (dilution, frequency, timing) strictly',
+'Follow MAFF’s <b>aerial spraying safety guidelines</b>: advance notice to neighbors, wind checks, buffer zones',
+'Manufacturer training (DJI Agras, Yamaha, etc.) is a <b>de facto requirement</b> for insurance and warranty'],},
+{h:'⚠️ Watch out',c:'#fca5a5',items:[
+'<b>Drift is the biggest risk.</b> Chemicals landing on organic fields, houses, beehives or schools mean liability and lost trust',
+'Have the courage to stop when wind exceeds the guideline — schedule work for calm early mornings and evenings',
+'<b>Keep spraying records</b> (date, location, chemical, amount) — your only evidence if trouble arises'],},
+{h:'💡 Field advice',c:'#86efac',items:[
+'Agricultural drones cost millions of yen; start as an <b>operator for an existing spraying business</b> or via joint purchase',
+'Book area in bulk <b>through JA or farming co-ops</b>; one-off jobs for single farmers rarely cover travel costs',
+'Demand peaks in summer rice pest control — combine crops and <b>annual contracts</b> to smooth the season'],},
+{h:'💰 Earning potential',c:'#fbbf24',items:[
+'Market rate for rice spraying is roughly <b>¥2,000–3,500 per 10 a</b>; several hectares per day makes strong daily earnings',
+'Because work clusters in summer, pair it with inspection or photography for year-round income'],}]},
+{icon:'💼',title:'Going Professional — Essentials',sub:'Insurance, sales channels, using your 1st-class license',secs:[
+{h:'📋 Get these in place',c:'#60a5fa',items:[
+'<b>Liability insurance ¥100M+</b> plus hull insurance; clients often ask for the certificate copy',
+'Make <b>DIPS 2.0 flight plans and logbooks</b> a habit — they become audit and contract requirements in business',
+'<b>Your 2nd-class edge:</b> combined with Class-2 UAS certification, DID, night, BVLOS and sub-30 m Category II flights need no individual approval — that covers most paid work. Category III (over third parties) requires the 1st-class license: a clear next step'],},
+{h:'💡 Finding clients',c:'#86efac',items:[
+'Drone schools, construction/real-estate firms, municipalities and JA co-ops are the first doors — <b>subcontract, then go direct</b>',
+'Use matching platforms for track record; raise your rates through direct contracts',
+'<b>Multiply your skills:</b> license × languages is rare — English-language aerial work or instruction has almost no competition'],},
+{h:'⚠️ Paperwork & tax',c:'#fca5a5',items:[
+'Side income over <b>¥200,000/year requires a tax return</b>; aircraft, insurance and training are deductible expenses',
+'Put <b>weather-cancellation and reshoot terms</b> in every contract — the classic aerial-work dispute',
+'Rules change every year: watch the MLIT drone portal and DIPS announcements'],}]}
+];
+
+// ===== 用語フラッシュカード（日英） =====
+const TERMS={
+"🪪 資格・制度":[
+{jp:"無人航空機（ドローン）",en:"Unmanned Aircraft (UA)",kana:"アンマンド エアクラフト",zh:"无人航空器（无人机）",py:"wúrén hángkōngqì"},
+{jp:"技能証明（国家ライセンス）",en:"Remote Pilot Certificate",kana:"リモート パイロット サーティフィケート",zh:"技能证明（国家执照）",py:"jìnéng zhèngmíng"},
+{jp:"一等無人航空機操縦士",en:"First-Class Unmanned Aircraft Pilot",kana:"ファーストクラス アンマンド エアクラフト パイロット",zh:"一级无人航空器驾驶员",py:"yījí wúrén hángkōngqì jiàshǐyuán"},
+{jp:"二等無人航空機操縦士",en:"Second-Class Unmanned Aircraft Pilot",kana:"セカンドクラス アンマンド エアクラフト パイロット",zh:"二级无人航空器驾驶员",py:"èrjí wúrén hángkōngqì jiàshǐyuán"},
+{jp:"限定変更（夜間・目視外・25kg）",en:"Removal of limitations",kana:"リムーバル オブ リミテーションズ",zh:"解除限定（夜间・超视距・25kg）",py:"jiěchú xiàndìng",note:"rating change とも言う"},
+{jp:"機体認証",en:"UAS certification",kana:"ユーエーエス サーティフィケーション",zh:"机体认证",py:"jītǐ rènzhèng"},
+{jp:"型式認証",en:"Type certification",kana:"タイプ サーティフィケーション",zh:"型号认证",py:"xínghào rènzhèng"},
+{jp:"登録講習機関（スクール）",en:"Registered Training Organization",kana:"レジスタード トレーニング オーガニゼーション",zh:"注册培训机构（飞行学校）",py:"zhùcè péixùn jīgòu",note:"略して RTO"},
+{jp:"修了審査",en:"Completion exam",kana:"コンプリーション イグザム",zh:"结业考核",py:"jiéyè kǎohé",note:"国の実地試験の代わりになる校内審査"},
+{jp:"指定試験機関",en:"Designated Testing Organization",kana:"デジグネイテッド テスティング オーガニゼーション",zh:"指定考试机构",py:"zhǐdìng kǎoshì jīgòu"},
+{jp:"学科試験",en:"Knowledge test",kana:"ナレッジ テスト",zh:"理论考试",py:"lǐlùn kǎoshì",note:"CBT方式・日本語のみ"},
+{jp:"実地試験",en:"Practical test",kana:"プラクティカル テスト",zh:"实操考试",py:"shícāo kǎoshì"},
+{jp:"身体検査",en:"Medical check",kana:"メディカル チェック",zh:"体检",py:"tǐjiǎn"},
+{jp:"機体の登録",en:"Registration",kana:"レジストレーション",zh:"机体注册（登记）",py:"jītǐ zhùcè",note:"100g以上は義務"},
+{jp:"リモートID",en:"Remote ID",kana:"リモート アイディー",zh:"远程识别（Remote ID）",py:"yuǎnchéng shíbié"},
+{jp:"飛行日誌",en:"Flight logbook",kana:"フライト ログブック",zh:"飞行日志",py:"fēixíng rìzhì"},
+{jp:"事故",en:"Accident",kana:"アクシデント",zh:"事故",py:"shìgù",note:"人の死傷・物件損壊・航空機との衝突"},
+{jp:"重大インシデント",en:"Serious incident",kana:"シリアス インシデント",zh:"严重事故征候",py:"yánzhòng shìgù zhēnghòu"}],
+"📋 飛行ルール":[
+{jp:"特定飛行",en:"Specified flights",kana:"スペシファイド フライツ",zh:"特定飞行",py:"tèdìng fēixíng",note:"許可・承認が必要な飛行"},
+{jp:"カテゴリーI/II/III飛行",en:"Category one / two / three flights",kana:"カテゴリー ワン・トゥー・スリー フライツ",zh:"第一／二／三类飞行",py:"dì yī / èr / sān lèi fēixíng"},
+{jp:"立入管理措置",en:"Safety zone (keeping people out)",kana:"セーフティ ゾーン",zh:"禁入管理措施（隔离区）",py:"jìnrù guǎnlǐ cuòshī",note:"第三者の立入りを制限する措置"},
+{jp:"第三者",en:"Third parties",kana:"サード パーティーズ",zh:"第三方（无关人员）",py:"dìsānfāng",note:"飛行に関係しない人"},
+{jp:"目視内飛行",en:"VLOS (Visual Line of Sight)",kana:"ブイロス",zh:"视距内飞行",py:"shìjù nèi fēixíng"},
+{jp:"目視外飛行",en:"BVLOS (Beyond Visual Line of Sight)",kana:"ビーブイロス",zh:"超视距飞行",py:"chāo shìjù fēixíng"},
+{jp:"夜間飛行",en:"Night flight",kana:"ナイト フライト",zh:"夜间飞行",py:"yèjiān fēixíng"},
+{jp:"人口集中地区",en:"Densely Inhabited District (DID)",kana:"ディーアイディー",zh:"人口密集区（DID）",py:"rénkǒu mìjí qū"},
+{jp:"空港等の周辺",en:"Around airports",kana:"アラウンド エアポーツ",zh:"机场周边",py:"jīchǎng zhōubiān"},
+{jp:"150m以上の上空",en:"Above 150 meters",kana:"アバブ ワンフィフティ ミーターズ",zh:"150米以上空域",py:"yìbǎi wǔshí mǐ yǐshàng kōngyù"},
+{jp:"緊急用務空域",en:"Emergency operation airspace",kana:"エマージェンシー オペレーション エアスペース",zh:"紧急任务空域",py:"jǐnjí rènwù kōngyù"},
+{jp:"許可（空域）・承認（方法）",en:"Permission / Approval",kana:"パーミッション／アプルーバル",zh:"许可（空域）／批准（方式）",py:"xǔkě / pīzhǔn",note:"DIPS 2.0で申請"},
+{jp:"飛行計画の通報",en:"Flight plan notification",kana:"フライト プラン ノーティフィケーション",zh:"飞行计划申报",py:"fēixíng jìhuà shēnbào"},
+{jp:"レベル3.5飛行",en:"Level 3.5 flight",kana:"レベル スリーポイントファイブ フライト",zh:"3.5级飞行",py:"sān diǎn wǔ jí fēixíng",note:"教則第4版の新論点"}],
+"🎯 実地試験":[
+{jp:"机上試験",en:"Planning test",kana:"プランニング テスト",zh:"桌面测试（飞行计划）",py:"zhuōmiàn cèshì"},
+{jp:"口述試験",en:"Oral test",kana:"オーラル テスト",zh:"口试",py:"kǒushì"},
+{jp:"実技試験",en:"Flight skill test",kana:"フライト スキル テスト",zh:"飞行技能考试",py:"fēixíng jìnéng kǎoshì"},
+{jp:"減点式採点（100点持ち点）",en:"Deduction-based scoring",kana:"ディダクション ベースト スコアリング",zh:"扣分制评分（100分制）",py:"kòufēnzhì píngfēn"},
+{jp:"合格ライン",en:"Pass line",kana:"パス ライン",zh:"及格线",py:"jígéxiàn",note:"一等80点／二等70点"},
+{jp:"不合格区画",en:"Red zone (disqualification zone)",kana:"レッド ゾーン",zh:"不及格区（红区）",py:"bù jígé qū"},
+{jp:"減点区画",en:"Yellow zone (deduction zone)",kana:"イエロー ゾーン",zh:"扣分区（黄区）",py:"kòufēn qū"},
+{jp:"スクエア飛行",en:"Square flight",kana:"スクエア フライト",zh:"方形航线飞行",py:"fāngxíng hángxiàn fēixíng"},
+{jp:"8の字飛行",en:"Figure-eight",kana:"フィギュア エイト",zh:"8字飞行",py:"bā zì fēixíng"},
+{jp:"ピルエットホバリング",en:"Pirouette hovering",kana:"ピルエット ホバリング",zh:"原地360°旋转悬停",py:"yuándì xuánzhuǎn xuántíng",note:"360°その場回転（約20秒）"},
+{jp:"緊急着陸",en:"Emergency landing",kana:"エマージェンシー ランディング",zh:"紧急降落",py:"jǐnjí jiàngluò"},
+{jp:"異常事態における飛行",en:"Flight under abnormal conditions",kana:"フライト アンダー アブノーマル コンディションズ",zh:"异常情况下的飞行",py:"yìcháng qíngkuàng xià de fēixíng"},
+{jp:"位置安定機能",en:"Position stabilization",kana:"ポジション スタビライゼーション",zh:"位置稳定功能",py:"wèizhì wěndìng gōngnéng",note:"GNSS・ビジョンセンサー等"},
+{jp:"ATTIモード",en:"ATTI mode",kana:"アッティ モード",zh:"姿态模式（ATTI）",py:"zītài móshì",note:"位置安定OFFの状態"},
+{jp:"機首",en:"Nose (heading)",kana:"ノーズ",zh:"机头（航向）",py:"jītóu"},
+{jp:"飛行前点検",en:"Pre-flight inspection",kana:"プリフライト インスペクション",zh:"飞行前检查",py:"fēixíng qián jiǎnchá"},
+{jp:"飛行後点検",en:"Post-flight inspection",kana:"ポストフライト インスペクション",zh:"飞行后检查",py:"fēixíng hòu jiǎnchá"},
+{jp:"日常点検記録",en:"Daily inspection record",kana:"デイリー インスペクション レコード",zh:"日常检查记录",py:"rìcháng jiǎnchá jìlù"},
+{jp:"試験員／修了審査員",en:"Examiner",kana:"イグザミナー",zh:"考官",py:"kǎoguān"},
+{jp:"受験者",en:"Candidate",kana:"キャンディデート",zh:"考生",py:"kǎoshēng"},
+{jp:"ふらつき",en:"Wobble",kana:"ウォブル",zh:"晃动（不稳）",py:"huàngdòng"},
+{jp:"制限時間",en:"Time limit",kana:"タイム リミット",zh:"时间限制",py:"shíjiān xiànzhì"}],
+"🚁 機体・現場":[
+{jp:"離陸／着陸",en:"Takeoff / Landing",kana:"テイクオフ／ランディング",zh:"起飞／降落",py:"qǐfēi / jiàngluò"},
+{jp:"ホバリング",en:"Hover",kana:"ホバー",zh:"悬停",py:"xuántíng"},
+{jp:"上昇／下降",en:"Climb / Descend",kana:"クライム／ディセンド",zh:"上升／下降",py:"shàngshēng / xiàjiàng"},
+{jp:"プロペラ（ローター）",en:"Propeller",kana:"プロペラー",zh:"螺旋桨",py:"luóxuánjiǎng"},
+{jp:"操縦装置（プロポ）",en:"Controller (transmitter)",kana:"コントローラー",zh:"遥控器",py:"yáokòngqì"},
+{jp:"バッテリー残量",en:"Battery level",kana:"バッテリー レベル",zh:"电池电量",py:"diànchí diànliàng"},
+{jp:"帰還機能（RTH）",en:"Return to Home (RTH)",kana:"リターン トゥ ホーム",zh:"自动返航（RTH）",py:"zìdòng fǎnháng"},
+{jp:"フェールセーフ",en:"Fail-safe",kana:"フェイルセーフ",zh:"失控保护",py:"shīkòng bǎohù"},
+{jp:"電波（通信）",en:"Signal",kana:"シグナル",zh:"信号",py:"xìnhào"},
+{jp:"風速",en:"Wind speed",kana:"ウィンド スピード",zh:"风速",py:"fēngsù",note:"5 m/s = five meters per second"},
+{jp:"気象",en:"Weather",kana:"ウェザー",zh:"气象（天气）",py:"qìxiàng"},
+{jp:"保護具（ヘルメット等）",en:"Safety gear",kana:"セーフティ ギア",zh:"安全防护用品（头盔等）",py:"ānquán fánghù yòngpǐn",note:"2026年6月から着用義務"},
+{jp:"安全確認よし！",en:"Safety check — OK!",kana:"セーフティ チェック オーケー",zh:"安全确认完毕！",py:"ānquán quèrèn wánbì",note:"声に出さないと未確認扱い"}]
+};
+let flashDeck=[],flashIdx=0,flashFlip=false,flashCat='all',flashDir='jp';
+function startFlash(){buildFlashDeck();showTab('flash')}
+function buildFlashDeck(){
+  let list=[];
+  Object.keys(TERMS).forEach(cat=>{if(flashCat==='all'||flashCat===cat)TERMS[cat].forEach(x=>list.push({...x,cat}))});
+  flashDeck=list;flashIdx=0;flashFlip=false;buildFlashChips();renderFlash();
+}
+function buildFlashChips(){
+  const el=document.getElementById('flashChips');el.innerHTML='';
+  const mk=(label,val)=>{const b=document.createElement('button');b.className='chip'+(flashCat===val?' active':'');b.textContent=label;b.onclick=()=>{flashCat=val;buildFlashDeck()};el.appendChild(b)};
+  mk(t('flashAll'),'all');Object.keys(TERMS).forEach(c=>mk(c,c));
+}
+function renderFlash(){
+  const card=document.getElementById('flashCard');
+  if(flashDeck.length===0){card.innerHTML='';return}
+  const x=flashDeck[flashIdx];
+  const L={jp:{main:x.jp,read:'',cls:'flash-en'},en:{main:x.en,read:x.kana||'',cls:'flash-en'},zh:{main:x.zh||'',read:x.py||'',cls:'flash-zh'}};
+  let h=`<div class="flash-cat">${x.cat}</div><div class="flash-front">${L[flashDir].main}</div>`;
+  if(flashFlip){
+    h+='<div class="flash-back">';
+    ['jp','en','zh'].filter(k=>k!==flashDir).forEach(k=>{
+      h+=`<div class="${L[k].cls}">${L[k].main}</div>`;
+      if(L[k].read)h+=`<div class="flash-kana">${L[k].read}</div>`;
+      h+='<div style="height:8px"></div>';
+    });
+    if(x.note)h+=`<div class="flash-note">💡 ${x.note}</div>`;
+    h+='</div>';
+  }else{
+    h+=`<div class="flash-hint">👆 ${t('flashTap')}</div>`;
+  }
+  card.innerHTML=h;
+  document.getElementById('flashDirBtn').textContent=t(flashDir==='jp'?'dirJp':flashDir==='en'?'dirEn':'dirZh');
+  document.getElementById('flashCounter').textContent=(flashIdx+1)+' / '+flashDeck.length;
+}
+function flipFlash(){flashFlip=!flashFlip;renderFlash()}
+function nextFlash(){if(!flashDeck.length)return;flashIdx=(flashIdx+1)%flashDeck.length;flashFlip=false;renderFlash()}
+function prevFlash(){if(!flashDeck.length)return;flashIdx=(flashIdx-1+flashDeck.length)%flashDeck.length;flashFlip=false;renderFlash()}
+function shuffleFlash(){flashDeck=shuffle(flashDeck);flashIdx=0;flashFlip=false;renderFlash()}
+function toggleFlashDir(){flashDir=flashDir==='jp'?'en':flashDir==='en'?'zh':'jp';flashFlip=false;renderFlash()}
+
+function buildWork(){
+  const el=document.getElementById('workList');
+  el.innerHTML='';
+  (LANG==='en'?WORK_EN:WORK).forEach(w=>{
+    const card=document.createElement('div');card.className='work-card';
+    let body='';
+    w.secs.forEach(s=>{
+      body+=`<div class="work-sec"><h5 style="color:${s.c}">${s.h}</h5><ul>`;
+      body+=s.items.map(i=>'<li>・'+i+'</li>').join('');
+      body+='</ul></div>';
+    });
+    card.innerHTML=`<div class="work-head" onclick="this.parentElement.classList.toggle('open')"><span class="icon">${w.icon}</span><div style="flex:1"><h4>${w.title}</h4><p>${w.sub}</p></div><span class="arrow">▶</span></div><div class="work-body">${body}</div>`;
+    el.appendChild(card);
+  });
+}
+applyLang();
 </script>
 </body>
 </html>
