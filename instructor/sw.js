@@ -1,4 +1,4 @@
-const CACHE = 'instructor-app-v3';
+﻿const CACHE = 'instructor-app-v4';
 const ASSETS = [
   './',
   'index.html',
@@ -26,7 +26,7 @@ self.addEventListener('activate', e => {
   );
 });
 
-// ネット優先・失敗時キャッシュ(更新が反映されやすい方式)
+// 繝阪ャ繝亥━蜈医・螟ｱ謨玲凾繧ｭ繝｣繝・す繝･(譖ｴ譁ｰ縺悟渚譏縺輔ｌ繧・☆縺・婿蠑・
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
   e.respondWith(
