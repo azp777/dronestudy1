@@ -1,0 +1,14 @@
+{
+  "name": "ドローン学習ポータル",
+  "short_name": "ドローン学習",
+  "description": "無人航空機（ドローン）国家資格 学科試験対策ポータル。一等・二等の学科問題演習、模擬試験、答案用紙、講座資料をまとめて学習できる。",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#1d4ed8",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
